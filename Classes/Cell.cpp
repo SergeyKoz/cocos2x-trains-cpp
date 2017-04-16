@@ -1,5 +1,6 @@
 #include "Field.h"
 #include "Cell.h"
+#include "Switch.h"
 
 namespace GameObjects {
 
@@ -193,20 +194,37 @@ namespace GameObjects {
 		entry->Enter = Enter;
 
 		if (Enter == 0){
-			image = Elements::GetElement(cell->x, cell->y, Element);
-			Field::getInstance()->trainsLayer->addChild(image, ZIndexRails);
+			image = Elements::GetTrackElement(cell->x, cell->y, Element);
+			Field::getInstance()->mapLayer->addChild(image, ZIndexRails);
 			entry->Resource = image;
 
 			//Elements::setRules(x, y, Element);
 		}
 		configuration = Configuration;
-		straightConnection[ToPoint] = entry;
+		if (straightConnection[ToPoint] == NULL) {
+			straightConnection[ToPoint] = entry;
+		}
+		else
+		{
+			divergingConnection[ToPoint] = entry;
+		}
+	}
 
-		//divergingConnection[ToPoint] = entry;
+	void Cell::SetSwitch(int Point)
+	{
+
+		this->switches[Point] = new Switch(this, Point);
+
+		/*
+		if self.Switch == nil then
+			self.Switch = {}
+		end
+		self.Switch[Point] = Switch:new(self, Point)
+		*/
 	}
 	
 	bool Cell::isAllow(int Point, TrackElement Element){
-		//return allowEnter[Point][Element];
+		// TODO: the check logic point
 		return true;
 	}
 }

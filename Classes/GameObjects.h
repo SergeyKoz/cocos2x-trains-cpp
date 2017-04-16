@@ -5,6 +5,7 @@
 #include "Cell.h"
 #include "Field.h"
 #include "Path.h"
+#include "Switch.h"
 #include "Cmd.h"
 #include "Command.h"
 

@@ -34,7 +34,7 @@ namespace GameObjects {
 		bool f = false;
 		Field *Game = Field::getInstance();
 		
-		Vec2 layerPosition = Game->trainsLayer->getPosition();
+		Vec2 layerPosition = Game->mapLayer->getPosition();
 		origin = { (int)round(layerPosition.x / (Game->scale * 10)), (int)round(layerPosition.y / (Game->scale * 10)) };
 
 		Cell *startCell = &Game->cells[Point.x][Point.y];
@@ -140,7 +140,7 @@ namespace GameObjects {
 					}
 				}
 				for (auto c = 0; c < PathItems.size(); c++){
-					Game->trainsLayer->removeChild(PathItems[c]->element, true);
+					Game->mapLayer->removeChild(PathItems[c]->element, true);
 				}
 				PathItems.clear();
 				if (p >= 0 && (Area.d.x != 0 || Area.d.y != 0)) {
@@ -158,12 +158,14 @@ namespace GameObjects {
 						d.y = n.y - c.y;
 						connect = Cell::GetConnectConfig(d.x, d.y, p);
 						item = new PathItem;
+						item->elementType = connect->element;
 						if (connect->enter == 0) {
-							item->element = Elements::GetElement(c.x, c.y, connect->element);
+							item->element = Elements::GetTrackElement(c.x, c.y, connect->element);
 						}
 						else {
-							item->element = Elements::GetElement(n.x, n.y, connect->element);
+							item->element = Elements::GetTrackElement(n.x, n.y, connect->element);
 						}
+						item->enter = connect->enter;
 						item->next = next;
 						item->current = current;						
 						item->point = p;
@@ -174,26 +176,50 @@ namespace GameObjects {
 						i++;
 					}
 					for (auto c = 0; c < PathItems.size(); c++){
-						Game->trainsLayer->addChild(PathItems[c]->element, ZIndexRails);
+						Game->mapLayer->addChild(PathItems[c]->element, ZIndexRails);
 					}
 				}
 			}
 		}
 	}
 
-	void Path::Set(){				
+	void Path::Set() {
 		vector<string> commands;
-		string command;
+		string pathCommand = "";
+		string switchCommand = "";
+		int fromPoint, toPoint;
 		Field *Game = Field::getInstance();
-		for (auto c = 0; c < PathItems.size(); c++){				
-			Game->trainsLayer->removeChild(PathItems[c]->element, true);
-			command += StringUtils::format("%s{\"from\":{\"x\":%d,\"y\":%d},\"to\":{\"x\":%d,\"y\":%d},\"point\":%d}",
-				c > 0 ? "," : "", PathItems[c]->next->x, PathItems[c]->next->y, PathItems[c]->current->x, PathItems[c]->current->y, PathItems[c]->point);
+		for (auto c = 0; c < PathItems.size(); c++) {
+			Game->mapLayer->removeChild(PathItems[c]->element, true);
 
+			fromPoint = PathItems[c]->point;
+			toPoint = Elements::offset[Elements::second[PathItems[c]->enter]][PathItems[c]->elementType].p;
+
+			pathCommand += StringUtils::format("%s{\"from\":{\"x\":%d,\"y\":%d},\"to\":{\"x\":%d,\"y\":%d},\"point\":%d}",
+				pathCommand == "" ? "" : ",", PathItems[c]->next->x, PathItems[c]->next->y, PathItems[c]->current->x, PathItems[c]->current->y, fromPoint);
+
+			if (PathItems[c]->current->straightConnection[fromPoint] != NULL && PathItems[c]->current->divergingConnection[fromPoint] == NULL) {
+				switchCommand += StringUtils::format("%s{\"cell\":{\"x\":%d,\"y\":%d},\"point\":%d}",
+					switchCommand == "" ? "" : ",", PathItems[c]->current->x, PathItems[c]->current->y, fromPoint);
+			}
+
+			if (PathItems[c]->next->straightConnection[toPoint] != NULL && PathItems[c]->next->divergingConnection[toPoint] == NULL) {
+				switchCommand += StringUtils::format("%s{\"cell\":{\"x\":%d,\"y\":%d},\"point\":%d}",
+					switchCommand == "" ? "" : ",", PathItems[c]->next->x, PathItems[c]->next->y, toPoint);
+			}
 		}
+		string command;
 		PathItems.clear();
-		command = "path --add --path=[" + command + "]";
-		Cmd::Exec(command);
+		if (pathCommand != "") {
+			command = "path --add --path=[" + pathCommand + "]";
+			Cmd::Exec(command);
+		}
+
+		if (switchCommand != "") {
+			command = "path --add --switch=[" + switchCommand + "]";
+			Cmd::Exec(command);
+		}
+
 		for (int x = 0; x < (int)size.width; x++){
 			for (int y = 0; y < (int)size.height; y++){
 				Graph[x][y].isArea = false;

@@ -4,20 +4,18 @@ USING_NS_CC;
 
 Scene* GameMapScene::createScene()
 {
+	//int d = 10 * Field::getInstance()->scale;
 
-	int d = 10 * Field::getInstance()->scale;
-
-    // 'scene' is an autorelease object
     auto scene = Scene::create();
 
-	auto BackgroundLayer = MapBackgroundLayer::create();
+	auto BackgroundLayer = BackgroundLayer::create();
 	scene->addChild(BackgroundLayer);
 
-    // 'layer' is an autorelease object
-	auto layer = GameMapLayer::create();
-	scene->addChild(layer);
+	auto Maplayer = MapLayer::create();
+	Field::getInstance()->mapLayer = Maplayer;
+	scene->addChild(Maplayer);
 
-	auto TrainsLayer = MapTrainsLayer::create();
+	auto TrainsLayer = TrainsLayer::create();
 	Field::getInstance()->trainsLayer = TrainsLayer;
 	scene->addChild(TrainsLayer);
 

@@ -44,7 +44,8 @@ namespace GameObjects {
 		int scale = 2;
 		ConstructionMode constuctionMode = Rails;
 
-		Layer *trainsLayer;
+		Layer *mapLayer;
+		Layer *trainsLayer;		
 		Layer *menuLayer;
 
 	protected:

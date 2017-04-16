@@ -24,8 +24,7 @@ namespace GameObjects {
 		execMethods["path"] = &Cmd::path;
 		execMethods["semaphore"] = &Cmd::semaphore;
 	}
-
-
+	
 	Cmd::~Cmd()
 	{
 	}
@@ -33,7 +32,7 @@ namespace GameObjects {
 	void Cmd::Exec(string cmdline)
 	{
 		Cmd *inst = Cmd::getInstance();
-
+		
 		CCLOG("> %s", cmdline);
 		
 		Command *cmd = inst->ParseCmd(cmdline);
@@ -96,13 +95,23 @@ namespace GameObjects {
 
 	//execution methods
 	void Cmd::path(map<string, string> opts, vector<string> args){
-		if (opts["add"]==""){			
+		if (opts["add"] == "") {			
 			Field *Game = Field::getInstance();
 			rapidjson::Document jsonDoc;
-			jsonDoc.Parse<kParseDefaultFlags>(opts["path"].c_str());
+			if (opts["path"] != "") {
+				jsonDoc.Parse<kParseDefaultFlags>(opts["path"].c_str());
 
-			for (SizeType i = 0; i < jsonDoc.Size(); i++){
-				Game->cells[jsonDoc[i]["from"]["x"].GetInt()][jsonDoc[i]["from"]["y"].GetInt()].Connect(&Game->cells[jsonDoc[i]["to"]["x"].GetInt()][jsonDoc[i]["to"]["y"].GetInt()], jsonDoc[i]["point"].GetInt());
+				for (SizeType i = 0; i < jsonDoc.Size(); i++){
+					Game->cells[jsonDoc[i]["from"]["x"].GetInt()][jsonDoc[i]["from"]["y"].GetInt()].Connect(&Game->cells[jsonDoc[i]["to"]["x"].GetInt()][jsonDoc[i]["to"]["y"].GetInt()], jsonDoc[i]["point"].GetInt());
+				}
+			}
+
+			if (opts["switch"] != "") {
+				jsonDoc.Parse<kParseDefaultFlags>(opts["switch"].c_str());
+
+				for (SizeType i = 0; i < jsonDoc.Size(); i++) {
+					Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].SetSwitch(jsonDoc[i]["point"].GetInt());
+				}
 			}
 
 			/*
@@ -121,10 +130,21 @@ namespace GameObjects {
 			*/
 		}
 
+		if (opts["remove"] == "") {
+
+		}
+
 	}
 
-	void Cmd::semaphore(map<string, string> opts, vector<string> args){
+	void Cmd::semaphore(map<string, string> opts, vector<string> args) {
+		if (opts["add"] == "") {
+			Field *Game = Field::getInstance();
+			rapidjson::Document jsonDoc;		
+		}
 
+		if (opts["remove"] == "") {
+
+		}
 	}
 	
 }

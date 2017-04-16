@@ -1,9 +1,9 @@
-#include "MapBackgroundLayer.h"
+#include "BackgroundLayer.h"
 
 USING_NS_CC;
 
 // on "init" you need to initialize your instance
-bool MapBackgroundLayer::init()
+bool BackgroundLayer::init()
 {  
     // 1. super init first
     if ( !Layer::init() )

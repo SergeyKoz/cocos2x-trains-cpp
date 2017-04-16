@@ -4,7 +4,7 @@
 
 namespace GameObjects {
 
-	const char Elements::rules[16][24][140] = {
+	/*const char Elements::rules[16][24][140] = {
 		{},
 		{},
 		{},
@@ -57,11 +57,48 @@ namespace GameObjects {
 		{}, //SmallCilcleSect2
 		{} //SmallCilcleSect3
 	};
+	
+	*/
 
 	const ElementOffset Elements::offset[2][16] = {
-		{ { 0, -1, 2 }, { 1, 0, 4 }, { 1, 1, 5 }, { 1, -1, 3 }, { -1, 3, 7 }, { -3, 1, 0 }, { -3, -1, 1 }, { -1, -3, 2 }, { 1, -3, 3 }, { 3, -1, 4 }, { 3, 1, 5 }, { 1, 3, 6 }, { -2, 2, 0 }, { -2, -2, 2 }, { 2, -2, 4 }, { 2, 2, 6 } },
-		{ { 0, 1, 6 }, { -1, 0, 0 }, { -1, -1, 1 }, { -1, 1, 7 }, { 1, -3, 2 }, { 3, -1, 3 }, { 3, 1, 4 }, { 1, 3, 5 }, { -1, 3, 6 }, { -3, 1, 7 }, { -3, -1, 0 }, { -1, -3, 1 }, { 2, -2, 2 }, { 2, 2, 4 }, { -2, 2, 6 }, { -2, -2, 0 } }
+		{ 
+			{ 0, -1, 2, SwitchElement::Vertical0 },
+			{ 1, 0, 4, SwitchElement::Horizontal0 },
+			{ 1, 1, 5, SwitchElement::Item450 },
+			{ 1, -1, 3, SwitchElement::Item1350 },
+			{ -1, 3, 7, SwitchElement::BaseCircleSect00 },
+			{ -3, 1, 0, SwitchElement::BaseCircleSect10 },
+			{ -3, -1, 1, SwitchElement::BaseCircleSect20 },
+			{ -1, -3, 2, SwitchElement::BaseCircleSect30 },
+			{ 1, -3, 3, SwitchElement::BaseCircleSect40 },
+			{ 3, -1, 4, SwitchElement::BaseCircleSect50 },
+			{ 3, 1, 5, SwitchElement::BaseCircleSect60 },
+			{ 1, 3, 6, SwitchElement::BaseCircleSect70 },
+			{ -2, 2, 0, SwitchElement::SmallCilcleSect00 },
+			{ -2, -2, 2, SwitchElement::SmallCilcleSect10 },
+			{ 2, -2, 4, SwitchElement::SmallCilcleSect20 },
+			{ 2, 2, 6, SwitchElement::SmallCilcleSect30 }
+		}, {
+			{ 0, 1, 6, SwitchElement::Vertical1 },
+			{ -1, 0, 0, SwitchElement::Horizontal1 },
+			{ -1, -1, 1, SwitchElement::Item451 },
+			{ -1, 1, 7, SwitchElement::Item1351 },
+			{ 1, -3, 2, SwitchElement::BaseCircleSect01 },
+			{ 3, -1, 3, SwitchElement::BaseCircleSect11 },
+			{ 3, 1, 4, SwitchElement::BaseCircleSect21 },
+			{ 1, 3, 5, SwitchElement::BaseCircleSect31 },
+			{ -1, 3, 6, SwitchElement::BaseCircleSect41 },
+			{ -3, 1, 7, SwitchElement::BaseCircleSect51 },
+			{ -3, -1, 0, SwitchElement::BaseCircleSect61 },
+			{ -1, -3, 1, SwitchElement::BaseCircleSect71 },
+			{ 2, -2, 2, SwitchElement::SmallCilcleSect01 },
+			{ 2, 2, 4, SwitchElement::SmallCilcleSect11 },
+			{ -2, 2, 6, SwitchElement::SmallCilcleSect21 },
+			{ -2, -2, 0, SwitchElement::SmallCilcleSect31 }
+		}
 	};
+
+	const int Elements::second[2] = { 1, 0 };
 	
 	/*Elements *Elements::p_instance = 0;
 
@@ -81,7 +118,7 @@ namespace GameObjects {
 	{
 	}
 
-	Sprite *Elements::GetElement(int x, int y, TrackElement Element){
+	Sprite *Elements::GetTrackElement(int x, int y, TrackElement Element){
 		Sprite *item;
 		Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("rails.png");
 
@@ -170,6 +207,175 @@ namespace GameObjects {
 		return item;
 	}
 
+	Sprite *Elements::GetSwitchElement(int x, int y, SwitchElement Element) {
+		Sprite *item;
+		Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("rails.png");
+		int d = 10 * Field::getInstance()->scale;
+
+		if (Element == Horizontal0) {
+			item = Sprite::createWithTexture(texture, Rect(d, 6.5 * d, 1.5 * d, d));
+			item->setPosition(x * d + 0.75 * d, y * d);
+		}
+
+		if (Element == Horizontal1) {
+			item = Sprite::createWithTexture(texture, Rect(0.5 * d, 6.5 * d, 1.5 * d, d));
+			item->setPosition(x * d - 0.75 * d, y * d);
+		}
+
+		if (Element == Vertical0) {
+			item = Sprite::createWithTexture(texture, Rect(d - 0.5 * d, d + 4 * d, d, 1.5 * d));
+			item->setPosition(x * d, y * d - 0.75 * d);
+		}
+
+		if (Element == Vertical1) {
+			item = Sprite::createWithTexture(texture, Rect(d - 0.5 * d, d + 3.5 * d, d, 1.5 * d));
+			item->setPosition(x * d, y * d + 0.75 * d);
+		}
+
+		if (Element == Item450) {
+			item = Sprite::createWithTexture(texture, Rect(3 * d - 0.25 * d, d + 3.75 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d + 0.5 *  d, y * d + 0.5 * d);
+		}
+
+		if (Element == Item451) {
+			item = Sprite::createWithTexture(texture, Rect(3 * d - 0.25 * d, d + 3.75 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d - 0.5 *  d, y * d - 0.5 * d);
+		}
+
+		if (Element == Item1350) {
+			item = Sprite::createWithTexture(texture, Rect(3 * d - 0.25 * d, 3 * d + 3.75 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d + 0.5 *  d, y * d - 0.5 * d);
+		}
+
+		if (Element == Item1351) {
+			item = Sprite::createWithTexture(texture, Rect(3 * d - 0.5 * d, 3 * d + 3.5 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d - 0.5 *  d, y * d + 0.5 * d);
+		}
+
+		// base circle
+		if (Element == BaseCircleSect00) {
+			item = Sprite::createWithTexture(texture, Rect(5.5 * d, 6.5 * d, d, 1.5 * d));
+			item->setPosition(x * d, y * d + 0.75 * d);
+		}
+
+		if (Element == BaseCircleSect01) {
+			item = Sprite::createWithTexture(texture, Rect(4.75 * d, 4.75 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d + 0.5 * d, y * d - 0.5 * d);
+		}
+
+		if (Element == BaseCircleSect10) {
+			item = Sprite::createWithTexture(texture, Rect(8.75 * d, 4.75 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d - 0.5 * d, y * d + 0.5 * d);
+		}
+
+		if (Element == BaseCircleSect11) {
+			item = Sprite::createWithTexture(texture, Rect(7 * d, 4.5 * d, 1.5 * d, d));
+			item->setPosition(x * d + 0.75 * d, y * d);
+		}
+
+		if (Element == BaseCircleSect20) {
+			item = Sprite::createWithTexture(texture, Rect(8.5 * d, 6.5 * d, 1.5 * d, d));
+			item->setPosition(x * d - 0.75 * d, y * d);
+		}
+
+		if (Element == BaseCircleSect21) {
+			item = Sprite::createWithTexture(texture, Rect(6.75 * d, 6.75 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d + 0.5 * d, y * d + 0.5 * d);
+		}
+
+		if (Element == BaseCircleSect30) {
+			item = Sprite::createWithTexture(texture, Rect(10.75 * d, 4.75 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d - 0.5 * d, y * d - 0.5 * d);
+		}
+
+		if (Element == BaseCircleSect31) {
+			item = Sprite::createWithTexture(texture, Rect(10.5 * d, 6.5 * d, d, 1.5 * d));
+			item->setPosition(x * d, y * d + 0.75 * d);
+		}
+
+		if (Element == BaseCircleSect40) {
+			item = Sprite::createWithTexture(texture, Rect(12.5 * d, 5 * d, d, 1.5 * d));
+			item->setPosition(x * d, y * d - 0.75 * d);
+		}
+
+		if (Element == BaseCircleSect41) {
+			item = Sprite::createWithTexture(texture, Rect(12.75 * d, 6.75 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d - 0.5 * d, y * d + 0.5 * d);
+		}
+
+		if (Element == BaseCircleSect50) {
+			item = Sprite::createWithTexture(texture, Rect(14.75 * d, 4.75 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d + 0.5 * d, y * d - 0.5 * d);
+		}
+
+		if (Element == BaseCircleSect51) {
+			item = Sprite::createWithTexture(texture, Rect(16.5 * d, 5.5 * d, 1.5 * d, d));
+			item->setPosition(x * d - 0.75 * d, y * d);			
+		}
+
+		if (Element == BaseCircleSect60) {
+			item = Sprite::createWithTexture(texture, Rect(15 * d, 7.5 * d, 1.5 * d, d));
+			item->setPosition(x * d + 0.75 * d, y * d);
+		}
+
+		if (Element == BaseCircleSect61) {
+			item = Sprite::createWithTexture(texture, Rect(16.75 * d, 6.75 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d - 0.5 * d, y * d - 0.5 * d);
+		}
+
+		if (Element == BaseCircleSect70) {
+			item = Sprite::createWithTexture(texture, Rect(18.75 * d, 6.75 * d, 1.5 * d, 1.5 * d));
+			item->setPosition(x * d + 0.5 * d, y * d + 0.5 * d);
+		}
+
+		if (Element == BaseCircleSect71) {
+			item = Sprite::createWithTexture(texture, Rect(19.5 * d, 5 * d, d, 1.5 * d));
+			item->setPosition(x * d, y * d - 0.75 * d);
+		}
+
+		// small circle
+		if (Element == SmallCilcleSect00) {
+			item = Sprite::createWithTexture(texture, Rect(22.5 * d, 5.5 * d, d, 1.5 * d));
+			item->setPosition(x * d, y * d + 0.75 * d);
+		}
+
+		if (Element == SmallCilcleSect01) {
+			item = Sprite::createWithTexture(texture, Rect(21 * d, 4.5 * d, 1.5 * d, d));
+			item->setPosition(x * d + 0.75 * d, y * d);
+		}
+
+		if (Element == SmallCilcleSect10) {
+			item = Sprite::createWithTexture(texture, Rect(24.5 * d, 4.5 * d, 1.5 * d, d));
+			item->setPosition(x * d - 0.75 * d, y * d);
+		}
+
+		if (Element == SmallCilcleSect11) {
+			item = Sprite::createWithTexture(texture, Rect(23.5 * d, 5.5 * d, d, 1.5 * d));
+			item->setPosition(x * d, y * d + 0.75 * d);
+		}
+
+		if (Element == SmallCilcleSect20) {
+			item = Sprite::createWithTexture(texture, Rect(26.5 * d, 5 * d, d, 1.5 * d));
+			item->setPosition(x * d, y * d - 0.75 * d);
+		}
+
+		if (Element == SmallCilcleSect21) {
+			item = Sprite::createWithTexture(texture, Rect(27.5 * d, 6.5 * d, 1.5 * d, d));
+			item->setPosition(x * d - 0.75 * d, y * d);
+		}
+
+		if (Element == SmallCilcleSect30) {
+			item = Sprite::createWithTexture(texture, Rect(30 * d, 6.5 * d, 1.5 * d, d));
+			item->setPosition(x * d + 0.75 * d, y * d);
+		}
+
+		if (Element == SmallCilcleSect31) {
+			item = Sprite::createWithTexture(texture, Rect(31.5 * d, 5 * d, d, 1.5 * d));
+			item->setPosition(x * d, y * d - 0.75 * d);
+		}
+		return item;
+	}
+
 	/*void Elements::setRules(int x, int y, TrackElement Element){
 
 		if (Element == BaseCircleSect2) {
@@ -199,7 +405,7 @@ namespace GameObjects {
 							oy = current->y * 20;
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox, oy), Vec2(ox + 2, oy + 2), Color4F::BLACK);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						//0-------------
@@ -207,35 +413,35 @@ namespace GameObjects {
 						if (Debug && rules[Element][iy + 1][ix + 12] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 4, oy - 2), Vec2(ox + 6, oy), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 11, iy + 1, 0, Element, BaseCircleSect1);
 						if (Debug && rules[Element][iy + 1][ix + 11] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 6, oy - 2), Vec2(ox + 8, oy), Color4F::GREEN);							
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 10, iy + 1, 0, Element, Horizontal);
 						if (Debug && rules[Element][iy + 1][ix + 10] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 6, oy), Vec2(ox + 8, oy + 2), Color4F::ORANGE);							
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 9, iy + 1, 0, Element, BaseCircleSect6);
 						if (Debug && rules[Element][iy + 1][ix + 9] == '1'){
 							draw = DrawNode::create();							
 							draw->drawRect(Vec2(ox + 6, oy + 2), Vec2(ox + 8, oy + 4), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 8, iy + 1, 0, Element, SmallCilcleSect3);
 						if (Debug && rules[Element][iy + 1][ix + 8] == '1'){
 							draw = DrawNode::create();							
 							draw->drawRect(Vec2(ox + 4, oy + 2), Vec2(ox + 6, oy + 4), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						//1-------------
@@ -243,19 +449,19 @@ namespace GameObjects {
 						if (Debug && rules[Element][iy][ix + 12] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 6, oy + 4), Vec2(ox + 8, oy + 6), Color4F::BLUE);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 						setRule(current, ix + 11, iy, 1, Element, Item45);
 						if (Debug && rules[Element][iy][ix + 11] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 4, oy + 4), Vec2(ox + 6, oy + 6), Color4F::RED);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 						setRule(current, ix + 10, iy, 1, Element, BaseCircleSect2);
 						if (Debug && rules[Element][iy][ix + 10] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 4, oy + 6), Vec2(ox + 6, oy + 8), Color4F::BLUE);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						//2-------------						
@@ -263,35 +469,35 @@ namespace GameObjects {
 						if (Debug && rules[Element][iy][ix + 8] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 2, oy + 4), Vec2(ox + 4, oy + 6), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 7, iy, 2, Element, BaseCircleSect3);
 						if (Debug && rules[Element][iy][ix + 7] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 2, oy + 6), Vec2(ox + 4, oy + 8), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 6, iy, 2, Element, Vertical);
 						if (Debug && rules[Element][iy][ix + 6] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox, oy + 6), Vec2(ox + 2, oy + 8), Color4F::ORANGE);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 5, iy, 2, Element, BaseCircleSect0);
 						if (Debug && rules[Element][iy][ix + 5] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 2, oy + 6), Vec2(ox, oy + 8), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 4, iy, 2, Element, SmallCilcleSect0);
 						if (Debug && rules[Element][iy][ix + 4] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 2, oy + 4), Vec2(ox, oy + 6), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						//3-------------						
@@ -299,19 +505,19 @@ namespace GameObjects {
 						if (Debug && rules[Element][iy][ix + 2] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 6, oy + 4), Vec2(ox - 4, oy + 6), Color4F::BLUE);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 						setRule(current, ix + 1, iy, 3, Element, Item135);
 						if (Debug && rules[Element][iy][ix + 1] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 4, oy + 4), Vec2(ox - 2, oy + 6), Color4F::RED);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 						setRule(current, ix, iy, 3, Element, BaseCircleSect1);
 						if (Debug && rules[Element][iy][ix] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 4, oy + 6), Vec2(ox - 2, oy + 8), Color4F::BLUE);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						//4-------------
@@ -319,35 +525,35 @@ namespace GameObjects {
 						if (Debug && rules[Element][iy + 1][ix + 4] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 4, oy + 2), Vec2(ox - 2, oy + 4), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 						
 						setRule(current, ix + 3, iy + 1, 4, Element, BaseCircleSect5);
 						if (Debug && rules[Element][iy + 1][ix + 3] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 6, oy + 2), Vec2(ox - 4, oy + 4), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 2, iy + 1, 4, Element, Horizontal);
 						if (Debug && rules[Element][iy + 1][ix + 2] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 6, oy), Vec2(ox - 4, oy + 2), Color4F::ORANGE);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 1, iy + 1, 4, Element, BaseCircleSect2);
 						if (Debug && rules[Element][iy + 1][ix + 1] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 6, oy - 2), Vec2(ox - 4, oy), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix, iy + 1, 4, Element, SmallCilcleSect1);
 						if (Debug && rules[Element][iy + 1][ix] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 4, oy - 2), Vec2(ox - 2, oy), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						//5-------------
@@ -355,21 +561,21 @@ namespace GameObjects {
 						if (Debug && rules[Element][iy + 2][ix] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 6, oy - 4), Vec2(ox - 4, oy - 2), Color4F::BLUE);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 1, iy + 2, 5, Element, Item45);
 						if (Debug && rules[Element][iy + 2][ix + 1] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 4, oy - 4), Vec2(ox - 2, oy - 2), Color4F::RED);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 2, iy + 2, 5, Element, BaseCircleSect7);
 						if (Debug && rules[Element][iy + 2][ix + 2] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 4, oy - 6), Vec2(ox - 2, oy - 4), Color4F::BLUE);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						//6-------------
@@ -377,35 +583,35 @@ namespace GameObjects {
 						if (Debug && rules[Element][iy + 2][ix + 4] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 2, oy - 4), Vec2(ox, oy - 2), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 5, iy + 2, 6, Element, BaseCircleSect7);
 						if (Debug && rules[Element][iy + 2][ix + 5] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox - 2, oy - 6), Vec2(ox, oy - 4), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 6, iy + 2, 6, Element, Vertical);
 						if (Debug && rules[Element][iy + 2][ix + 6] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox, oy - 6), Vec2(ox + 2, oy - 4), Color4F::ORANGE);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 7, iy + 2, 6, Element, BaseCircleSect4);
 						if (Debug && rules[Element][iy + 2][ix + 7] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 2, oy - 6), Vec2(ox + 4, oy - 4), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 8, iy + 2, 6, Element, SmallCilcleSect2);
 						if (Debug && rules[Element][iy + 2][ix + 8] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 2, oy - 4), Vec2(ox + 4, oy - 2), Color4F::GREEN);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						//7-------------
@@ -413,21 +619,21 @@ namespace GameObjects {
 						if (Debug && rules[Element][iy + 2][ix + 10] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 4, oy - 6), Vec2(ox + 6, oy - 4), Color4F::BLUE);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 11, iy + 2, 7, Element, Item135);
 						if (Debug && rules[Element][iy + 2][ix + 11] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 4, oy - 4), Vec2(ox + 6, oy - 2), Color4F::RED);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 
 						setRule(current, ix + 12, iy + 2, 7, Element, BaseCircleSect5);
 						if (Debug && rules[Element][iy + 2][ix + 12] == '1'){
 							draw = DrawNode::create();
 							draw->drawRect(Vec2(ox + 6, oy - 4), Vec2(ox + 8, oy - 2), Color4F::BLUE);
-							Field::getInstance()->trainsLayer->addChild(draw);
+							Field::getInstance()->mapLayer->addChild(draw);
 						}
 					}
 				}

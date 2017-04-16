@@ -3,9 +3,9 @@
 
 #include "cocos2d.h"
 
-#include "MapBackgroundLayer.h"
-#include "MapTrainsLayer.h"
-#include "GameMapLayer.h"
+#include "BackgroundLayer.h"
+#include "TrainsLayer.h"
+#include "MapLayer.h"
 
 class GameMapScene 
 {

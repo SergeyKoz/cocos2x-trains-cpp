@@ -1,7 +1,7 @@
-#include "MapTrainsLayer.h"
+#include "TrainsLayer.h"
 
 // on "init" you need to initialize your instance
-bool MapTrainsLayer::init()
+bool TrainsLayer::init()
 { 
     if ( !Layer::init() )
     {
@@ -12,7 +12,7 @@ bool MapTrainsLayer::init()
     return true;
 }
 
-void MapTrainsLayer::onEnter()
+/*void TrainsLayer::onEnter()
 {
 	Layer::onEnter();
 
@@ -22,16 +22,16 @@ void MapTrainsLayer::onEnter()
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
 
-	listener->onTouchBegan = CC_CALLBACK_2(MapTrainsLayer::onTouchBegan, this);
-	listener->onTouchMoved = CC_CALLBACK_2(MapTrainsLayer::onTouchMoved, this);
-	listener->onTouchEnded = CC_CALLBACK_2(MapTrainsLayer::onTouchEnded, this);
+	listener->onTouchBegan = CC_CALLBACK_2(TrainsLayer::onTouchBegan, this);
+	listener->onTouchMoved = CC_CALLBACK_2(TrainsLayer::onTouchMoved, this);
+	listener->onTouchEnded = CC_CALLBACK_2(TrainsLayer::onTouchEnded, this);
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
 	test();
-}
+}*/
 
-bool MapTrainsLayer::onTouchBegan(Touch* touch, Event* event)
+/*bool TrainsLayer::onTouchBegan(Touch* touch, Event* event)
 {
 	Field *Game = Field::getInstance();
 	
@@ -64,7 +64,7 @@ bool MapTrainsLayer::onTouchBegan(Touch* touch, Event* event)
 	return true;
 }
 
-void MapTrainsLayer::onTouchMoved(Touch* touch, Event* event)
+void TrainsLayer::onTouchMoved(Touch* touch, Event* event)
 {
 	if (startLocation.x != -1 && startLocation.y != -1){
 		Field *Game = Field::getInstance();
@@ -105,7 +105,7 @@ void MapTrainsLayer::onTouchMoved(Touch* touch, Event* event)
 	}
 }
 
-void MapTrainsLayer::onTouchEnded(Touch* touch, Event* event)
+void TrainsLayer::onTouchEnded(Touch* touch, Event* event)
 {
 	Field *Game = Field::getInstance();
 	if (touchMode == BuildRails){
@@ -118,22 +118,22 @@ void MapTrainsLayer::onTouchEnded(Touch* touch, Event* event)
 
 	touchMode = Move;
 	startLocation = { -1, -1 };
-}
+}*/
 
-void MapTrainsLayer::test(){
+/*void TrainsLayer::test(){
 
 	Field *Game = Field::getInstance();
 	int x, y;
 
 	Game->cells[18][15].Connect(&Game->cells[15][14], 1);
 	
-	/*
+	/ *
 	int d = 1;
 	for (int i = 0; i < 1; i++){
 		for (int j = 0; j < 1; j++){
 			x = (j + 1) * 50 - 50;
 			y = (i + 1) * 25 - 25;
 		}
-	}*/
+	}* /
 
-}
+}*/

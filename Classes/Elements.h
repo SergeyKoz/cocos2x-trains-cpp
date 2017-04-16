@@ -7,36 +7,71 @@ USING_NS_CC;
 #include <string>
 using namespace std;
 
-
-
 namespace GameObjects {
 
 	class Cell;
-	
-	struct ElementOffset{
+		
+	enum TrackElement
+	{
+		Vertical = 0,
+		Horizontal = 1,
+		Item45 = 2,
+		Item135 = 3,
+		BaseCircleSect0 = 4,
+		BaseCircleSect1 = 5,
+		BaseCircleSect2 = 6,
+		BaseCircleSect3 = 7,
+		BaseCircleSect4 = 8,
+		BaseCircleSect5 = 9,
+		BaseCircleSect6 = 10,
+		BaseCircleSect7 = 11,
+		SmallCilcleSect0 = 12,
+		SmallCilcleSect1 = 13,
+		SmallCilcleSect2 = 14,
+		SmallCilcleSect3 = 15
+	};
+
+	enum SwitchElement
+	{
+		Vertical0 = 0,
+		Vertical1 = 1,
+		Horizontal0 = 2,
+		Horizontal1 = 3,
+		Item450 = 4,
+		Item451 = 5,
+		Item1350 = 6,
+		Item1351 = 7,
+		BaseCircleSect00 = 8,
+		BaseCircleSect01 = 9,
+		BaseCircleSect10 = 10,
+		BaseCircleSect11 = 11,
+		BaseCircleSect20 = 12,
+		BaseCircleSect21 = 13,
+		BaseCircleSect30 = 14,
+		BaseCircleSect31 = 15,
+		BaseCircleSect40 = 16,
+		BaseCircleSect41 = 17,
+		BaseCircleSect50 = 18,
+		BaseCircleSect51 = 19,
+		BaseCircleSect60 = 20,
+		BaseCircleSect61 = 21,
+		BaseCircleSect70 = 22,
+		BaseCircleSect71 = 23,
+		SmallCilcleSect00 = 24,
+		SmallCilcleSect01 = 25,
+		SmallCilcleSect10 = 26,
+		SmallCilcleSect11 = 27,
+		SmallCilcleSect20 = 28,
+		SmallCilcleSect21 = 29,
+		SmallCilcleSect30 = 30,
+		SmallCilcleSect31 = 31
+	};
+
+	struct ElementOffset {
 		int dx;
 		int dy;
 		int p;
-	};
-	
-	enum TrackElement
-	{
-		Vertical,
-		Horizontal,
-		Item45,
-		Item135,
-		BaseCircleSect0,
-		BaseCircleSect1,
-		BaseCircleSect2,
-		BaseCircleSect3,
-		BaseCircleSect4,
-		BaseCircleSect5,
-		BaseCircleSect6,
-		BaseCircleSect7,
-		SmallCilcleSect0,
-		SmallCilcleSect1,
-		SmallCilcleSect2,
-		SmallCilcleSect3
+		SwitchElement sw;
 	};
 
 	class Elements
@@ -53,11 +88,14 @@ namespace GameObjects {
 		Elements();
 		~Elements();
 
-		static const char rules[16][24][140];
+		//static const char rules[16][24][140];
 		static const ElementOffset offset[2][16];
+		static const int second[2];
 
 		static Elements *getInstance();
-		static Sprite *GetElement(int x, int y, TrackElement Element);
+		static Sprite *GetTrackElement(int x, int y, TrackElement Element);
+		static Sprite *GetSwitchElement(int x, int y, SwitchElement Element);
+		
 
 		//static void setRules(int x, int y, TrackElement Element);
 		//static void setRule(Cell *c, int x, int y, int p, TrackElement e1, TrackElement e2);
