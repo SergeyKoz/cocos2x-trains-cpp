@@ -2,17 +2,18 @@
 #define __GAME_PATH_H__
 
 #include <vector>
+#include "Field.h"
 
 using namespace std;
 
 namespace GameObjects {
 
-	struct MapPoint{
+	/*struct MapPoint {
 		int x;
 		int y;
-	};
+	};*/
 
-	struct MapSize{
+	struct MapSize {
 		int width;
 		int height;
 	};

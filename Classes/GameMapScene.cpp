@@ -11,9 +11,13 @@ Scene* GameMapScene::createScene()
 	auto BackgroundLayer = BackgroundLayer::create();
 	scene->addChild(BackgroundLayer);
 
-	auto Maplayer = MapLayer::create();
-	Field::getInstance()->mapLayer = Maplayer;
-	scene->addChild(Maplayer);
+	auto MenuLayer = MenuLayer::create();
+	Field::getInstance()->menuLayer = MenuLayer;
+	scene->addChild(MenuLayer, ZIndexMenu);
+
+	auto MapLayer = MapLayer::create();
+	Field::getInstance()->mapLayer = MapLayer;
+	scene->addChild(MapLayer);
 
 	auto TrainsLayer = TrainsLayer::create();
 	Field::getInstance()->trainsLayer = TrainsLayer;

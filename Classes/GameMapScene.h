@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 
 #include "BackgroundLayer.h"
+#include "MenuLayer.h"
 #include "TrainsLayer.h"
 #include "MapLayer.h"
 

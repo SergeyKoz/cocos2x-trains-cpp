@@ -194,7 +194,7 @@ namespace GameObjects {
 		entry->Enter = Enter;
 
 		if (Enter == 0){
-			image = Elements::GetTrackElement(cell->x, cell->y, Element);
+			image = Elements::GetTrackElement({ cell->x, cell->y }, Element);
 			Field::getInstance()->mapLayer->addChild(image, ZIndexRails);
 			entry->Resource = image;
 
@@ -212,15 +212,7 @@ namespace GameObjects {
 
 	void Cell::SetSwitch(int Point)
 	{
-
 		this->switches[Point] = new Switch(this, Point);
-
-		/*
-		if self.Switch == nil then
-			self.Switch = {}
-		end
-		self.Switch[Point] = Switch:new(self, Point)
-		*/
 	}
 	
 	bool Cell::isAllow(int Point, TrackElement Element){

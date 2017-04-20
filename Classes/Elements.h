@@ -5,11 +5,14 @@
 USING_NS_CC;
 
 #include <string>
+
 using namespace std;
 
 namespace GameObjects {
 
 	class Cell;
+
+	struct MapPoint;
 		
 	enum TrackElement
 	{
@@ -67,6 +70,49 @@ namespace GameObjects {
 		SmallCilcleSect31 = 31
 	};
 
+	enum MenuElement {
+		StartButton = 0,
+		FastButton = 1,
+		PauseButton = 2,
+		StopButton = 3,
+		RailsButton = 4,
+		RailsButtonChecked = 5,
+		SemaforesButton = 6,
+		SemaforesButtonChecked = 7,
+		ZoomInButton = 8,
+		ZoomOutButton = 9,
+		UndoButton = 10,
+		RedoButton = 11,
+		TasksButton = 12
+
+		/*StartButtonEnabled = 0,
+		StartButtonDisabled = 1,
+		FastButtonEnabled = 2,
+		FastButtonDisabled = 3,
+		PauseButtonEnabled = 4,
+		PauseButtonDisabled = 5,
+		StopButtonEnabled = 6,
+		StopButtonDisabled = 7,
+		RailsButtonEnabled = 8,
+		RailsButtonDisabled = 9,
+		RailsButtonCheckedEnabled = 10,
+		RailsButtonCheckedDisabled = 11,
+		SemaforesButtonEnabled = 12,
+		SemaforesButtonDisabled = 13,
+		SemaforesButtonCheckedEnabled = 14,
+		SemaforesButtonCheckedDisabled = 15,
+		ZoomInButtonEnabled = 16,
+		ZoomInButtonDisabled = 17,
+		ZoomOutButtonEnabled = 18,
+		ZoomOutButtonDisabled = 19,
+		UndoButtonEnabled = 20,
+		UndoButtonDisabled = 21,
+		RedoButtonEnabled = 22,
+		RedoButtonDisabled = 23,
+		TasksButtonEnabled = 24,
+		TasksButtonDisabled = 25*/
+	};
+
 	struct ElementOffset {
 		int dx;
 		int dy;
@@ -93,8 +139,10 @@ namespace GameObjects {
 		static const int second[2];
 
 		static Elements *getInstance();
-		static Sprite *GetTrackElement(int x, int y, TrackElement Element);
-		static Sprite *GetSwitchElement(int x, int y, SwitchElement Element);
+		static Sprite *GetTrackElement(MapPoint Point, TrackElement Element);
+		static Sprite *GetSwitchElement(MapPoint Point, SwitchElement Element);
+
+		static MenuItemImage *GetMenuElement(MenuElement Element);
 		
 
 		//static void setRules(int x, int y, TrackElement Element);

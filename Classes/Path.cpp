@@ -160,10 +160,10 @@ namespace GameObjects {
 						item = new PathItem;
 						item->elementType = connect->element;
 						if (connect->enter == 0) {
-							item->element = Elements::GetTrackElement(c.x, c.y, connect->element);
+							item->element = Elements::GetTrackElement(c, connect->element);
 						}
 						else {
-							item->element = Elements::GetTrackElement(n.x, n.y, connect->element);
+							item->element = Elements::GetTrackElement(n, connect->element);
 						}
 						item->enter = connect->enter;
 						item->next = next;

@@ -11,10 +11,7 @@ public:
     virtual bool init();
 	virtual void onEnter();
     
-    // a selector callback
-    void menuCloseCallback(cocos2d::Ref* pSender);
-
-	bool onTouchBegan(Touch* touch, Event* event);
+ 	bool onTouchBegan(Touch* touch, Event* event);
 	void onTouchMoved(Touch* touch, Event* event);
 	void onTouchEnded(Touch* touch, Event* event);
 

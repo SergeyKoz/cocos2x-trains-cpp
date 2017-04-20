@@ -6,6 +6,11 @@
 
 namespace GameObjects {
 
+	struct MapPoint {
+		int x;
+		int y;
+	};
+
 	enum ConstructionMode
 	{
 		Rails,
@@ -30,7 +35,8 @@ namespace GameObjects {
 		ZIndexRails = 1,
 		ZIndexSwitches = 2,
 		ZIndexTrains = 3,
-		ZIndexSemafores = 4
+		ZIndexSemafores = 4,
+		ZIndexMenu = 5
 	};
 	
 	class Field
@@ -46,7 +52,7 @@ namespace GameObjects {
 
 		Layer *mapLayer;
 		Layer *trainsLayer;		
-		Layer *menuLayer;
+		Layer *menuLayer;		
 
 	protected:
 		Field();

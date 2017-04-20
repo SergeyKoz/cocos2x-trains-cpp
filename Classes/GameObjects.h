@@ -8,5 +8,6 @@
 #include "Switch.h"
 #include "Cmd.h"
 #include "Command.h"
+#include "MenuItem.h"
 
 #endif // __GAMEOBJECTS_H__
