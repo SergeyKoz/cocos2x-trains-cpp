@@ -1,9 +1,10 @@
 #include "Elements.h"
-//#include "Field.h"
+#include "Field.h"
 #include "Path.h"
 
 namespace GameObjects {
 
+	
 	/*const char Elements::rules[16][24][140] = {
 		{},
 		{},
@@ -118,7 +119,7 @@ namespace GameObjects {
 	{
 	}
 
-	Sprite *Elements::GetTrackElement(MapPoint Point, TrackElement Element){
+	Sprite *Elements::GetTrackElement(MapPoint Point, TrackElement Element) {
 		Sprite *item;
 		Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("rails.png");
 
@@ -447,6 +448,67 @@ namespace GameObjects {
 			item->setNormalImage(Sprite::createWithTexture(texture, Rect(21 * d, 10 * d, 2 * d, 2 * d)));
 			item->setDisabledImage(Sprite::createWithTexture(texture, Rect(21 * d, 12 * d, 2 * d, 2 * d)));
 		}
+		return item;
+	}
+
+	Sprite *Elements::GetSemaphoreElement(MapPoint Point, SemaphorElement Element) {
+		Sprite *item;
+		Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("rails.png");
+
+		int d = 10 * Field::getInstance()->scale;
+		int k = Field::getInstance()->trafficSide == LeftHandTraffic ? -1 : 1;
+	
+		if (Element == SemaphorGo0 || Element == SemaphorGo1 || Element == SemaphorGo2 || Element == SemaphorGo3 || Element == SemaphorGo4 || Element == SemaphorGo5 || Element == SemaphorGo6 || Element == SemaphorGo7) {
+			item = Sprite::createWithTexture(texture, Rect(0.6 * d, 14.5 * d, 1 * d, 1 * d));
+		}
+
+		if (Element == SemaphorStop0 || Element == SemaphorStop1 || Element == SemaphorStop2 || Element == SemaphorStop3 || Element == SemaphorStop4 || Element == SemaphorStop5 || Element == SemaphorStop6 || Element == SemaphorStop7) {
+			item = Sprite::createWithTexture(texture, Rect(1.6 * d, 14.5 * d, 1 * d, 1 * d));
+		}
+
+		if (Element == SemaphorReverse0 || Element == SemaphorReverse1 || Element == SemaphorReverse2 || Element == SemaphorReverse3 || Element == SemaphorReverse4 || Element == SemaphorReverse5 || Element == SemaphorReverse6 || Element == SemaphorReverse7) {
+			item = Sprite::createWithTexture(texture, Rect(2.6 * d, 14.5 * d, 1 * d, 1 * d));
+		}
+
+		if (Element == SemaphorGo0 || Element == SemaphorStop0 || Element == SemaphorReverse0) {
+			item->setPosition(Point.x * d, Point.y * d + k * 0.5 * d);
+		}
+
+		if (Element == SemaphorGo1 || Element == SemaphorStop1 || Element == SemaphorReverse1) {
+			item->setPosition(Point.x * d - k * 0.3525 * d, Point.y * d + k * 0.3525 * d);
+			item->setRotation(315);
+		}
+
+		if (Element == SemaphorGo2 || Element == SemaphorStop2 || Element == SemaphorReverse2) {
+			item->setPosition(Point.x * d - k * 0.5 * d, Point.y * d);
+			item->setRotation(270);
+		}
+
+		if (Element == SemaphorGo3 || Element == SemaphorStop3 || Element == SemaphorReverse3) {
+			item->setPosition(Point.x * d - k * 0.3525 * d, Point.y * d - k * 0.3525 * d);
+			item->setRotation(225);
+		}
+
+		if (Element == SemaphorGo4 || Element == SemaphorStop4 || Element == SemaphorReverse4) {
+			item->setPosition(Point.x * d, Point.y * d - k * 0.5 * d);
+			item->setRotation(180);
+		}
+
+		if (Element == SemaphorGo5 || Element == SemaphorStop5 || Element == SemaphorReverse5) {
+			item->setPosition(Point.x * d + k * 0.3525 * d, Point.y * d - k * 0.3525 * d);
+			item->setRotation(135);
+		}
+
+		if (Element == SemaphorGo6 || Element == SemaphorStop6 || Element == SemaphorReverse6) {
+			item->setPosition(Point.x * d + k * 0.5 * d, Point.y * d);
+			item->setRotation(90);
+		}
+
+		if (Element == SemaphorGo7 || Element == SemaphorStop7 || Element == SemaphorReverse7) {
+			item->setPosition(Point.x * d + k * 0.3525 * d, Point.y * d + k * 0.3525 * d);
+			item->setRotation(45);
+		}
+		
 		return item;
 	}
 

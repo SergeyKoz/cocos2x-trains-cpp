@@ -67,8 +67,6 @@ void MapLayer::onEnter()
 {
 	Layer::onEnter();
 
-	//Path* PathFinder = new Path();
-
 	// Register Touch Event
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
@@ -87,28 +85,30 @@ bool MapLayer::onTouchBegan(Touch* touch, Event* event)
 	Field *Game = Field::getInstance();
 
 	startLocation = touch->getLocation();
-	Vec2 LayerPosition = this->getPosition();
+	Vec2 pos = this->getPosition();
 
-	int cx = LayerPosition.x;
-	int cy = LayerPosition.y;
+	if (Game->constuctionMode == Rails || Game->constuctionMode == Semafores) {
+		MapPoint c = {
+			(int)round((-pos.x + startLocation.x) / (Game->scale * 10)),
+			(int)round((-pos.y + startLocation.y) / (Game->scale * 10))
+		};
 
-	if (Game->constuctionMode == Rails) {
-
-		cx = round((-cx + startLocation.x) / (Game->scale * 10));
-		cy = round((-cy + startLocation.y) / (Game->scale * 10));
-
-		//MapPoint Point = { cx, cy };	
-		//if (PathFinder.Init(Point)) {
-		if (PathFinder.Init({ cx, cy })) {
-			touchMode = BuildRails;
+		if (Game->constuctionMode == Rails) {
+			if (path.Init(c)) {
+				touchMode = BuildRails;
+			}
 		}
 
-		//touchBeginPoint = { touch->getLocation().x, touch->getLocation().y };
-		//Vec2 touchBeginPoint = touch->getLocation();
+		if (Game->constuctionMode == Semafores) {			
+			MapIndent d = {
+				c.x - ((-pos.x + startLocation.x) / (Game->scale * 10)),
+				c.y - ((-pos.y + startLocation.y) / (Game->scale * 10))
+			};
 
-	}
-
-	if (Game->constuctionMode == Semafores) {
+			if (semaphore.Show(c, d)) {
+				touchMode = SemaphoreShow;
+			}
+		}
 
 	}
 
@@ -120,39 +120,36 @@ void MapLayer::onTouchMoved(Touch* touch, Event* event)
 	if (startLocation.x != -1 && startLocation.y != -1) {
 		Field *Game = Field::getInstance();
 
-		Vec2 location = touch->getLocation();
-		Vec2 LayerPosition = this->getPosition();
+		Vec2 loc = touch->getLocation();
+		Vec2 pos = this->getPosition();
 
-		float cx = LayerPosition.x;
-		float cy = LayerPosition.y;
-
-		float px, py;
-
+		Vec2 p;
 		if (touchMode == Move) {
-			px = cx + location.x - startLocation.x;
-			py = cy + location.y - startLocation.y;
-
-			px = px < 0 ? px : 0;
-			py = py < 0 ? py : 0;
-			this->setPosition({ px, py });
+			p = { pos.x + loc.x - startLocation.x, pos.y + loc.y - startLocation.y };
+			p.x = p.x < 0 ? p.x : 0;
+			p.y = p.y < 0 ? p.y : 0;
+			this->setPosition(p);
 		}
 
-		//Vec2 touchBeginPoint = touch->getLocation();
-		//touchBeginPoint = { touch->getLocation().x, touch->getLocation().y };
-
 		if (touchMode == BuildRails || touchMode == SemaphoreShow) {
-			px = round((-cx + location.x) / (Game->scale * 10));
-			py = round((-cy + location.y) / (Game->scale * 10));
-
-			//MapPoint Point = {px, py};
-
+			MapPoint p = { (int)round((-pos.x + loc.x) / (Game->scale * 10)), (int)round((-pos.y + loc.y) / (Game->scale * 10)) };
 			if (touchMode == BuildRails) {
-				//PathFinder.Show(Point);
-				PathFinder.Show({ (int)px, (int)py });
+				path.Show(p);
+			}
+
+			if (touchMode == SemaphoreShow) {
+				MapIndent d = {
+					p.x - ((-pos.x + loc.x) / (Game->scale * 10)),
+					p.y - ((-pos.y + loc.y) / (Game->scale * 10))
+				};
+
+				if (!semaphore.Show(p, d)) {
+					semaphore.Hide();
+				}
 			}
 		}
 
-		startLocation = location;
+		startLocation = loc;
 	}
 }
 
@@ -160,11 +157,11 @@ void MapLayer::onTouchEnded(Touch* touch, Event* event)
 {
 	Field *Game = Field::getInstance();
 	if (touchMode == BuildRails) {
-		PathFinder.Set();
+		path.Set();
 	}
 
 	if (touchMode == SemaphoreShow) {
-
+		semaphore.Set();
 	}
 
 	touchMode = Move;
@@ -176,7 +173,9 @@ void MapLayer::test() {
 	Field *Game = Field::getInstance();
 	int x, y;
 
-	Game->cells[18][15].Connect(&Game->cells[15][14], 1);
+	//Game->cells[18][15].Connect(&Game->cells[15][14], 1);
+	string command = "path --add --path=[{\"from\":{\"x\":18,\"y\":15},\"to\":{\"x\":15,\"y\":14},\"point\":1}]";
+	Cmd::Exec(command);
 
 	/*
 	int d = 1;

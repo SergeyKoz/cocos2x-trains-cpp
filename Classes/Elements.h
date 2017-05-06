@@ -12,7 +12,15 @@ namespace GameObjects {
 
 	class Cell;
 
-	struct MapPoint;
+	struct MapPoint {
+		int x;
+		int y;
+	};
+
+	struct MapIndent {
+		float dx;
+		float dy;
+	};
 		
 	enum TrackElement
 	{
@@ -84,33 +92,35 @@ namespace GameObjects {
 		UndoButton = 10,
 		RedoButton = 11,
 		TasksButton = 12
+	};
 
-		/*StartButtonEnabled = 0,
-		StartButtonDisabled = 1,
-		FastButtonEnabled = 2,
-		FastButtonDisabled = 3,
-		PauseButtonEnabled = 4,
-		PauseButtonDisabled = 5,
-		StopButtonEnabled = 6,
-		StopButtonDisabled = 7,
-		RailsButtonEnabled = 8,
-		RailsButtonDisabled = 9,
-		RailsButtonCheckedEnabled = 10,
-		RailsButtonCheckedDisabled = 11,
-		SemaforesButtonEnabled = 12,
-		SemaforesButtonDisabled = 13,
-		SemaforesButtonCheckedEnabled = 14,
-		SemaforesButtonCheckedDisabled = 15,
-		ZoomInButtonEnabled = 16,
-		ZoomInButtonDisabled = 17,
-		ZoomOutButtonEnabled = 18,
-		ZoomOutButtonDisabled = 19,
-		UndoButtonEnabled = 20,
-		UndoButtonDisabled = 21,
-		RedoButtonEnabled = 22,
-		RedoButtonDisabled = 23,
-		TasksButtonEnabled = 24,
-		TasksButtonDisabled = 25*/
+	enum SemaphorElement {
+		SemaphorNone = -1,
+		SemaphorGo0 = 0,
+		SemaphorGo1 = 1,
+		SemaphorGo2 = 2,
+		SemaphorGo3 = 3,
+		SemaphorGo4 = 4,
+		SemaphorGo5 = 5,
+		SemaphorGo6 = 6,
+		SemaphorGo7 = 7,
+		SemaphorStop0 = 8,
+		SemaphorStop1 = 9,
+		SemaphorStop2 = 10,
+		SemaphorStop3 = 11,
+		SemaphorStop4 = 12,
+		SemaphorStop5 = 13,
+		SemaphorStop6 = 14,
+		SemaphorStop7 = 15,
+		SemaphorStop8 = 16,
+		SemaphorReverse0 = 17,
+		SemaphorReverse1 = 18,
+		SemaphorReverse2 = 19,
+		SemaphorReverse3 = 20,
+		SemaphorReverse4 = 21,
+		SemaphorReverse5 = 22,
+		SemaphorReverse6 = 23,
+		SemaphorReverse7 = 24
 	};
 
 	struct ElementOffset {
@@ -141,6 +151,7 @@ namespace GameObjects {
 		static Elements *getInstance();
 		static Sprite *GetTrackElement(MapPoint Point, TrackElement Element);
 		static Sprite *GetSwitchElement(MapPoint Point, SwitchElement Element);
+		static Sprite *GetSemaphoreElement(MapPoint Point, SemaphorElement Element);
 
 		static MenuItemImage *GetMenuElement(MenuElement Element);
 		

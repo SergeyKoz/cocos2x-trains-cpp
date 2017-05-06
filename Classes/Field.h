@@ -6,11 +6,6 @@
 
 namespace GameObjects {
 
-	struct MapPoint {
-		int x;
-		int y;
-	};
-
 	enum ConstructionMode
 	{
 		Rails,
@@ -35,7 +30,7 @@ namespace GameObjects {
 		ZIndexRails = 1,
 		ZIndexSwitches = 2,
 		ZIndexTrains = 3,
-		ZIndexSemafores = 4,
+		ZIndexSemaphores = 4,
 		ZIndexMenu = 5
 	};
 	
@@ -49,6 +44,7 @@ namespace GameObjects {
 		Cell cells[SizeX][SizeY];
 		int scale = 2;
 		ConstructionMode constuctionMode = Rails;
+		TrafficSide trafficSide = RightHandTraffic; //LeftHandTraffic;
 
 		Layer *mapLayer;
 		Layer *trainsLayer;		

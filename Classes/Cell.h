@@ -3,6 +3,7 @@
 
 #include "Elements.h"
 #include "Switch.h"
+#include "Semaphore.h"
 //#include <iostream>
 
 namespace GameObjects {
@@ -42,6 +43,7 @@ namespace GameObjects {
 		Entry *straightConnection[8];
 		Entry *divergingConnection[8];
 		Switch *switches[8];
+		Semaphore *semaphores[8];
 
 		//bool allowSwitch[8];
 		//bool allowEnter[8][16];
@@ -50,6 +52,7 @@ namespace GameObjects {
 
 		void Connect(Cell *cell, int Point, bool Back = false);
 		void SetSwitch(int Point);
+		void SetSemaphore(int Point);
 		void SetEntry(Cell *cell, int FromPoint, int ToPoint, Configuration Configuration, TrackElement Element, int Enter);
 		static ConnectionConfig *GetConnectConfig(int dx, int dy, int Point);
 		bool isAllow(int Point, TrackElement Element);

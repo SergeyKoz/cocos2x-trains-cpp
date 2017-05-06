@@ -214,6 +214,11 @@ namespace GameObjects {
 	{
 		this->switches[Point] = new Switch(this, Point);
 	}
+
+	void Cell::SetSemaphore(int Point)
+	{
+		this->semaphores[Point] = new Semaphore(this, Point);
+	}
 	
 	bool Cell::isAllow(int Point, TrackElement Element){
 		// TODO: the check logic point

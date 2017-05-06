@@ -106,15 +106,6 @@ namespace GameObjects {
 			this->positions[SwitchPosition::Diverging]->element->setVisible(false);
 			this->positions[SwitchPosition::Straight]->element->setVisible(true);
 			this->Position = SwitchPosition::Straight;
-		}
-
-		/*
-		if #self.Trains > 0 then
-			for c = 1, #self.Trains do
-				self.Trains[c]:SpeedProgramReset()          
-			end
-			self.Trains = {}
-		end
-		*/		
+		}		
 	}
 }

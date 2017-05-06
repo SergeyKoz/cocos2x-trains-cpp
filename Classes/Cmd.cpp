@@ -138,8 +138,9 @@ namespace GameObjects {
 
 	void Cmd::semaphore(map<string, string> opts, vector<string> args) {
 		if (opts["add"] == "") {
-			Field *Game = Field::getInstance();
-			rapidjson::Document jsonDoc;		
+			rapidjson::Document jsonDoc;
+			jsonDoc.Parse<kParseDefaultFlags>(opts["cell"].c_str());
+			Field::getInstance()->cells[jsonDoc["x"].GetInt()][jsonDoc["y"].GetInt()].SetSemaphore(std::stoi(opts["point"]));
 		}
 
 		if (opts["remove"] == "") {

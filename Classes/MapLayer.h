@@ -21,7 +21,8 @@ public:
 	TouchMode touchMode = Move;
 	Vec2 startLocation = { -1, -1 };
 
-	Path PathFinder;
+	Path path;
+	Semaphore semaphore;
 
 	void test();
 };
