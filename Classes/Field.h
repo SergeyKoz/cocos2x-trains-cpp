@@ -3,6 +3,7 @@
 
 #include "Elements.h"
 #include "Cell.h"
+#include "Train.h"
 
 namespace GameObjects {
 
@@ -48,7 +49,11 @@ namespace GameObjects {
 
 		Layer *mapLayer;
 		Layer *trainsLayer;		
-		Layer *menuLayer;		
+		Layer *menuLayer;
+
+		void AddTrain(Train *train);
+
+		vector<Train> trains;
 
 	protected:
 		Field();

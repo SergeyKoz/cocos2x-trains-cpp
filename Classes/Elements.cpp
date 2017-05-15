@@ -512,6 +512,32 @@ namespace GameObjects {
 		return item;
 	}
 
+	Sprite *Elements::GetCarElement(CarElement Element) {
+		Sprite *item;
+		Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("rails.png");
+		int d = 10 * Field::getInstance()->scale;
+		
+		if (Element == Locomotive) {
+			item = Sprite::createWithTexture(texture, Rect(0.5 * d, 8.5 * d, 3 * d, 1 * d));
+		}
+
+		if (Element == TankCar) {
+			item = Sprite::createWithTexture(texture, Rect(3.5 * d, 8.5 * d, 3 * d, 1 * d));
+		}
+
+		if (Element == Switcher) {
+			item = Sprite::createWithTexture(texture, Rect(6.8 * d, 8.5 * d, 2 * d, 1 * d));
+		}
+
+		if (Element == PassengerCar) {		
+		}
+
+		if (Element == FreightCar) {
+		}
+
+		return item;
+	}
+
 	/*void Elements::setRules(int x, int y, TrackElement Element){
 
 		if (Element == BaseCircleSect2) {

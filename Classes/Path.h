@@ -50,6 +50,11 @@ namespace GameObjects {
 		int point;
 	};
 
+	struct TrackItem {
+		int SpeedLimit;
+		vector<Vec2> items;
+	};
+	
 	class Path
 	{
 
@@ -58,6 +63,7 @@ namespace GameObjects {
 		~Path();
 
 		static const MapPoint closer[20];
+		static const TrackItem track[16];
 		Area Area;		
 		GraphItem **Graph;
 		vector<GraphItem*> GraphItems;
@@ -77,7 +83,8 @@ namespace GameObjects {
 
 		bool inWindow(MapPoint Point);
 
-		
+		static Vec2 GetPosition(TrackPosition position);
+		static TrackPosition GetPosition(TrackPosition position, int increase);
 
 		/*		
 		GetPosition(Position, Increase, EstimateObjects)

@@ -10,5 +10,7 @@
 #include "Cmd.h"
 #include "Command.h"
 #include "MenuItem.h"
+#include "Train.h"
+#include "Car.h"
 
 #endif // __GAMEOBJECTS_H__

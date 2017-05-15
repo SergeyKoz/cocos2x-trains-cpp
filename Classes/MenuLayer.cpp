@@ -33,6 +33,14 @@ bool MenuLayer::init()
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu);
 
+	auto label = Label::createWithTTF("My Trains", "fonts/Marker Felt.ttf", 16);
+	// position the label on the center of the screen
+	/*label->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - label->getContentSize().height));*/
+	label->setPosition(Vec2(origin.x + label->getContentSize().width, origin.y + label->getContentSize().height));
+	label->setColor(Color3B::BLACK);
+	// add the label as a child to this layer
+	this->addChild(label, ZIndexMenu);
+
 	return true;
 }
 

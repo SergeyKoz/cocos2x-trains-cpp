@@ -21,6 +21,12 @@ namespace GameObjects {
 		float dx;
 		float dy;
 	};
+
+	struct TrackPosition {
+		Cell *cell;
+		int point;
+		int indent;
+	};
 		
 	enum TrackElement
 	{
@@ -123,6 +129,14 @@ namespace GameObjects {
 		SemaphorReverse7 = 24
 	};
 
+	enum CarElement {
+		Locomotive = 1,
+		TankCar = 2,
+		PassengerCar = 3,
+		FreightCar = 4,
+		Switcher = 5,
+	};
+
 	struct ElementOffset {
 		int dx;
 		int dy;
@@ -131,15 +145,7 @@ namespace GameObjects {
 	};
 
 	class Elements
-	{
-	/*protected:
-		Elements();
-		Elements(const Elements&);
-		Elements &operator=(Elements&);
-		~Elements();
-	private:
-		static Elements *p_instance;*/
-		
+	{	
 	public:
 		Elements();
 		~Elements();
@@ -152,13 +158,11 @@ namespace GameObjects {
 		static Sprite *GetTrackElement(MapPoint Point, TrackElement Element);
 		static Sprite *GetSwitchElement(MapPoint Point, SwitchElement Element);
 		static Sprite *GetSemaphoreElement(MapPoint Point, SemaphorElement Element);
-
+		static Sprite *GetCarElement(CarElement Element);
 		static MenuItemImage *GetMenuElement(MenuElement Element);
 		
-
 		//static void setRules(int x, int y, TrackElement Element);
 		//static void setRule(Cell *c, int x, int y, int p, TrackElement e1, TrackElement e2);
 	};
 }
-
 #endif /*__GAME_ELEMENTS_H__*/

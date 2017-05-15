@@ -17,18 +17,18 @@ namespace GameObjects {
 		for (int x = 0; x < SizeX; x++){
 			for (int y = 0; y < SizeY; y++){
 				cells[x][y].x = x;
-				cells[x][y].y = y;
-				for (int i = 0; i < 8; i++) {
-					cells[x][y].switches[i] = 0;
-					cells[x][y].semaphores[i] = 0;
-				}
+				cells[x][y].y = y;				
 			}
 		}
 	}
 
-
 	Field::~Field()
 	{
+	}
+
+	void Field::AddTrain(Train *train)
+	{
+		this->trains.insert(trains.end(), *train);
 	}
 	
 }

@@ -54,6 +54,7 @@ namespace GameObjects {
 		void SetSwitch(int Point);
 		void SetSemaphore(int Point);
 		void SetEntry(Cell *cell, int FromPoint, int ToPoint, Configuration Configuration, TrackElement Element, int Enter);
+		Entry *getEntry(int Point);
 		static ConnectionConfig *GetConnectConfig(int dx, int dy, int Point);
 		bool isAllow(int Point, TrackElement Element);
 

@@ -9,6 +9,8 @@ namespace GameObjects {
 		for (int i = 0; i < 8; i++){
 			straightConnection[i] = 0;
 			divergingConnection[i] = 0;
+			switches[i] = 0;
+			semaphores[i] = 0;
 
 			/*allowSwitch[i] = true;
 			allowEnter[i][Vertical] = true;
@@ -208,6 +210,10 @@ namespace GameObjects {
 		{
 			divergingConnection[ToPoint] = entry;
 		}
+	}
+
+	Entry *Cell::getEntry(int Point) {		
+		return this->switches[Point] == 0 || (this->switches[Point] > 0 && this->switches[Point]->Position == SwitchPosition::Straight) ? this->straightConnection[Point] : this->divergingConnection[Point];
 	}
 
 	void Cell::SetSwitch(int Point)
