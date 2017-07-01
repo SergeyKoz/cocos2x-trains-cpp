@@ -7,19 +7,12 @@ bool TrainsLayer::init()
     {
         return false;
     }
-		/*
-		for c = 1, #Game.Trains do
-            Game.Trains[c]:Init()
-        end
-		*/
 
-	Director::getInstance()->getScheduler()->schedule(CC_CALLBACK_1(TrainsLayer::trainsMoveCallback, this), this, 0.05f, false, "trainsMoving");
+	Director::getInstance()->getScheduler()->schedule(CC_CALLBACK_1(TrainsLayer::trainsMoveCallback, this), this, 0.25f, false, "trainsMoving");
 
 	/*Director::getInstance()->getScheduler()->schedule([&](float dt) {
 		log("scheduled");
 	}, this, 0.5f, false, "trainsMowing");*/
-
-
     return true;
 }
 
@@ -28,15 +21,18 @@ void TrainsLayer::onEnter()
 	Layer::onEnter();
 
 	Field *Game = Field::getInstance();
+
+	for (int i = 0; i < Game->trains.size(); i++) {
+		Game->trains[i].init();
+	}
 }
 
 void TrainsLayer::trainsMoveCallback(float dt)
 {
-
 	Field *Game = Field::getInstance();
 
 	for (int i = 0; i < Game->trains.size(); i++) {
-		Game->trains[i].Move();
+		Game->trains[i].move();
 	}
 	
 	/*

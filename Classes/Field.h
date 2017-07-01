@@ -32,7 +32,8 @@ namespace GameObjects {
 		ZIndexSwitches = 2,
 		ZIndexTrains = 3,
 		ZIndexSemaphores = 4,
-		ZIndexMenu = 5
+		ZIndexMenu = 5,
+		ZIndexTrainsLabel = 6,
 	};
 	
 	class Field

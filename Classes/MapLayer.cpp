@@ -151,14 +151,23 @@ void MapLayer::test() {
 	Cmd::Exec(command);
 	command = "path --add --path=[{\"from\":{\"x\":46,\"y\":2},\"to\":{\"x\":48,\"y\":4},\"point\":6}]";
 	Cmd::Exec(command);
-
+	command = "path --add --path=[{\"from\":{\"x\":48,\"y\":13},\"to\":{\"x\":49,\"y\":16},\"point\":5}]";
+	Cmd::Exec(command);
+	command = "path --add --switch=[{\"cell\":{\"x\":48,\"y\":13},\"point\":2}]";
+	Cmd::Exec(command);
+	command = "path --add --path=[{\"from\":{\"x\":48,\"y\":13},\"to\":{\"x\":49,\"y\":10},\"point\":3}]";
+	Cmd::Exec(command);
+	command = "path --add --switch=[{\"cell\":{\"x\":48,\"y\":13},\"point\":6}]";
+	Cmd::Exec(command);
+	
 	Train *train = new Train();
-	train->direction = Forward;
+	train->direction = Back;
+	//train->direction = Forward;
 	train->AddCar(new Car(Locomotive));
-	train->AddCar(new Car(Locomotive));
-	train->AddCar(new Car(TankCar));
-	train->AddCar(new Car(TankCar));
-	train->AddCar(new Car(Switcher));
+	//train->AddCar(new Car(Locomotive));
+	//train->AddCar(new Car(TankCar));
+	//train->AddCar(new Car(TankCar));
+	//train->AddCar(new Car(Switcher));
 	train->AddCar(new Car(Switcher));
 	train->AddCar(new Car(TankCar));
 	train->AddCar(new Car(TankCar));
@@ -189,10 +198,10 @@ void MapLayer::test() {
 	train->AddCar(new Car(Switcher));
 	train->AddCar(new Car(Switcher));*/
 
+	//train->AddCar(new Car(Locomotive));
 	train->AddCar(new Car(Locomotive));
-	train->AddCar(new Car(Locomotive));
-	train->SetPosition(Path::GetPosition({ &Game->cells[15][2], 4, 9 }, 1));
-	//train->SetPosition( {&Game->cells[40][2], 0, 5 });
+	//train->SetPosition(Path::GetPosition({ &Game->cells[40][2], 0, 0 }, 10));
+	train->SetPosition( {&Game->cells[40][2], 0, 0 });
 	Game->AddTrain(train);
 		
 	/*

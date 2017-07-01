@@ -3,12 +3,14 @@
 
 #include "cocos2d.h"
 #include "Elements.h"
+#include "Train.h"
 
 using namespace std;
 
 namespace GameObjects {
 
 	class Cell;
+	class Train;
 
 	enum SwitchPosition
 	{
@@ -18,7 +20,7 @@ namespace GameObjects {
 
 	struct SwitchItem {
 		SwitchElement type;
-		Sprite *element;		
+		Sprite *element;
 	};
 
 	class Switch
@@ -34,6 +36,9 @@ namespace GameObjects {
 		SwitchItem *positions[2];
 
 		void changePosition();
+
+		Train *over;
+		vector<Train*> look;
 	};
 }
 
