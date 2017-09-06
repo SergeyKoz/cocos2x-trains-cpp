@@ -25,4 +25,6 @@ public:
 	Semaphore semaphore;
 
 	void test();
+	void testNet(int x, int y);
+	string p(int p, int d);
 };

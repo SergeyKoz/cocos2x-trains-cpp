@@ -50,7 +50,7 @@ namespace GameObjects {
 		TrainDirection direction;
 		vector<Car> cars;
 
-		int acceleration = 1;
+		int acceleration = 2;
 		int length = 0; //length of the train
 
 		TrackPosition position;
@@ -70,6 +70,7 @@ namespace GameObjects {
 
 		void slowDown(int Speed, int Indent);
 
+		/* debug */
 		/*DrawNode *debugNode;
 		Vec2 debugItems[20];
 		int debugPointer = 0;

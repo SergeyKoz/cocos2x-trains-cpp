@@ -7,6 +7,8 @@ using namespace std;
 
 namespace GameObjects {
 
+	class Train;
+
 	enum SemaphorePosition
 	{
 		Go = 0,
@@ -46,8 +48,14 @@ namespace GameObjects {
 		Cell *cell;
 		SemaphoreResources Resources;
 
+		
+
 		void Next();
-		void SetPosition(SemaphorePosition pos);	
+		void SetPosition(SemaphorePosition pos);
+
+		vector<Train*> trains;
+		void listen(Train *train);
+		void remove(Train *train);
 	};
 }
 

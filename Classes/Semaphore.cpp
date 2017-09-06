@@ -62,8 +62,18 @@ namespace GameObjects {
 		listener->onTouchMoved = [](Touch* touch, Event* event) {
 		};
 
-		listener->onTouchEnded = [&, s](Touch* touch, Event* event) { //[=]	
-			s->Next();			
+		listener->onTouchEnded = [&, s](Touch* touch, Event* event) { //[=]
+			if (!trains.empty()) {
+				vector<Train*>::iterator i = trains.begin();;
+				for (int i = 0; i < trains.size(); i++)
+				{
+					/*if (Position == SemaphorePosition::Reverse) {
+						trains[i]->direction == trains[i]->direction == TrainDirection::Forward ? TrainDirection::Back : TrainDirection::Forward;
+					}*/
+					trains[i]->SpeedReset();
+				}
+			}
+			s->Next();
 		};
 
 		Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this->Resources.go);
@@ -196,5 +206,14 @@ namespace GameObjects {
 			SetPosition(Go);
 		}
 	}
-		
+	
+	void Semaphore::listen(Train *train)
+	{
+		trains.push_back(train);
+	}
+
+	void Semaphore::remove(Train *train)
+	{
+		trains.erase(std::remove(trains.begin(), trains.end(), train), trains.end());
+	}
 }
