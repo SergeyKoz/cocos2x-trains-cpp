@@ -196,9 +196,9 @@ namespace GameObjects {
 		entry->Enter = Enter;
 
 		if (Enter == 0){
-			image = Elements::GetTrackElement({ cell->x, cell->y }, Element);
-			Field::getInstance()->mapLayer->addChild(image, ZIndexRails);
-			entry->Resource = image;
+			//image = Elements::GetTrackElement({ cell->x, cell->y }, Element);
+			//Field::getInstance()->mapLayer->addChild(image, ZIndexRails); //!!!!!!!!!!
+			//entry->Resource = image;
 
 			//Elements::setRules(x, y, Element);
 		}

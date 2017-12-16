@@ -6,8 +6,12 @@ Scene* GameMapScene::createScene()
 {
 	//int d = 10 * Field::getInstance()->scale;
 
-    auto scene = Scene::create();
+    auto scene = Scene::createWithPhysics();
 
+	Field::getInstance()->scene = scene;
+
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	
 	auto BackgroundLayer = BackgroundLayer::create();
 	scene->addChild(BackgroundLayer);
 

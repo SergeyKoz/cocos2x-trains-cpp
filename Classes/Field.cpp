@@ -29,6 +29,5 @@ namespace GameObjects {
 	void Field::AddTrain(Train *train)
 	{
 		this->trains.insert(trains.end(), *train);
-	}
-	
+	}	
 }

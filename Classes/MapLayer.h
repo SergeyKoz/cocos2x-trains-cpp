@@ -24,6 +24,8 @@ public:
 	Path path;
 	Semaphore semaphore;
 
+	//Node* pin;
+
 	void test();
 	void testNet(int x, int y);
 	string p(int p, int d);

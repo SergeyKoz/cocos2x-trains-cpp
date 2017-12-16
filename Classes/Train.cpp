@@ -22,6 +22,8 @@ namespace GameObjects {
 
 	void Train::AddCar(Car *car)
 	{
+		int c = this->cars.size();
+		
 		this->cars.insert(cars.end(), *car);		
 		if (Car::settings[car->type].traction > 0) {
 			speed.maxSpeed += Car::settings[car->type].traction;
@@ -37,14 +39,15 @@ namespace GameObjects {
 		}
 		length += Car::settings[car->type].base + 4;
 
-		//SpeedReset();
-		/*
-		if CarItem.Type.traction ~= nil and CarItem.Type.traction > 0 then
-			self.SpeedProgram.MaxSpeed = self.SpeedProgram.MaxSpeed + CarItem.Type.traction
-			self.SpeedProgram.Length = math.ceil(self.SpeedProgram.MaxSpeed / self.SpeedProgram.Acceleration) * 2
-			self.SpeedProgram.Limit = self.SpeedProgram.Length / 3
-		end
-		*/
+		/*if (c > 0) {
+			Field *Game = Field::getInstance();
+			PhysicsBody* physicsBody1 = this->cars[c].resource->getPhysicsBody();
+			PhysicsBody* physicsBody2 = this->cars[c - 1].resource->getPhysicsBody();			
+			Vec2 p1 = {20, 0}; //Point::ZERO
+			Vec2 p2 = {-20, 0}; //Point::ZERO			
+			PhysicsJointDistance* joint = PhysicsJointDistance::construct(physicsBody1, physicsBody2, p1, p2);
+			Game->scene->getPhysicsWorld()->addJoint(joint);
+		}*/
 	}
 
 	void Train::init()
@@ -56,23 +59,11 @@ namespace GameObjects {
 		/*for (int i = 0; i < 20; i++) {
 			debugItems[i] = Vec2(0, 0);
 		}*/
-
-		/*
-		if self.Cars ~= nil and self.SpeedProgram.MaxSpeed > 0 and self.Cars[1].Move == nil then    
-			local i           
-			for i = 1, self.SpeedProgram.Length do
-				self.SpeedProgram.Speeds[i] = {}
-			end
-			self.SpeedProgram.Pointer = 1 
-			self.SpeedProgram.Speeds[self.SpeedProgram.Pointer].Speed = 0            
-			self:SpeedProgramReset()        
-			self:GetMove(self:GetSpeed())
-		end*/
 	}
 
 	void Train::move()
 	{
-		Vec2 d = { 0, 2 };
+		/*Vec2 d = { 0, 2 };
 		if (speed.length > 0) {
 			int speed = GetSpeed();
 			TrackPosition pos = Path::GetPosition(this->position, speed);
@@ -84,25 +75,41 @@ namespace GameObjects {
 					label->setPosition(cars[i].position.p + d);
 				}				
 			}
-		}
+		}*/
+
+		//pin->setPosition(this->cars[0].move.p);
+
+		GetMove(GetSpeed());
+		RunMove();
 	}
 
 	void Train::SetPosition(TrackPosition position)
 	{
 		this->position = position;
 		TrackPosition pos = position;
+
+		//pin->setPosition({0, 0});
+
 		for (int i = 0; i < cars.size(); i++) {
-			pos = cars[i].SetPosition(pos);
+			pos = cars[i].SetPosition(pos);			
 			cars[i].resource->setVisible(true);
 		}
 	}
 	
 	void Train::GetMove(int move)
-	{
+	{			
+		this->position = Path::GetPosition(this->position, move);
+		for (int i = 0; i < cars.size(); i++) {
+			cars[i].GetMove(move);
+			//cars[i].RunMove();
+		}
 	}
 
 	void Train::RunMove()
 	{
+		for (int i = 0; i < cars.size(); i++) {
+			cars[i].RunMove();
+		}
 	}
 
 	int Train::GetSpeed()
@@ -475,33 +482,6 @@ namespace GameObjects {
 			this->speed.lookPointers++;
 			this->speed.speeds[this->speed.lookPointer] = Speed;
 		}
-
-		/*
-		 if Checked then
-            Program.LookPointer = GetNextPointer(Program.LookPointer, Program.Length)
-            Program.LookPointers = Program.LookPointers + 1            
-            Program.LookPosition = NextPosition            
-            Program.Speeds[Program.LookPointer].Speed = Speed
-
-            if Program.SpeedLimits[Program.SpeedLimit] ~= nil then
-                local Distance
-                local SpeedLimit = Program.MaxSpeed
-                for s, Item in pairs(Program.SpeedLimits) do
-                    Distance = Item.Distance - k * Speed
-                    if Distance > 0 then
-                        if s < SpeedLimit then
-                            SpeedLimit = s
-                        end                    
-                        Program.SpeedLimits[s] = {Distance = Distance}
-                    else
-                        Program.SpeedLimits[s] = nil
-                    end
-                end       
-                Program.SpeedLimit = SpeedLimit
-            end                
-        end		
-		*/
-
 		return f;
 	}
 	

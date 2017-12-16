@@ -518,15 +518,18 @@ namespace GameObjects {
 		int d = 10 * Field::getInstance()->scale;
 		
 		if (Element == Locomotive) {
-			item = Sprite::createWithTexture(texture, Rect(0.5 * d, 8.5 * d, 3 * d, 1 * d));
+			//item = Sprite::createWithTexture(texture, Rect(0.5 * d, 8.5 * d, 3 * d, 1 * d));
+			item = Sprite::createWithTexture(texture, Rect(1 * d, 8.65 * d, 2 * d, 0.7 * d));
 		}
 
 		if (Element == TankCar) {
-			item = Sprite::createWithTexture(texture, Rect(3.5 * d, 8.5 * d, 3 * d, 1 * d));
+			//item = Sprite::createWithTexture(texture, Rect(3.5 * d, 8.5 * d, 3 * d, 1 * d));
+			item = Sprite::createWithTexture(texture, Rect(4 * d, 8.65 * d, 2 * d, 0.7 * d));
 		}
 
 		if (Element == Switcher) {
-			item = Sprite::createWithTexture(texture, Rect(6.8 * d, 8.5 * d, 2 * d, 1 * d));
+			//item = Sprite::createWithTexture(texture, Rect(6.8 * d, 8.5 * d, 2 * d, 1 * d));
+			item = Sprite::createWithTexture(texture, Rect(7 * d, 8.65 * d, 1.6 * d, 0.7 * d));
 		}
 
 		if (Element == PassengerCar) {		

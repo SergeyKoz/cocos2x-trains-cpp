@@ -32,6 +32,9 @@ namespace GameObjects {
 
 		TrackPosition SetPosition(TrackPosition position);
 
+		void GetMove(int speed);
+		void RunMove();
+
 		TrackPosition Axis1;
 		TrackPosition Axis2;
 
@@ -39,8 +42,9 @@ namespace GameObjects {
 
 		CarElement type;
 		CarPosition position;
+		CarPosition move;
+		CarPosition shift;
 		Sprite *resource;
 	};
 }
 #endif /*__GAME_CAR_H__*/
-

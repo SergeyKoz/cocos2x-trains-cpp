@@ -41,12 +41,15 @@ namespace GameObjects {
 
 	public:
 		static Field *getInstance();
-		static const int SizeX = 1000;
-		static const int SizeY = 500;
+		static const int SizeX = 1500;
+		static const int SizeY = 750;		
 		Cell cells[SizeX][SizeY];
 		int scale = 2;
 		ConstructionMode constuctionMode = Rails;
 		TrafficSide trafficSide = RightHandTraffic; //LeftHandTraffic;
+
+
+		Scene *scene;
 
 		Layer *mapLayer;
 		Layer *trainsLayer;		

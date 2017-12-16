@@ -8,11 +8,7 @@ bool TrainsLayer::init()
         return false;
     }
 
-	Director::getInstance()->getScheduler()->schedule(CC_CALLBACK_1(TrainsLayer::trainsMoveCallback, this), this, 0.25f, false, "trainsMoving");
-
-	/*Director::getInstance()->getScheduler()->schedule([&](float dt) {
-		log("scheduled");
-	}, this, 0.5f, false, "trainsMowing");*/
+	Director::getInstance()->getScheduler()->schedule(CC_CALLBACK_1(TrainsLayer::trainsMoveCallback, this), this, 0.2f, false, "trainsMoving");
     return true;
 }
 
@@ -31,19 +27,14 @@ void TrainsLayer::trainsMoveCallback(float dt)
 {
 	Field *Game = Field::getInstance();
 
+	std::chrono::steady_clock::time_point start, end;
+
+	start = std::chrono::steady_clock::now();
 	for (int i = 0; i < Game->trains.size(); i++) {
 		Game->trains[i].move();
 	}
-	
-	/*
-	 local Trains = GameField:Instance().Trains
-    --local x
-    --local x = os.clock()              
-    for c = 1, #Trains do
-        --x = os.clock() 
-        Trains[c]:Move() 
-        --print(string.format("Train ".. c .. ": %.2f\n", os.clock() - x))
-    end
-	*/
-	//log("scheduled");
+	end = std::chrono::steady_clock::now();
+
+	std::chrono::duration<double> elapsed_seconds = end - start;
+	CCLOG("%f seconds", elapsed_seconds.count());
 }

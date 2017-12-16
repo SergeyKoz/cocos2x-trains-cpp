@@ -87,6 +87,8 @@ void MapLayer::onTouchMoved(Touch* touch, Event* event)
 			}
 		}
 		startLocation = loc;
+
+		
 	}
 }
 
@@ -103,10 +105,54 @@ void MapLayer::onTouchEnded(Touch* touch, Event* event)
 	startLocation = { 5, 5 };
 }
 
-void MapLayer::test() {
+void MapLayer::test()
+{
+	/*Field *Game = Field::getInstance();
+
+	auto renderTexture = RenderTexture::create(100, 100, Texture2D::PixelFormat::RGBA4444);
+
+	renderTexture->setColor(Color3B::BLUE);
+
+	//renderTexture->addChild();
+
+	Sprite *image;
+	image = Elements::GetTrackElement({ 10, 10 }, TrackElement::Horizontal);
+
+	int d = 10 * Field::getInstance()->scale;
+	Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("rails.png");
+	Sprite *item = Sprite::createWithTexture(texture, Rect(d, 2.5 * d, d, d));
+	item->setPosition(10 * d - 0.5 * d, 10 * d);
+
+	renderTexture->addChild(item);
+	renderTexture->setPosition({100, 100});
+
+	
+
+	Game->trainsLayer->addChild(renderTexture, ZIndexTrainsLabel);*/
+
+	//renderTexture->end();
+	//Director::getInstance()->getRenderer()->render();
+
+
+	//Field::getInstance()->mapLayer->addChild(image, ZIndexRails); //!!!!!!!!!!
+	//entry->Resource = image;
+
+	Sprite *sprite;
+	sprite = Elements::GetTrackElement({ 10, 10 }, TrackElement::Horizontal);
+
+	//auto sprite = Sprite::create("original.png");
+	auto renderTexture = RenderTexture::create(64, 64, Texture2D::PixelFormat::RGBA8888);
+	renderTexture->begin();
+	sprite->setAnchorPoint(Vec2(0, 0));
+	sprite->setPosition(Vec2(0, 0));
+	sprite->visit();
+	renderTexture->end();
+	renderTexture->saveToFile("rendertexture.png", Image::Format::PNG);
+
+	
 	int x;
 	int y;
-	int k = 1;
+	int k = 5;
 	for (int i = 0; i < k; i++) {
 		for (int j = 0; j < k; j++) {
 			x = j * 45;
@@ -253,7 +299,8 @@ void MapLayer::testNet(int x, int y) {
 	//train->direction = Back;
 	train->direction = Forward;
 	train->AddCar(new Car(Locomotive));
-	train->AddCar(new Car(Switcher));
+	train->AddCar(new Car(Locomotive));
+	//train->AddCar(new Car(Switcher));
 	train->AddCar(new Car(TankCar));
 	train->AddCar(new Car(TankCar));
 	train->AddCar(new Car(TankCar));
@@ -264,7 +311,8 @@ void MapLayer::testNet(int x, int y) {
 
 	Train *train2 = new Train();
 	train2->direction = Back;
-	train2->AddCar(new Car(Switcher));
+	train2->AddCar(new Car(Locomotive));
+	//train2->AddCar(new Car(Switcher));
 	train2->AddCar(new Car(TankCar));
 	train2->AddCar(new Car(TankCar));
 	train2->AddCar(new Car(TankCar));
