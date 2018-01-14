@@ -119,6 +119,14 @@ namespace GameObjects {
 	{
 	}
 
+	Sprite *Elements::GetEmpty() {
+		Sprite *item;
+		Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("rails.png");
+		item = Sprite::createWithTexture(texture, Rect(0, 0, 1, 1));
+		item->setPosition(0, 0);
+		return item;
+	}
+
 	Sprite *Elements::GetTrackElement(MapPoint Point, TrackElement Element) {
 		Sprite *item;
 		Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("rails.png");
@@ -537,7 +545,6 @@ namespace GameObjects {
 
 		if (Element == FreightCar) {
 		}
-
 		return item;
 	}
 

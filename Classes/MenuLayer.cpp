@@ -16,9 +16,9 @@ bool MenuLayer::init()
 	this->TasksButton = new GameObjects::MenuItem(items, pos({ -1, -1 }), Elements::GetMenuElement(MenuElement::TasksButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), true, true);
 	this->ZoomInButton = new GameObjects::MenuItem(items, pos({ -1, -3 }), Elements::GetMenuElement(MenuElement::ZoomInButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), true, true);
 	this->ZoomOutButton = new GameObjects::MenuItem(items, pos({ -1, -5 }), Elements::GetMenuElement(MenuElement::ZoomOutButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), true, true);
-	this->UndoButton = new GameObjects::MenuItem(items, pos({ -5, -1 }), Elements::GetMenuElement(MenuElement::UndoButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), false, true);
-	this->RedoButton = new GameObjects::MenuItem(items, pos({ -3, -1 }), Elements::GetMenuElement(MenuElement::RedoButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), false, true);
-	this->RailsButton = new GameObjects::MenuItem(items, pos({ -13, -1 }), { Elements::GetMenuElement(MenuElement::RailsButton), Elements::GetMenuElement(MenuElement::RailsButtonChecked) }, CC_CALLBACK_1(MenuLayer::menuRailsButtonCallback, this), true, true, true);
+	this->UndoButton = new GameObjects::MenuItem(items, pos({ -5, -1 }), Elements::GetMenuElement(MenuElement::UndoButton), CC_CALLBACK_1(MenuLayer::menuUndoButtonCallback, this), false, true);
+	this->RedoButton = new GameObjects::MenuItem(items, pos({ -3, -1 }), Elements::GetMenuElement(MenuElement::RedoButton), CC_CALLBACK_1(MenuLayer::menuRedoButtonCallback, this), false, true);
+	this->RailsButton = new GameObjects::MenuItem(items, pos({ -13, -1 }), { Elements::GetMenuElement(MenuElement::RailsButton), Elements::GetMenuElement(MenuElement::RailsButtonChecked) }, CC_CALLBACK_1(MenuLayer::menuRailsButtonCallback, this), true, true, false);
 	this->SemaforesButton = new GameObjects::MenuItem(items, pos({ -11, -1 }), { Elements::GetMenuElement(MenuElement::SemaforesButton), Elements::GetMenuElement(MenuElement::SemaforesButtonChecked) }, CC_CALLBACK_1(MenuLayer::menuSemaforesButtonCallback, this), true, true, false);
 	this->StartButton = new GameObjects::MenuItem(items, pos({ -23, -1 }), Elements::GetMenuElement(MenuElement::StartButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), true, true);
 	this->PauseButton = new GameObjects::MenuItem(items, pos({ -23, -1 }), Elements::GetMenuElement(MenuElement::RedoButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), true, false);
@@ -61,7 +61,10 @@ void MenuLayer::menuRailsButtonCallback(Ref* pSender)
 	if (!this->RailsButton->checked) {
 		this->RailsButton->check(true);
 		this->SemaforesButton->check(false);
-		Field::getInstance()->constuctionMode = Rails;
+		Field::getInstance()->constuctionMode = ConstructRails;
+	} else {
+		this->RailsButton->check(false);
+		Field::getInstance()->constuctionMode = ConstructNone;
 	}
 }
 
@@ -70,8 +73,21 @@ void MenuLayer::menuSemaforesButtonCallback(Ref* pSender)
 	if (!this->SemaforesButton->checked) {
 		this->SemaforesButton->check(true);
 		this->RailsButton->check(false);
-		Field::getInstance()->constuctionMode = Semafores;
+		Field::getInstance()->constuctionMode = ConstructSemafores;
+	} else {
+		this->SemaforesButton->check(false);
+		Field::getInstance()->constuctionMode = ConstructNone;
 	}
+}
+
+void MenuLayer::menuUndoButtonCallback(Ref* pSender)
+{
+	Cmd::Undo();
+}
+
+void MenuLayer::menuRedoButtonCallback(Ref* pSender)
+{
+	Cmd::Redo();
 }
 
 void MenuLayer::menuCloseCallback(Ref* pSender)

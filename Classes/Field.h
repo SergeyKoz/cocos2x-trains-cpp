@@ -9,8 +9,9 @@ namespace GameObjects {
 
 	enum ConstructionMode
 	{
-		Rails,
-		Semafores
+		ConstructNone,
+		ConstructRails,
+		ConstructSemafores
 	};
 
 	enum TrafficSide
@@ -29,11 +30,12 @@ namespace GameObjects {
 	enum LayerZIndex
 	{
 		ZIndexRails = 1,
-		ZIndexSwitches = 2,
-		ZIndexTrains = 3,
-		ZIndexSemaphores = 4,
-		ZIndexMenu = 5,
-		ZIndexTrainsLabel = 6,
+		ZIndexRailsBackground = 2,
+		ZIndexSwitches = 3,
+		ZIndexTrains = 4,
+		ZIndexSemaphores = 5,
+		ZIndexMenu = 6,
+		ZIndexTrainsLabel = 7,
 	};
 	
 	class Field
@@ -42,13 +44,13 @@ namespace GameObjects {
 	public:
 		static Field *getInstance();
 		static const int SizeX = 1500;
-		static const int SizeY = 750;		
+		static const int SizeY = 750;	
+		Size sector = {200, 200};
 		Cell cells[SizeX][SizeY];
 		int scale = 2;
-		ConstructionMode constuctionMode = Rails;
+		ConstructionMode constuctionMode = ConstructNone;
 		TrafficSide trafficSide = RightHandTraffic; //LeftHandTraffic;
-
-
+		
 		Scene *scene;
 
 		Layer *mapLayer;

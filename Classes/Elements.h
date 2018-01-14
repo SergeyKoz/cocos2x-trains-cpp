@@ -155,6 +155,7 @@ namespace GameObjects {
 		static const int second[2];
 
 		static Elements *getInstance();
+		static Sprite *GetEmpty();
 		static Sprite *GetTrackElement(MapPoint Point, TrackElement Element);
 		static Sprite *GetSwitchElement(MapPoint Point, SwitchElement Element);
 		static Sprite *GetSemaphoreElement(MapPoint Point, SemaphorElement Element);

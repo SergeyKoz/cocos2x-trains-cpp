@@ -1,4 +1,5 @@
 #include "MapLayer.h"
+#include <math.h>
 
 USING_NS_CC;
 
@@ -11,6 +12,9 @@ bool MapLayer::init()
     {
         return false;
     }    
+
+	Director::getInstance()->setProjection(Director::Projection::_2D);
+
     //Size visibleSize = Director::getInstance()->getVisibleSize();
     //Vec2 origin = Director::getInstance()->getVisibleOrigin();
      return true;
@@ -26,7 +30,10 @@ void MapLayer::onEnter()
 	listener->onTouchMoved = CC_CALLBACK_2(MapLayer::onTouchMoved, this);
 	listener->onTouchEnded = CC_CALLBACK_2(MapLayer::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-	test();
+	
+	testNet();
+
+	renderMap();
 }
 
 bool MapLayer::onTouchBegan(Touch* touch, Event* event)
@@ -34,17 +41,17 @@ bool MapLayer::onTouchBegan(Touch* touch, Event* event)
 	Field *Game = Field::getInstance();
 	startLocation = touch->getLocation();
 	Vec2 pos = this->getPosition();
-	if (Game->constuctionMode == Rails || Game->constuctionMode == Semafores) {
+	if (Game->constuctionMode == ConstructRails || Game->constuctionMode == ConstructSemafores) {
 		MapPoint c = {
 			(int)round((-pos.x + startLocation.x) / (Game->scale * 10)),
 			(int)round((-pos.y + startLocation.y) / (Game->scale * 10))
 		};
-		if (Game->constuctionMode == Rails) {
+		if (Game->constuctionMode == ConstructRails) {
 			if (path.Init(c)) {
 				touchMode = BuildRails;
 			}
 		}
-		if (Game->constuctionMode == Semafores) {			
+		if (Game->constuctionMode == ConstructSemafores) {
 			MapIndent d = {
 				c.x - ((-pos.x + startLocation.x) / (Game->scale * 10)),
 				c.y - ((-pos.y + startLocation.y) / (Game->scale * 10))
@@ -105,51 +112,97 @@ void MapLayer::onTouchEnded(Touch* touch, Event* event)
 	startLocation = { 5, 5 };
 }
 
-void MapLayer::test()
+void MapLayer::renderMap()
+{	
+	Director::getInstance()->getScheduler()->performFunctionInCocosThread([&] {
+		renderMapSector(0, 0);
+	});
+}
+
+void MapLayer::renderMapSector(int px, int py)
 {
-	/*Field *Game = Field::getInstance();
+	Field *Game = Field::getInstance();
+	int d = 10 * Game->scale;	
+	Size cp = Game->sector;
+	if (Game->sector.width * (px + 1) > Game->SizeX) {
+		cp.width = Game->SizeX - Game->sector.width * px;
+	}
+	if (Game->sector.height * (py + 1) > Game->SizeY) {
+		cp.height = Game->SizeY - Game->sector.height * py;
+	}	
+	string file = "map_sector_" + to_string(px) + "_" + to_string(py) + ".png";
+	if (!FileUtils::getInstance()->isFileExist(FileUtils::getInstance()->getWritablePath() + file)) {	
+		RenderTexture *renderTexture = RenderTexture::create(cp.width * d, cp.height * d, Texture2D::PixelFormat::RGBA8888);		
+		renderTexture->setName(to_string(px) + ":" + to_string(py));
+		renderTexture->setScale(1);
+		renderTexture->begin();
+		for (int x = 0; x < cp.width; x++) {
+			for (int y = 0; y < cp.height; y++) {
+				for (int i = 0; i < 8; i++) {
+					int dx = x + Game->sector.width * px;
+					int dy = y + Game->sector.height * py;
+					Entry *straight = Game->cells[dx][dy].straightConnection[i];
+					if (straight > 0 && straight->Enter == 1) {
+						Sprite *sp = Elements::GetTrackElement({ x, y }, straight->Element);						
+						sp->getTexture()->setAntiAliasTexParameters();
+						sp->visit();						
+					}
+					Entry *diverging = Game->cells[dx][dy].divergingConnection[i];
+					if (diverging > 0 && diverging->Enter == 1) {					
+						Elements::GetTrackElement({ x, y }, diverging->Element)->visit();
+					}
+				}
+			}
+		}
+		renderTexture->end();
+		renderTexture->saveToFile(file, Image::Format::PNG, true, [&](RenderTexture* texture, const std::string& string) {
+			vector<std::string> items = Helper::split(texture->getName(), ':');
+			int x = std::stoi(items[0]);
+			int y = std::stoi(items[1]);
+			Field *Game = Field::getInstance();
+			Size f = { ceil(Game->SizeX / Game->sector.width),  ceil(Game->SizeY / Game->sector.height) };
+			if (x < f.width - 1) {
+				x++;
+				Director::getInstance()->getScheduler()->performFunctionInCocosThread([&, x, y] {
+					renderMapSector(x, y);
+				});			
+			} else if (y < f.height - 1) {
+				y++;
+				Director::getInstance()->getScheduler()->performFunctionInCocosThread([&, y] {
+					renderMapSector(0, y);
+				});			
+			} else {				
+				renderMap();
+			}
+		});		
+	} else {
+		Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(FileUtils::getInstance()->getWritablePath() + file);
+		Sprite *sp = Sprite::createWithTexture(texture, Rect(0, 0, cp.width * d, cp.height * d));
+		sp->setPosition(px * Game->sector.width * d, py * Game->sector.height * d);
+		sp->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+		this->addChild(sp, ZIndexRailsBackground);
+		Size f = { ceil(Game->SizeX / Game->sector.width),  ceil(Game->SizeY / Game->sector.height) };
+		if (px < f.width - 1) {
+			px++;
+			Director::getInstance()->getScheduler()->performFunctionInCocosThread([&, px, py] {
+				renderMapSector(px, py);
+			});
+			
+		} else if (py < f.height - 1) {
+			py++;			
+			Director::getInstance()->getScheduler()->performFunctionInCocosThread([&, py] {
+				renderMapSector(0, py);
+			});
+		} else {
+			//onMapRenderEnd();
+		}
+	}
+}
 
-	auto renderTexture = RenderTexture::create(100, 100, Texture2D::PixelFormat::RGBA4444);
-
-	renderTexture->setColor(Color3B::BLUE);
-
-	//renderTexture->addChild();
-
-	Sprite *image;
-	image = Elements::GetTrackElement({ 10, 10 }, TrackElement::Horizontal);
-
-	int d = 10 * Field::getInstance()->scale;
-	Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("rails.png");
-	Sprite *item = Sprite::createWithTexture(texture, Rect(d, 2.5 * d, d, d));
-	item->setPosition(10 * d - 0.5 * d, 10 * d);
-
-	renderTexture->addChild(item);
-	renderTexture->setPosition({100, 100});
-
-	
-
-	Game->trainsLayer->addChild(renderTexture, ZIndexTrainsLabel);*/
-
-	//renderTexture->end();
-	//Director::getInstance()->getRenderer()->render();
-
-
-	//Field::getInstance()->mapLayer->addChild(image, ZIndexRails); //!!!!!!!!!!
-	//entry->Resource = image;
-
-	Sprite *sprite;
-	sprite = Elements::GetTrackElement({ 10, 10 }, TrackElement::Horizontal);
-
-	//auto sprite = Sprite::create("original.png");
-	auto renderTexture = RenderTexture::create(64, 64, Texture2D::PixelFormat::RGBA8888);
-	renderTexture->begin();
-	sprite->setAnchorPoint(Vec2(0, 0));
-	sprite->setPosition(Vec2(0, 0));
-	sprite->visit();
-	renderTexture->end();
-	renderTexture->saveToFile("rendertexture.png", Image::Format::PNG);
-
-	
+void MapLayer::testNet()
+{
+	std::chrono::steady_clock::time_point start, end;
+	start = std::chrono::steady_clock::now();
 	int x;
 	int y;
 	int k = 5;
@@ -157,12 +210,17 @@ void MapLayer::test()
 		for (int j = 0; j < k; j++) {
 			x = j * 45;
 			y = i * 43;
-			testNet(x, y);
+			testNetSector(x, y);
 		}
 	}
+	Cmd::clear();
+
+	end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> elapsed_seconds = end - start;
+	CCLOG("%f seconds", elapsed_seconds.count());
 }
 
-void MapLayer::testNet(int x, int y) {
+void MapLayer::testNetSector(int x, int y) {
 	Field *Game = Field::getInstance();
 
 	//Game->cells[18 + x][15 + y].Connect(&Game->cells[15 + x][14 + y], 1);

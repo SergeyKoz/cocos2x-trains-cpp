@@ -21,22 +21,31 @@ namespace GameObjects {
 		~Cmd();
 	private:
 		static Cmd *p_instance;
-
-		vector<string> &split(const string &s, char delim, vector<string> &elems);
-		vector<string> split(const string &s, char delim);
 		
 	public:
 		static Cmd *getInstance();
 		static void Exec(string cmdline);
+		static void Undo(Command *cmd);
+
+		static void Undo();
+		static void Redo();
+
+		static void clear();
+
 		Command *ParseCmd(string cmdline);
 
 		vector<Command> history;
 
+		int pointer = 0;
+
 		map<string, CmdFunc> execMethods;
+		map<string, CmdFunc> undoMethods;
 
 		void path(map<string, string> opts, vector<string> args);
-		void semaphore(map<string, string> opts, vector<string> args);
+		void _path(map<string, string> opts, vector<string> args);
 
+		void semaphore(map<string, string> opts, vector<string> args);
+		void _semaphore(map<string, string> opts, vector<string> args);
 	};
 }
 

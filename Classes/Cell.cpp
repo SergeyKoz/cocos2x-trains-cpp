@@ -185,6 +185,11 @@ namespace GameObjects {
 		}
 	}
 
+	void Cell::Disconnect(Cell *cell, int Point, bool Back) //to point
+	{
+
+	}
+
 	void Cell::SetEntry(Cell *cell, int FromPoint, int ToPoint, Configuration Configuration, TrackElement Element, int Enter)
 	{
 		Entry *entry = new Entry;
@@ -196,9 +201,9 @@ namespace GameObjects {
 		entry->Enter = Enter;
 
 		if (Enter == 0){
-			//image = Elements::GetTrackElement({ cell->x, cell->y }, Element);
-			//Field::getInstance()->mapLayer->addChild(image, ZIndexRails); //!!!!!!!!!!
-			//entry->Resource = image;
+			/*image = Elements::GetTrackElement({ cell->x, cell->y }, Element);
+			Field::getInstance()->mapLayer->addChild(image, ZIndexRails); 
+			entry->Resource = image;*/
 
 			//Elements::setRules(x, y, Element);
 		}
@@ -221,9 +226,20 @@ namespace GameObjects {
 		this->switches[Point] = new Switch(this, Point);
 	}
 
+	void Cell::RemoveSwitch(int Point)
+	{
+		//this->switches[Point] = new Switch(this, Point);
+	}
+
 	void Cell::SetSemaphore(int Point)
 	{
 		this->semaphores[Point] = new Semaphore(this, Point);
+	}
+
+	void Cell::RemoveSemaphore(int Point)
+	{
+		delete(this->semaphores[Point]);
+		this->semaphores[Point] = 0;
 	}
 	
 	bool Cell::isAllow(int Point, TrackElement Element){

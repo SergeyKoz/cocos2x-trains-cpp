@@ -5,6 +5,8 @@
 #include "cocos2d/external/json/rapidjson.h"  
 #include "cocos2d/external/json/document.h"
 #include "Field.h"
+#include "Helper.h"
+#include "MenuLayer.h"
 
 using namespace rapidjson;
 
@@ -23,6 +25,9 @@ namespace GameObjects {
 	{
 		execMethods["path"] = &Cmd::path;
 		execMethods["semaphore"] = &Cmd::semaphore;
+
+		undoMethods["path"] = &Cmd::_path;
+		undoMethods["semaphore"] = &Cmd::_semaphore;
 	}
 	
 	Cmd::~Cmd()
@@ -31,23 +36,94 @@ namespace GameObjects {
 
 	void Cmd::Exec(string cmdline)
 	{
-		Cmd *inst = Cmd::getInstance();
-		
 		CCLOG("> %s", cmdline);
-		
+
+		Cmd *inst = Cmd::getInstance();
+
 		Command *cmd = inst->ParseCmd(cmdline);
 		inst->history.insert(inst->history.end(), *cmd);
-
+		inst->pointer++;
+		(*(MenuLayer*)Field::getInstance()->menuLayer).UndoButton->enable(true);
+	
 		CmdFunc execMethod = inst->execMethods[cmd->command];
 		(inst->*execMethod)(cmd->opts, cmd->args);
 	}
 
+	void Cmd::Undo(Command *cmd)
+	{
+		CCLOG("< %s", cmd->command);
+		
+		Cmd *inst = Cmd::getInstance();	
+
+		//Command *cmd = inst->ParseCmd(cmdline);
+		//inst->history.insert(inst->history.end(), *cmd);
+		inst->pointer--;
+
+		CmdFunc execMethod = inst->undoMethods[cmd->command];
+		(inst->*execMethod)(cmd->opts, cmd->args);
+	}
+
+	void Cmd::Undo()
+	{
+		Cmd *inst = Cmd::getInstance();
+		//inst->pointer--;
+		//Command cmd = inst->history[inst->pointer - 1];
+		Cmd::Undo(&inst->history[inst->pointer - 1]);
+
+		MenuLayer *menu = (MenuLayer*)Field::getInstance()->menuLayer;
+		if (inst->pointer == 0) {
+			menu->UndoButton->enable(false);
+		}
+		if (inst->pointer == inst->history.size() - 1) {
+			menu->RedoButton->enable(true);
+		}
+	}
+
+	void Cmd::Redo()
+	{
+		Cmd *inst = Cmd::getInstance();
+		//inst->pointer++;
+		Cmd::Exec(inst->history[inst->pointer + 1].command);
+
+		MenuLayer *menu = (MenuLayer*)Field::getInstance()->menuLayer;
+		if (inst->pointer == 1) {
+			menu->UndoButton->enable(true);
+		}
+
+		if (inst->pointer == inst->history.size()) {
+			menu->RedoButton->enable(false);
+		}
+	}
+
+	void Cmd::clear()
+	{
+		//Field *Game = Field::getInstance();
+		//MenuLayer *menu = (MenuLayer*)Game->menuLayer;
+
+		MenuLayer *menu = (MenuLayer*)Field::getInstance()->menuLayer;
+		menu->UndoButton->enable(false);
+		menu->RedoButton->enable(false);
+		
+		Cmd *inst = Cmd::getInstance();
+
+		/*std::vector<Command> history = inst->history;
+		
+		for (std::vector<Command>::iterator i = history.begin(); i != history.end(); ++i) {
+			//Cmd *inst = Cmd::getInstance();
+			delete (*i);
+		}*/
+		inst->history.clear();
+		inst->pointer = 0;
+		
+		CCLOG("= clear");
+	}
+	
 	Command *Cmd::ParseCmd(string cmdline)
 	{
 		vector<string> args;
 		map<string, string> opts;
 
-		vector<string> items = split(cmdline, ' ');
+		vector<string> items = Helper::split(cmdline, ' ');
 		string command = items[0];
 		int pos;
 		string caption, value;
@@ -78,21 +154,6 @@ namespace GameObjects {
 		return new Command(command, opts, args);
 	}
 
-	vector<string> &Cmd::split(const string &s, char delim, vector<string> &elems) {
-		stringstream ss(s);
-		string item;
-		while (std::getline(ss, item, delim)) {
-			elems.push_back(item);
-		}
-		return elems;
-	}
-	
-	vector<string> Cmd::split(const string &s, char delim) {
-		std::vector<string> elems;
-		split(s, delim, elems);
-		return elems;
-	}
-
 	//execution methods
 	void Cmd::path(map<string, string> opts, vector<string> args){
 		if (opts["add"] == "") {			
@@ -112,22 +173,7 @@ namespace GameObjects {
 				for (SizeType i = 0; i < jsonDoc.Size(); i++) {
 					Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].SetSwitch(jsonDoc[i]["point"].GetInt());
 				}
-			}
-
-			/*
-			local i
-			for c = 1, #Path do
-				i=Path[c]
-				Game:getCell(i.from.x, i.from.y):Connect(Game:getCell(i.to.x, i.to.y), i.point)
-			end
-			if opts.switch~=nil then        
-				local Switch=json.decode(opts.switch)
-				for c = 1, #Switch do
-					i=Switch[c]
-					Game:getCell(i.cell.x, i.cell.y):SetSwitch(i.point)
-				end 
-			end
-			*/
+			}		
 		}
 
 		if (opts["remove"] == "") {
@@ -147,5 +193,44 @@ namespace GameObjects {
 
 		}
 	}
-	
+
+	//undo methods
+	void Cmd::_path(map<string, string> opts, vector<string> args) {
+		if (opts["add"] == "") {
+			Field *Game = Field::getInstance();
+			rapidjson::Document jsonDoc;
+			if (opts["path"] != "") {
+				jsonDoc.Parse<kParseDefaultFlags>(opts["path"].c_str());
+
+				for (SizeType i = 0; i < jsonDoc.Size(); i++) {
+					Game->cells[jsonDoc[i]["from"]["x"].GetInt()][jsonDoc[i]["from"]["y"].GetInt()].Disconnect(&Game->cells[jsonDoc[i]["to"]["x"].GetInt()][jsonDoc[i]["to"]["y"].GetInt()], jsonDoc[i]["point"].GetInt());
+				}
+			}
+
+			if (opts["switch"] != "") {
+				jsonDoc.Parse<kParseDefaultFlags>(opts["switch"].c_str());
+
+				for (SizeType i = 0; i < jsonDoc.Size(); i++) {
+					Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].RemoveSwitch(jsonDoc[i]["point"].GetInt());
+				}
+			}
+		}
+
+		if (opts["remove"] == "") {
+
+		}
+	}
+
+	void Cmd::_semaphore(map<string, string> opts, vector<string> args) {
+		if (opts["add"] == "") {
+			rapidjson::Document jsonDoc;
+			jsonDoc.Parse<kParseDefaultFlags>(opts["cell"].c_str());
+			Field::getInstance()->cells[jsonDoc["x"].GetInt()][jsonDoc["y"].GetInt()].RemoveSemaphore(std::stoi(opts["point"]));
+		}
+
+		if (opts["remove"] == "") {
+
+		}
+	}
+
 }

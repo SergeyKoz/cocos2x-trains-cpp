@@ -51,10 +51,18 @@ namespace GameObjects {
 		static int Related[8];
 
 		void Connect(Cell *cell, int Point, bool Back = false);
+		void Disconnect(Cell *cell, int Point, bool Back = false);
+
 		void SetSwitch(int Point);
+		void RemoveSwitch(int Point);
+
 		void SetSemaphore(int Point);
+		void RemoveSemaphore(int Point);
+
 		void SetEntry(Cell *cell, int FromPoint, int ToPoint, Configuration Configuration, TrackElement Element, int Enter);
+		void RemoveEntry(Cell *cell, int FromPoint, int ToPoint, Configuration Configuration, TrackElement Element, int Enter);
 		Entry *getEntry(int Point);
+
 		static ConnectionConfig *GetConnectConfig(int dx, int dy, int Point);
 		bool isAllow(int Point, TrackElement Element);
 

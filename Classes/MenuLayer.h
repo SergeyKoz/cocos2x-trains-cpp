@@ -10,10 +10,12 @@ public:
 	virtual bool init();
 		
 	void menuDefaultCallback(cocos2d::Ref* pSender);
+
 	void menuRailsButtonCallback(cocos2d::Ref* pSender);
 	void menuSemaforesButtonCallback(Ref* pSender);
-
 	void menuCloseCallback(cocos2d::Ref* pSender);
+	void menuUndoButtonCallback(cocos2d::Ref* pSender);	
+	void menuRedoButtonCallback(cocos2d::Ref* pSender);
 
 	GameObjects::MenuItem *TasksButton;
 	GameObjects::MenuItem *ZoomInButton;

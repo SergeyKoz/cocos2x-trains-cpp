@@ -27,14 +27,14 @@ void TrainsLayer::trainsMoveCallback(float dt)
 {
 	Field *Game = Field::getInstance();
 
-	std::chrono::steady_clock::time_point start, end;
+	/*std::chrono::steady_clock::time_point start, end;
 
-	start = std::chrono::steady_clock::now();
+	start = std::chrono::steady_clock::now();*/
 	for (int i = 0; i < Game->trains.size(); i++) {
 		Game->trains[i].move();
 	}
-	end = std::chrono::steady_clock::now();
+	/*end = std::chrono::steady_clock::now();
 
 	std::chrono::duration<double> elapsed_seconds = end - start;
-	CCLOG("%f seconds", elapsed_seconds.count());
+	CCLOG("%f seconds", elapsed_seconds.count());*/
 }

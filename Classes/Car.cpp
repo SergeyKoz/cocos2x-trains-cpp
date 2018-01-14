@@ -37,6 +37,7 @@ namespace GameObjects {
 		physicsBody->setGravityEnable(false);
 		
 		this->resource->setPhysicsBody(physicsBody);
+
 		Field::getInstance()->trainsLayer->addChild(this->resource, ZIndexTrains);
 	}
 
@@ -84,6 +85,6 @@ namespace GameObjects {
 		} else {
 			this->resource->setPosition(this->move.p);
 			this->resource->setRotation(this->move.a);
-		}	
+		}
 	}
 }

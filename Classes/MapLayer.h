@@ -10,7 +10,7 @@ public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();
 	virtual void onEnter();
-    
+		
  	bool onTouchBegan(Touch* touch, Event* event);
 	void onTouchMoved(Touch* touch, Event* event);
 	void onTouchEnded(Touch* touch, Event* event);
@@ -24,9 +24,15 @@ public:
 	Path path;
 	Semaphore semaphore;
 
-	//Node* pin;
+	//vector<Sprite> backGround;
 
-	void test();
-	void testNet(int x, int y);
+	//Node* pin;
+		
+	void renderMap();
+	void renderMapSector(int x, int y);
+
+	void testNet();
+	void testNetSector(int x, int y);
+
 	string p(int p, int d);
 };

@@ -1,6 +1,7 @@
 #ifndef __GAMEOBJECTS_H__
 #define __GAMEOBJECTS_H__
 
+#include "Helper.h"
 #include "Elements.h"
 #include "Cell.h"
 #include "Field.h"
