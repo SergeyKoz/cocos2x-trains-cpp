@@ -86,14 +86,21 @@ namespace GameObjects {
 	}
 
 	Semaphore::~Semaphore()
+	{		
+	}
+
+	void Semaphore::remove()
 	{
 		Field *game = Field::getInstance();
-		
+
 		Director::getInstance()->getEventDispatcher()->removeEventListenersForTarget(this->Resources.go);
 
 		game->mapLayer->removeChild(this->Resources.go);
 		game->mapLayer->removeChild(this->Resources.reverse);
 		game->mapLayer->removeChild(this->Resources.stop);
+		/*this->Resources.go->release();
+		this->Resources.reverse->release();
+		this->Resources.stop->release();*/
 	}
 
 	bool Semaphore::Show(MapPoint Point, MapIndent Indent)

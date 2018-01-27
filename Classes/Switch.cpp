@@ -94,6 +94,8 @@ namespace GameObjects {
 
 	Switch::~Switch()
 	{
+		/*positions[Straight]->element->release();
+		positions[Diverging]->element->release();*/
 	}
 
 	void Switch::changePosition()
@@ -107,5 +109,28 @@ namespace GameObjects {
 			this->positions[SwitchPosition::Straight]->element->setVisible(true);
 			this->Position = SwitchPosition::Straight;
 		}		
+	}
+
+	void Switch::setPosition(SwitchPosition position)
+	{
+		if (position == SwitchPosition::Straight && Position == SwitchPosition::Diverging) {
+			
+			this->positions[SwitchPosition::Diverging]->element->setVisible(false);
+			this->positions[SwitchPosition::Straight]->element->setVisible(true);
+			this->Position = position;
+		}
+		if (position == SwitchPosition::Diverging && Position == SwitchPosition::Straight) {
+			this->positions[SwitchPosition::Straight]->element->setVisible(false);
+			this->positions[SwitchPosition::Diverging]->element->setVisible(true);
+			this->Position = position;
+		}
+	}
+
+	void Switch::remove()
+	{
+		Field *game = Field::getInstance();
+		Director::getInstance()->getEventDispatcher()->removeEventListenersForTarget(this->positions[Straight]->element);
+		game->mapLayer->removeChild(positions[Straight]->element);
+		game->mapLayer->removeChild(positions[Diverging]->element);
 	}
 }

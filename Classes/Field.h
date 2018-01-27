@@ -11,7 +11,8 @@ namespace GameObjects {
 	{
 		ConstructNone,
 		ConstructRails,
-		ConstructSemafores
+		ConstructSemafores,
+		ConstructOpen
 	};
 
 	enum TrafficSide
@@ -57,9 +58,12 @@ namespace GameObjects {
 		Layer *trainsLayer;		
 		Layer *menuLayer;
 
-		void AddTrain(Train *train);
-
 		vector<Train> trains;
+		void addTrain(Train train);
+		void removeTrain();
+		
+		void save(string name);
+		void open(string name);
 
 	protected:
 		Field();

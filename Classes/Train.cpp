@@ -18,15 +18,20 @@ namespace GameObjects {
 
 	Train::~Train()
 	{
+		Field::getInstance()->trainsLayer->removeChild(label);
+		this->cars.clear();
 	}
 
-	void Train::AddCar(Car *car)
+	void Train::AddCar(Car car)
 	{
 		int c = this->cars.size();
 		
-		this->cars.insert(cars.end(), *car);		
-		if (Car::settings[car->type].traction > 0) {
-			speed.maxSpeed += Car::settings[car->type].traction;
+		//this->cars.insert(cars.end(), car);		
+
+		this->cars.push_back(car);
+
+		if (Car::settings[car.type].traction > 0) {
+			speed.maxSpeed += Car::settings[car.type].traction;
 			speed.length = ceil(speed.maxSpeed / acceleration) * 2;
 			//speed.lookLength = ceil(speed.length / 3);
 			if (speed.speeds != 0) {			
@@ -37,7 +42,7 @@ namespace GameObjects {
 				speed.speeds[i] = 0;
 			}*/			
 		}
-		length += Car::settings[car->type].base + 4;
+		length += Car::settings[car.type].base + 4;
 
 		/*if (c > 0) {
 			Field *Game = Field::getInstance();
@@ -59,6 +64,13 @@ namespace GameObjects {
 		/*for (int i = 0; i < 20; i++) {
 			debugItems[i] = Vec2(0, 0);
 		}*/
+	}
+
+	void Train::remove()
+	{
+		for (int i = 0; i < this->cars.size(); i++) {
+			this->cars[i].remove();
+		}
 	}
 
 	void Train::move()

@@ -25,9 +25,15 @@ namespace GameObjects {
 	{
 		execMethods["path"] = &Cmd::path;
 		execMethods["semaphore"] = &Cmd::semaphore;
+		execMethods["save"] = &Cmd::save;
+		execMethods["open"] = &Cmd::open;
+		execMethods["train"] = &Cmd::train;
 
 		undoMethods["path"] = &Cmd::_path;
 		undoMethods["semaphore"] = &Cmd::_semaphore;
+		undoMethods["train"] = &Cmd::_train;
+		undoMethods["save"] = &Cmd::_save;
+		undoMethods["open"] = &Cmd::_open;
 	}
 	
 	Cmd::~Cmd()
@@ -40,7 +46,7 @@ namespace GameObjects {
 
 		Cmd *inst = Cmd::getInstance();
 
-		Command *cmd = inst->ParseCmd(cmdline);
+		Command *cmd = inst->decode(cmdline);
 		inst->history.insert(inst->history.end(), *cmd);
 		inst->pointer++;
 		(*(MenuLayer*)Field::getInstance()->menuLayer).UndoButton->enable(true);
@@ -49,16 +55,21 @@ namespace GameObjects {
 		(inst->*execMethod)(cmd->opts, cmd->args);
 	}
 
+	void Cmd::Exec(Command *cmd)
+	{
+		CCLOG("> %s", cmd->command);
+
+		Cmd *inst = Cmd::getInstance();
+		CmdFunc execMethod = inst->execMethods[cmd->command];
+		(inst->*execMethod)(cmd->opts, cmd->args);
+	}
+
 	void Cmd::Undo(Command *cmd)
 	{
 		CCLOG("< %s", cmd->command);
 		
-		Cmd *inst = Cmd::getInstance();	
-
-		//Command *cmd = inst->ParseCmd(cmdline);
-		//inst->history.insert(inst->history.end(), *cmd);
+		Cmd *inst = Cmd::getInstance();
 		inst->pointer--;
-
 		CmdFunc execMethod = inst->undoMethods[cmd->command];
 		(inst->*execMethod)(cmd->opts, cmd->args);
 	}
@@ -66,10 +77,7 @@ namespace GameObjects {
 	void Cmd::Undo()
 	{
 		Cmd *inst = Cmd::getInstance();
-		//inst->pointer--;
-		//Command cmd = inst->history[inst->pointer - 1];
 		Cmd::Undo(&inst->history[inst->pointer - 1]);
-
 		MenuLayer *menu = (MenuLayer*)Field::getInstance()->menuLayer;
 		if (inst->pointer == 0) {
 			menu->UndoButton->enable(false);
@@ -82,8 +90,8 @@ namespace GameObjects {
 	void Cmd::Redo()
 	{
 		Cmd *inst = Cmd::getInstance();
-		//inst->pointer++;
-		Cmd::Exec(inst->history[inst->pointer + 1].command);
+		inst->pointer++;
+		Cmd::Exec(&(inst->history[inst->pointer - 1]));
 
 		MenuLayer *menu = (MenuLayer*)Field::getInstance()->menuLayer;
 		if (inst->pointer == 1) {
@@ -97,28 +105,22 @@ namespace GameObjects {
 
 	void Cmd::clear()
 	{
-		//Field *Game = Field::getInstance();
-		//MenuLayer *menu = (MenuLayer*)Game->menuLayer;
-
 		MenuLayer *menu = (MenuLayer*)Field::getInstance()->menuLayer;
 		menu->UndoButton->enable(false);
 		menu->RedoButton->enable(false);
 		
 		Cmd *inst = Cmd::getInstance();
-
-		/*std::vector<Command> history = inst->history;
-		
+		std::vector<Command> history = inst->history;		
 		for (std::vector<Command>::iterator i = history.begin(); i != history.end(); ++i) {
-			//Cmd *inst = Cmd::getInstance();
-			delete (*i);
-		}*/
+			i->elements.clear();
+		}
+
 		inst->history.clear();
-		inst->pointer = 0;
-		
+		inst->pointer = 0;		
 		CCLOG("= clear");
 	}
 	
-	Command *Cmd::ParseCmd(string cmdline)
+	Command *Cmd::decode(string cmdline)
 	{
 		vector<string> args;
 		map<string, string> opts;
@@ -150,8 +152,21 @@ namespace GameObjects {
 				}
 			}
 		}
-
 		return new Command(command, opts, args);
+	}
+
+	string Cmd::encode(Command *cmd)
+	{
+		string cmdline = cmd->command;
+		string opts = "";
+		for (std::map<string, string>::iterator i = cmd->opts.begin(); i != cmd->opts.end(); ++i) {
+			opts += " --" + i->first + (i->second != "" ? "=" + i->second : "");
+		}
+		string args = "";
+		for (int i = 0; i < cmd->args.size(); i++) {
+			args += " " + cmd->args[i];
+		}
+		return cmdline + opts + args;
 	}
 
 	//execution methods
@@ -162,7 +177,7 @@ namespace GameObjects {
 			if (opts["path"] != "") {
 				jsonDoc.Parse<kParseDefaultFlags>(opts["path"].c_str());
 
-				for (SizeType i = 0; i < jsonDoc.Size(); i++){
+				for (SizeType i = 0; i < jsonDoc.Size(); i++) {
 					Game->cells[jsonDoc[i]["from"]["x"].GetInt()][jsonDoc[i]["from"]["y"].GetInt()].Connect(&Game->cells[jsonDoc[i]["to"]["x"].GetInt()][jsonDoc[i]["to"]["y"].GetInt()], jsonDoc[i]["point"].GetInt());
 				}
 			}
@@ -172,6 +187,21 @@ namespace GameObjects {
 
 				for (SizeType i = 0; i < jsonDoc.Size(); i++) {
 					Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].SetSwitch(jsonDoc[i]["point"].GetInt());
+
+					//if (variables.find("jon") == variables.end())
+
+					if (jsonDoc[i].HasMember("position")) {
+						string position = jsonDoc[i]["position"].GetString();
+						//if (position != "") {
+						SwitchPosition pos;
+						if (position == "Straight") {
+							pos = SwitchPosition::Straight;
+						}
+						if (position == "Diverging") {
+							pos = SwitchPosition::Diverging;
+						}
+						Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].switches[jsonDoc[i]["point"].GetInt()]->setPosition(pos);
+					}
 				}
 			}		
 		}
@@ -179,19 +209,103 @@ namespace GameObjects {
 		if (opts["remove"] == "") {
 
 		}
-
 	}
 
-	void Cmd::semaphore(map<string, string> opts, vector<string> args) {
+	void Cmd::train(map<string, string> opts, vector<string> args) {
+		if (opts["add"] == "") {
+			Field *game = Field::getInstance();
+			rapidjson::Document jsonDoc;
+
+			jsonDoc.Parse<kParseDefaultFlags>(opts["position"].c_str());
+			int indent = jsonDoc["indent"].GetInt();
+			int point = jsonDoc["point"].GetInt();
+			int x = jsonDoc["cell"]["x"].GetInt();
+			int y = jsonDoc["cell"]["y"].GetInt();
+
+			TrainDirection direction;		
+			if (opts["direction"] == "Forward") {
+				direction = TrainDirection::Forward;
+			}
+			if (opts["direction"] == "Back") {
+				direction = TrainDirection::Back;
+			}
+
+			Train train;
+			train.direction = direction;
+			CarElement car;
+			for (int i = 0; i < args.size(); i++) {				
+				if (args[i] == "Locomotive") {
+					car = CarElement::Locomotive;
+				}
+				if (args[i] == "TankCar") {
+					car = CarElement::TankCar;
+				}
+				if (args[i] == "PassengerCar") {
+					car = CarElement::PassengerCar;
+				}
+				if (args[i] == "FreightCar") {
+					car = CarElement::FreightCar;
+				}
+				if (args[i] == "Switcher") {
+					car = CarElement::Switcher;
+				}
+				train.AddCar(Car(car));
+			}
+			train.SetPosition({ &game->cells[x][y], point, indent });
+			game->addTrain(train);
+		}
+	}
+
+	void Cmd::semaphore(map<string, string> opts, vector<string> args)
+	{
 		if (opts["add"] == "") {
 			rapidjson::Document jsonDoc;
 			jsonDoc.Parse<kParseDefaultFlags>(opts["cell"].c_str());
 			Field::getInstance()->cells[jsonDoc["x"].GetInt()][jsonDoc["y"].GetInt()].SetSemaphore(std::stoi(opts["point"]));
+			if (opts["position"] != "") {
+				SemaphorePosition pos;				
+				if (opts["position"] == "Go") {
+					pos = SemaphorePosition::Go;
+				}
+				if (opts["position"] == "Reverse") {
+					pos = SemaphorePosition::Reverse;
+				}
+				if (opts["position"] == "Stop") {
+					pos = SemaphorePosition::Stop;
+				}
+				Field::getInstance()->cells[jsonDoc["x"].GetInt()][jsonDoc["y"].GetInt()].semaphores[std::stoi(opts["point"])]->SetPosition(pos);
+			}
 		}
 
 		if (opts["remove"] == "") {
-
+			
 		}
+	}
+
+	void Cmd::save(map<string, string> opts, vector<string> args)
+	{
+		string name = args[0];
+		FileUtils *utils = FileUtils::getInstance();
+		string path = utils->getWritablePath() + name + "/";
+		utils->setWritablePath(path);
+		if (!utils->isDirectoryExist(path)) {
+			utils->createDirectory(path);
+		}
+		history.pop_back();
+		pointer--;
+		Field::getInstance()->save(name);
+	}
+
+	void Cmd::open(map<string, string> opts, vector<string> args)
+	{
+		string name = args[0];
+		FileUtils *utils = FileUtils::getInstance();
+		string path = utils->getWritablePath() + name + "/";
+		utils->setWritablePath(path);
+		if (utils->isDirectoryExist(path)) {
+			Field::getInstance()->open(name);
+			Cmd::clear();
+		}		
 	}
 
 	//undo methods
@@ -201,16 +315,14 @@ namespace GameObjects {
 			rapidjson::Document jsonDoc;
 			if (opts["path"] != "") {
 				jsonDoc.Parse<kParseDefaultFlags>(opts["path"].c_str());
-
-				for (SizeType i = 0; i < jsonDoc.Size(); i++) {
+				for (int i = jsonDoc.Size() - 1; i >= 0; i--) {
 					Game->cells[jsonDoc[i]["from"]["x"].GetInt()][jsonDoc[i]["from"]["y"].GetInt()].Disconnect(&Game->cells[jsonDoc[i]["to"]["x"].GetInt()][jsonDoc[i]["to"]["y"].GetInt()], jsonDoc[i]["point"].GetInt());
 				}
 			}
 
 			if (opts["switch"] != "") {
-				jsonDoc.Parse<kParseDefaultFlags>(opts["switch"].c_str());
-
-				for (SizeType i = 0; i < jsonDoc.Size(); i++) {
+				jsonDoc.Parse<kParseDefaultFlags>(opts["switch"].c_str());				
+				for (int i = jsonDoc.Size() - 1; i >= 0; i--) {
 					Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].RemoveSwitch(jsonDoc[i]["point"].GetInt());
 				}
 			}
@@ -233,4 +345,19 @@ namespace GameObjects {
 		}
 	}
 
+	void Cmd::_train(map<string, string> opts, vector<string> args)
+	{
+		if (opts["add"] == "") {
+			Field *game = Field::getInstance();			
+			game->removeTrain();
+		}
+	}
+
+	void Cmd::_save(map<string, string> opts, vector<string> args)
+	{
+	}
+
+	void Cmd::_open(map<string, string> opts, vector<string> args)
+	{
+	}
 }

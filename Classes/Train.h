@@ -39,9 +39,10 @@ namespace GameObjects {
 		Train();
 		~Train();
 
-		void AddCar(Car *car);
+		void AddCar(Car car);
 
 		void init();
+		void remove();
 		void move();
 
 		int next(int pointer);

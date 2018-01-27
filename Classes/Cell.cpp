@@ -1,6 +1,7 @@
 #include "Field.h"
 #include "Cell.h"
 #include "Switch.h"
+#include "Cmd.h"
 
 namespace GameObjects {
 
@@ -187,33 +188,60 @@ namespace GameObjects {
 
 	void Cell::Disconnect(Cell *cell, int Point, bool Back) //to point
 	{
-
+		int dx = x - cell->x;
+		int dy = y - cell->y;
+		ConnectionConfig *connect = Cell::GetConnectConfig(dx, dy, Point);
+		RemoveEntry(cell, Point, connect->point, connect->config, connect->element, connect->enter);
+		if (!Back) {
+			cell->Disconnect(this, connect->point, true);
+		}
 	}
 
 	void Cell::SetEntry(Cell *cell, int FromPoint, int ToPoint, Configuration Configuration, TrackElement Element, int Enter)
 	{
 		Entry *entry = new Entry;
-		Sprite *image;		
 		
 		entry->to = cell;
 		entry->Element = Element;
 		entry->Point = FromPoint;
 		entry->Enter = Enter;
-
-		if (Enter == 0){
-			/*image = Elements::GetTrackElement({ cell->x, cell->y }, Element);
-			Field::getInstance()->mapLayer->addChild(image, ZIndexRails); 
-			entry->Resource = image;*/
-
-			//Elements::setRules(x, y, Element);
+		
+		if (Enter == 0 && Field::getInstance()->constuctionMode != ConstructionMode::ConstructOpen) {
+			Cmd *inst = Cmd::getInstance();
+			Sprite *image = Elements::GetTrackElement({ cell->x, cell->y }, Element);
+			Field::getInstance()->mapLayer->addChild(image, ZIndexRails);
+			inst->history[inst->pointer - 1].elements.push_back(image);			
 		}
 		configuration = Configuration;
 		if (straightConnection[ToPoint] == NULL) {
 			straightConnection[ToPoint] = entry;
-		}
-		else
-		{
+		} else {
 			divergingConnection[ToPoint] = entry;
+		}
+	}
+
+	void Cell::RemoveEntry(Cell *cell, int FromPoint, int ToPoint, Configuration Configuration, TrackElement Element, int Enter)
+	{
+
+		Entry *straightEntry = straightConnection[ToPoint];
+		Entry *divergingEntry = divergingConnection[ToPoint];
+
+		if (Enter == 0) {
+			Cmd *inst = Cmd::getInstance();
+			Field::getInstance()->mapLayer->removeChild(inst->history[inst->pointer].elements.back());			
+			inst->history[inst->pointer].elements.pop_back();
+		}
+
+		if (divergingConnection[ToPoint] != NULL) {
+			if (divergingConnection[ToPoint]->Element == Element) {
+				delete(divergingConnection[ToPoint]);
+				divergingConnection[ToPoint] = 0;
+			}			
+		} else {
+			if (straightConnection[ToPoint]->Element == Element) {
+				delete(straightConnection[ToPoint]);
+				straightConnection[ToPoint] = 0;
+			}
 		}
 	}
 
@@ -228,7 +256,9 @@ namespace GameObjects {
 
 	void Cell::RemoveSwitch(int Point)
 	{
-		//this->switches[Point] = new Switch(this, Point);
+		this->switches[Point]->remove();
+		delete(this->switches[Point]);
+		this->switches[Point] = 0;
 	}
 
 	void Cell::SetSemaphore(int Point)
@@ -238,6 +268,7 @@ namespace GameObjects {
 
 	void Cell::RemoveSemaphore(int Point)
 	{
+		this->semaphores[Point]->remove();
 		delete(this->semaphores[Point]);
 		this->semaphores[Point] = 0;
 	}

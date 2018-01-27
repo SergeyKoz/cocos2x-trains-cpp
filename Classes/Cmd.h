@@ -24,15 +24,16 @@ namespace GameObjects {
 		
 	public:
 		static Cmd *getInstance();
-		static void Exec(string cmdline);
-		static void Undo(Command *cmd);
 
+		static void Exec(string cmdline);
+		static void Exec(Command *cmd);
+		static void Undo(Command *cmd);
 		static void Undo();
 		static void Redo();
-
 		static void clear();
 
-		Command *ParseCmd(string cmdline);
+		Command *decode(string cmdline);
+		string encode(Command *cmd);
 
 		vector<Command> history;
 
@@ -46,6 +47,15 @@ namespace GameObjects {
 
 		void semaphore(map<string, string> opts, vector<string> args);
 		void _semaphore(map<string, string> opts, vector<string> args);
+
+		void train(map<string, string> opts, vector<string> args);
+		void _train(map<string, string> opts, vector<string> args);
+
+		void save(map<string, string> opts, vector<string> args);
+		void _save(map<string, string> opts, vector<string> args);
+
+		void open(map<string, string> opts, vector<string> args);
+		void _open(map<string, string> opts, vector<string> args);
 	};
 }
 

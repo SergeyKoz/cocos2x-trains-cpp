@@ -14,7 +14,7 @@ namespace GameObjects {
 	Car::Car()
 	{
 	}
-
+	
 	Car::Car(CarElement type)
 	{
 		this->type = type;
@@ -27,7 +27,6 @@ namespace GameObjects {
 
 		size.height -= 2 * k;
 		size.width -= 2 * k;
-
 		
 		auto physicsBody = PhysicsBody::createBox(size, PhysicsMaterial());
 		//physicsBody->setMass(MASS_DEFAULT);
@@ -43,6 +42,7 @@ namespace GameObjects {
 
 	Car::~Car()
 	{
+		
 	}
 
 	TrackPosition Car::SetPosition(TrackPosition position) {		
@@ -86,5 +86,10 @@ namespace GameObjects {
 			this->resource->setPosition(this->move.p);
 			this->resource->setRotation(this->move.a);
 		}
+	}
+
+	void Car::remove()
+	{
+		this->resource->removeFromParent();
 	}
 }

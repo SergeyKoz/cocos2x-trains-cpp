@@ -36,6 +36,8 @@ namespace GameObjects {
 		SwitchItem *positions[2];
 
 		void changePosition();
+		void setPosition(SwitchPosition position);
+		void remove();
 
 		Train *over;
 		vector<Train*> look;

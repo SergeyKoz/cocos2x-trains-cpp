@@ -1,9 +1,12 @@
 #ifndef __GAME_COMMAND_H__
 #define __GAME_COMMAND_H__ 
 
+#include "cocos2d.h"
 #include <string>
 #include <vector>
 #include <map>
+
+USING_NS_CC;
 using namespace std;
 
 namespace GameObjects {
@@ -17,6 +20,7 @@ namespace GameObjects {
 		string command;
 		map<string, string> opts;
 		vector<string> args;
+		vector<Sprite*> elements;
 	};
 }
 

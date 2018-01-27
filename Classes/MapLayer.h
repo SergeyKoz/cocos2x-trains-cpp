@@ -27,9 +27,13 @@ public:
 	//vector<Sprite> backGround;
 
 	//Node* pin;
+
+	vector<Sprite*> **sectors;
 		
 	void renderMap();
+	void showMap();
 	void renderMapSector(int x, int y);
+	void onRenderMapEnd();
 
 	void testNet();
 	void testNetSector(int x, int y);

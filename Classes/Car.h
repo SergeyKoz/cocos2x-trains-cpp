@@ -34,6 +34,7 @@ namespace GameObjects {
 
 		void GetMove(int speed);
 		void RunMove();
+		void remove();
 
 		TrackPosition Axis1;
 		TrackPosition Axis2;

@@ -48,14 +48,14 @@ namespace GameObjects {
 		Cell *cell;
 		SemaphoreResources Resources;
 
-		
-
 		void Next();
 		void SetPosition(SemaphorePosition pos);
 
 		vector<Train*> trains;
 		void listen(Train *train);
 		void remove(Train *train);
+
+		void remove();
 	};
 }
 

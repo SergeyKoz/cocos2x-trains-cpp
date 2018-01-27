@@ -33,6 +33,7 @@ void TrainsLayer::trainsMoveCallback(float dt)
 	for (int i = 0; i < Game->trains.size(); i++) {
 		Game->trains[i].move();
 	}
+	
 	/*end = std::chrono::steady_clock::now();
 
 	std::chrono::duration<double> elapsed_seconds = end - start;

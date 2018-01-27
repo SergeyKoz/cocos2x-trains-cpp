@@ -316,7 +316,7 @@ namespace GameObjects {
 		int enter;
 		MapPoint next;
 		for (auto i = 0; i < GraphItems.size(); i++){
-			for (int c = 0; c < 8; c++){
+			for (int c = 0; c < 8; c++) {
 				if (!GraphItems[i]->f[c] && GraphItems[i]->d[c] > 0 && (min == 0 || GraphItems[i]->d[c] < min)){
 					min = GraphItems[i]->d[c];
 					next = GraphItems[i]->p;
