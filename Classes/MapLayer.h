@@ -35,6 +35,8 @@ public:
 	void renderMapSector(int x, int y);
 	void onRenderMapEnd();
 
+	int getStartPoint(MapPoint c, Vec2 d);
+
 	void testNet();
 	void testNetSector(int x, int y);
 

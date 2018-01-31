@@ -43,26 +43,81 @@ bool MapLayer::onTouchBegan(Touch* touch, Event* event)
 	startLocation = touch->getLocation();
 	Vec2 pos = this->getPosition();
 	if (Game->constuctionMode == ConstructRails || Game->constuctionMode == ConstructSemafores) {
-		MapPoint c = {
-			(int)round((-pos.x + startLocation.x) / (Game->scale * 10)),
-			(int)round((-pos.y + startLocation.y) / (Game->scale * 10))
-		};
+		Vec2 d = { (-pos.x + startLocation.x) / (Game->scale * 10), (-pos.y + startLocation.y) / (Game->scale * 10) };		
+		MapPoint c = { (int)round(d.x), (int)round(d.y) };
 		if (Game->constuctionMode == ConstructRails) {
-			if (path.Init(c)) {
+			int p = getStartPoint(c, { (d.x - c.x), (d.y - c.y) });
+			if (path.Init(c, p)) {
 				touchMode = BuildRails;
 			}
 		}
 		if (Game->constuctionMode == ConstructSemafores) {
-			MapIndent d = {
-				c.x - ((-pos.x + startLocation.x) / (Game->scale * 10)),
-				c.y - ((-pos.y + startLocation.y) / (Game->scale * 10))
-			};
-			if (semaphore.Show(c, d)) {
+			MapIndent i = {c.x - d.x, c.y - d.y};
+			if (semaphore.Show(c, i)) {
 				touchMode = SemaphoreShow;
 			}
 		}
 	}
 	return true;
+}
+
+int MapLayer::getStartPoint(MapPoint c, Vec2 d)
+{
+	int p = -1;
+	Field *Game = Field::getInstance();
+
+	if (Game->cells[c.x][c.y].configuration == GameObjects::Configuration::None) {
+		bool f1 = d.y < (2 * d.x);
+		bool f2 = d.y < (d.x / 2);
+		bool f3 = d.y >(-d.x / 2);
+		bool f4 = d.y >(-2 * d.x);
+		if (f2 && f3) {
+			p = 0;
+		} else if (f1 && !f2) {
+			p = 1;
+		} else if (f4 && !f1) {
+			p = 2;
+		} else if (!f4 && f3) {
+			p = 3;
+		} else if (!f4 && !f2) {
+			p = 4;
+		} else if (f2 && !f1) {
+			p = 5;
+		} else if (f1 && !f4) {
+			p = 6;
+		} else if (f4 && !f3) {
+			p = 7;
+		}		
+	}
+
+	if (Game->cells[c.x][c.y].configuration == GameObjects::Configuration::Polar) {
+		bool f1 = d.x > 0;
+		bool f2 = d.y > 0;		
+		if (f1 && f2) {
+			p = 1;
+		} else if (!f1 && f2) {
+			p = 3;
+		} else if (!f1 && !f2) {
+			p = 5;
+		} else if (f1 && !f2) {
+			p = 7;
+		}
+	}
+
+	if (Game->cells[c.x][c.y].configuration == GameObjects::Configuration::Ortogonal) {
+		bool f1 = d.y > d.x;
+		bool f2 = d.y > - d.x;
+		if (!f1 && f2) {
+			p = 0;
+		} else if (f1 && f2) {
+			p = 2;
+		} else if (f1 && !f2) {
+			p = 4;
+		} else if (!f1 && !f2) {
+			p = 6;
+		}
+	}
+	return p;
 }
 
 void MapLayer::onTouchMoved(Touch* touch, Event* event)
@@ -80,23 +135,21 @@ void MapLayer::onTouchMoved(Touch* touch, Event* event)
 			Game->trainsLayer->setPosition(p);
 		}
 		if (touchMode == BuildRails || touchMode == SemaphoreShow) {
-			MapPoint p = { (int)round((-pos.x + loc.x) / (Game->scale * 10)), (int)round((-pos.y + loc.y) / (Game->scale * 10)) };
+			Vec2 d = { (-pos.x + loc.x) / (Game->scale * 10), (-pos.y + loc.y) / (Game->scale * 10) };
+			MapPoint c = { (int)round(d.x), (int)round(d.y) };
+
 			if (touchMode == BuildRails) {
-				path.Show(p);
+				int p = getStartPoint(c, { (d.x - c.x), (d.y - c.y) });
+				path.Show(c, p);
 			}
-			if (touchMode == SemaphoreShow) {
-				MapIndent d = {
-					p.x - ((-pos.x + loc.x) / (Game->scale * 10)),
-					p.y - ((-pos.y + loc.y) / (Game->scale * 10))
-				};
-				if (!semaphore.Show(p, d)) {
+			if (touchMode == SemaphoreShow) {				
+				MapIndent i = {c.x - d.x, c.y - d.y};
+				if (!semaphore.Show(c, i)) {
 					semaphore.Hide();
 				}
 			}
 		}
 		startLocation = loc;
-
-		
 	}
 }
 

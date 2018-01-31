@@ -23,14 +23,15 @@ namespace GameObjects {
 		int Width = 4;
 		MapPoint s;
 		MapPoint e;
-		MapPoint d;		
+		MapPoint d;
+		int p;
 		float dt;		
 		float sin;
 		float cos;
 		Cell *sc;
 	};
 
-	struct GraphItem{
+	struct GraphItem {
 		bool isArea = false;
 		bool isBorder = false;
 		bool isInside = false;
@@ -41,7 +42,7 @@ namespace GameObjects {
 		int Out[8];
 	};
 
-	struct PathItem{
+	struct PathItem {
 		TrackElement elementType;
 		Sprite *element;
 		int enter;
@@ -73,8 +74,8 @@ namespace GameObjects {
 		MapSize size;
 		MapPoint origin;
 
-		bool Init(MapPoint Point);
-		void Show(MapPoint Point);
+		bool Init(MapPoint Point, int Enter);
+		void Show(MapPoint Point, int Enter);
 		void Find(Cell *c, int p = -1);
 		void Set();
 		GraphItem *graph(MapPoint Point);
@@ -91,6 +92,7 @@ namespace GameObjects {
 		GetPositionCoordinates(Position)
 		EstimateObject(Indent, OutPoint, InPoint, Cell, Position)
 		*/
+		//DrawNode *debugNode;
 	};
 }
 

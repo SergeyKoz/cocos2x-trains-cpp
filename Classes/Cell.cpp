@@ -177,10 +177,8 @@ namespace GameObjects {
 	{
 		int dx = x - cell->x;
 		int dy = y - cell->y;
-
 		ConnectionConfig *connect = Cell::GetConnectConfig(dx, dy, Point);
 		SetEntry(cell, Point, connect->point, connect->config, connect->element, connect->enter);
-
 		if (!Back){
 			cell->Connect(this, connect->point, true);
 		}

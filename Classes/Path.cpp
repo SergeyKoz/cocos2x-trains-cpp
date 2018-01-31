@@ -50,7 +50,7 @@ namespace GameObjects {
 		{ 7, { { 0, 0 },{ 1, 0.02f },{ 2, 0.1f },{ 2.99f, 0.22f },{ 3.97f, 0.4f },{ 4.95f, 0.62f },{ 5.91f, 0.89f },{ 6.86f, 1.21f },{ 7.79f, 1.58f },{ 8.7f, 1.99f },{ 9.59f, 2.45f },{ 10.45f, 2.95f },{ 11.29f, 3.49f },{ 12.1f, 4.08f },{ 12.88f, 4.7f },{ 13.63f, 5.37f },{ 14.35f, 6.07f },{ 15.03f, 6.8f },{ 15.67f, 7.57f },{ 16.27f, 8.37f },{ 16.83f, 9.19f },{ 17.35f, 10.05f },{ 17.82f, 10.93f },{ 18.26f, 11.83f },{ 18.64f, 12.75f },{ 18.98f, 13.69f },{ 19.27f, 14.65f },{ 19.51f, 15.62f },{ 19.71f, 16.6f },{ 19.85f, 17.59f },{ 19.95f, 18.59f } } }
 	};
 
-	bool Path::Init(MapPoint Point){
+	bool Path::Init(MapPoint Point, int Enter){
 		bool f = false;
 		Field *Game = Field::getInstance();
 		
@@ -60,15 +60,19 @@ namespace GameObjects {
 		Cell *startCell = &Game->cells[Point.x][Point.y];
 
 		Area.e = { -1, -1 };
+		Area.p = -1;
 		int p = -1;
-		if (startCell->configuration == Polar || startCell->configuration == Ortogonal){
-			for (int i = 0; i < 8; i++){
-				if (startCell->straightConnection[i] == 0 && !(startCell->straightConnection[Cell::Related[i]] == 0)){
-					p = i;
-				}
+		bool pf = false;
+		if (startCell->configuration != None) {
+			if (startCell->straightConnection[Enter] == 0 && !(startCell->straightConnection[Cell::Related[Enter]] == 0)) {
+				pf = true;
+			}
+			if (startCell->straightConnection[Enter] != 0 && startCell->divergingConnection[Enter] == 0) {
+				pf = true;
 			}
 		}
-		if (p >= 0){			
+
+		if (pf) {
 			Area.s = Point;
 			Area.sc = startCell;
 			graph(Point)->p = Point;
@@ -78,16 +82,20 @@ namespace GameObjects {
 				graph(Point)->In[i] = 0;
 				graph(Point)->Out[i] = -1;
 			}
-			graph(Point)->d[p] = 1;
-			graph(Point)->d[Cell::Related[p]] = 2;
+			graph(Point)->d[Enter] = 1;
+			graph(Point)->d[Cell::Related[Enter]] = 2;
 			graph(Point)->isArea = true;
 			GraphItems.insert(GraphItems.end(), graph(Point));			
 			f = true;
+
+			// debug
+			//debugNode = DrawNode::create();
+			//Game->mapLayer->addChild(debugNode, ZIndexRails);
 		}
 		return f;
 	}
 
-	void Path::Show(MapPoint Point){
+	void Path::Show(MapPoint Point, int Enter){
 		bool changed = false;
 
 		if (Point.x + origin.x < 0) {
@@ -110,22 +118,24 @@ namespace GameObjects {
 			(Area.e.x >= 0 && !(Area.e.x == Point.x && Area.e.y == Point.y))){
 			changed = true;
 		}
-		if (changed){
+
+		MapPoint d;
+		if (changed) {
 			Area.d.x = Point.x - Area.s.x;
-			Area.d.y = Point.y - Area.s.y;			
+			Area.d.y = Point.y - Area.s.y;
 			Area.e = Point;
-			Area.dt = abs(sqrt(pow(Area.d.x, 2) + pow(Area.d.y, 2)));			
+			Area.dt = abs(sqrt(pow(Area.d.x, 2) + pow(Area.d.y, 2)));
 			Area.sin = (float)Area.d.y / (float)Area.dt;
 			Area.cos = (float)Area.d.x / (float)Area.dt;
-			MapPoint d;
-			for (auto i = BorderItems.begin(); i != BorderItems.end();){
-				if (Path::IsArea(*i)){
-					for (auto c = 0; c < 20; c++){						
+			
+			for (auto i = BorderItems.begin(); i != BorderItems.end();) {
+				if (Path::IsArea(*i)) {
+					for (auto c = 0; c < 20; c++) {
 						d = { i->x + closer[c].x, i->y + closer[c].y };
-						if (Path::inWindow(d)){
-							if (graph(d)->isArea){
-								if (!graph(d)->isInside){
-									for (auto j = 0; j < 8; j++){
+						if (Path::inWindow(d)) {
+							if (graph(d)->isArea) {
+								if (!graph(d)->isInside) {
+									for (auto j = 0; j < 8; j++) {
 										graph(d)->f[j] = false;
 									}
 									InsideItems.insert(InsideItems.end(), d);
@@ -136,29 +146,40 @@ namespace GameObjects {
 						}
 					}
 					i = BorderItems.erase(i);
-				} else {
+				}
+				else {
 					++i;
 				}
-			}			
-			if (InsideItems.size()>0){
+			}
+			if (InsideItems.size() > 0) {
 				GraphItems.clear();
-				for (auto i = 0; i < InsideItems.size(); i++){					
+				for (auto i = 0; i < InsideItems.size(); i++) {
 					graph(InsideItems[i])->isInside = false;
 					GraphItems.insert(GraphItems.end(), graph(InsideItems[i]));
 				}
 				InsideItems.clear();
 			}
 			Find(Area.sc);
+		}
+
+		if (changed || Area.p != Enter) {
+			Area.p = Enter;
 			Field *Game = Field::getInstance();
 			Cell *current = &Game->cells[Point.x][Point.y];
-			if (graph(Point)->isArea){
-				int min = 0, p = -1;
+			if (graph(Point)->isArea) {
+				/*int min = 0, p = -1;
 				for (int c = 0; c < 8; c++){
 					if (graph(Point)->Out[c] >= 0 && graph(Point)->f[c] && graph(Point)->d[c] > 0 && (min == 0 || graph(Point)->d[c] < min)){
 						min = graph(Point)->d[c];
 						p = c;
 					}
 				}
+				*/
+				int p = -1;
+				if (graph(Point)->Out[Enter] >= 0 && graph(Point)->f[Enter] && graph(Point)->d[Enter] > 0) {
+					p = Enter;
+				}
+
 				for (auto c = 0; c < PathItems.size(); c++){
 					Game->mapLayer->removeChild(PathItems[c]->element, true);
 				}
@@ -200,7 +221,7 @@ namespace GameObjects {
 					}
 				}
 			}
-		}
+		} //changed
 	}
 
 	void Path::Set() {
@@ -355,7 +376,7 @@ namespace GameObjects {
 					}
 				}
 			} else {
-				if (!graph(p)->isBorder && (element == Horizontal || element == Vertical || element == Item45 || element == Item135)){
+				if (!graph(p)->isBorder /*&& (element == Horizontal || element == Vertical || element == Item45 || element == Item135)*/){
 					BorderItems.insert(BorderItems.end(), p);
 					graph(p)->isBorder = true;
 				}				
@@ -372,7 +393,12 @@ namespace GameObjects {
 				(Point.x - Area.s.x) * Area.cos - (Area.s.y - Point.y) * Area.sin,
 				(Point.x - Area.s.x) * Area.sin + (Area.s.y - Point.y) * Area.cos
 			};
-			if (m.x > -Area.Width && m.x < Area.Width + Area.dt && m.y > -Area.Width && m.y < Area.Width){
+			//CCLOG("m %.2f,%.2f|%.2f,%.2f|%d,%d|%d,%d|", m.x, m.y, Area.sin, Area.cos, Area.s.x, Area.s.y, Point.x, Point.y);
+			if (m.x > -Area.Width && m.x < Area.Width + Area.dt && m.y > -Area.Width && m.y < Area.Width) {
+				
+				//debug
+				//debugNode->drawDot({ (float)(Point.x * 20), (float)(Point.y * 20) }, 2.0, Color4F::BLUE);
+
 				f = true;
 				graph(Point)->p = Point;
 				graph(Point)->isArea = true;
