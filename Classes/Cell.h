@@ -45,6 +45,9 @@ namespace GameObjects {
 		Switch *switches[8];
 		Semaphore *semaphores[8];
 
+		byte access;
+		byte accessParam;
+
 		//bool allowSwitch[8];
 		//bool allowEnter[8][16];
 		
@@ -65,8 +68,11 @@ namespace GameObjects {
 		Entry *getEntry(int Point);
 
 		static ConnectionConfig *GetConnectConfig(int dx, int dy, int Point);
-		bool isAllow(int Point, TrackElement Element);
+		
+		//debug
+		DrawNode *debugNode;
 
+		void writeDebugNode(int x, int y, int a, int c, Color4F color);
 	};
 }
 

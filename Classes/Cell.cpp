@@ -2,6 +2,11 @@
 #include "Cell.h"
 #include "Switch.h"
 #include "Cmd.h"
+#include "Path.h"
+
+#include <bitset>
+#include <chrono>
+#include <thread>
 
 namespace GameObjects {
 
@@ -31,6 +36,8 @@ namespace GameObjects {
 			allowEnter[i][SmallCilcleSect2] = true;
 			allowEnter[i][SmallCilcleSect3] = true;*/
 		}
+		access = 0;
+		accessParam = 0;
 	}
 
 	Cell::~Cell()
@@ -203,6 +210,37 @@ namespace GameObjects {
 		entry->Element = Element;
 		entry->Point = FromPoint;
 		entry->Enter = Enter;
+
+		if (Enter == 0) {
+			Field *game = Field::getInstance();
+			//set access
+			AccessItems accessItems = Path::access[0][Element];
+			AccessItem accessItem;
+
+			for (int i = 0; i < accessItems.items.size(); i++) {
+				accessItem = accessItems.items[i];
+				//if (game->cells[x + accessItem.p.x][y + accessItem.p.y].access == 0) {
+					game->cells[x + accessItem.p.x][y + accessItem.p.y].access = game->cells[x + accessItem.p.x][y + accessItem.p.y].access | accessItem.access;
+					game->cells[x + accessItem.p.x][y + accessItem.p.y].accessParam = game->cells[x + accessItem.p.x][y + accessItem.p.y].accessParam | accessItem.c;
+					
+					// debug
+					//if (accessItem.access > 0) {
+						//writeDebugNode(x + accessItem.p.x, y + accessItem.p.y, accessItem.access, accessItem.c, Color4F::BLUE);
+					//}
+				//}
+			}
+		}
+
+		/*if (Enter == 1) {
+			AccessItems accessItems = Path::access[1][Element];
+			AccessItem accessItem;
+			for (int i = 0; i < accessItems.items.size(); i++) {
+				accessItem = accessItems.items[i];
+				
+				// debug
+				//writeDebugNode(x + accessItem.p.x, y + accessItem.p.y, accessItem.access, accessItem.c, Color4F::RED);
+			}
+		}*/
 		
 		if (Enter == 0 && Field::getInstance()->constuctionMode != ConstructionMode::ConstructOpen) {
 			Cmd *inst = Cmd::getInstance();
@@ -271,8 +309,65 @@ namespace GameObjects {
 		this->semaphores[Point] = 0;
 	}
 	
-	bool Cell::isAllow(int Point, TrackElement Element){
-		// TODO: the check logic point
-		return true;
+	void Cell::writeDebugNode(int x, int y, int a, int c, Color4F color) {
+		Field *game = Field::getInstance();
+
+		float _dx, _dy, _dx1, _dx2, _dy1, _dy2;
+		_dx = (float)(x * 20);
+		_dy = (float)(y * 20);
+		
+		if ((a & 0b00000001) == 1) {
+			debugNode = DrawNode::create();
+			game->mapLayer->addChild(debugNode, ZIndexRails);
+			debugNode->drawDot({ _dx, _dy }, 3, color);
+		}
+
+		if ((a & 0b00000010) == 2) {
+			debugNode = DrawNode::create();
+			game->mapLayer->addChild(debugNode, ZIndexRails);
+			debugNode->drawDot({ _dx + 7, _dy }, 3, color);
+		}
+
+		if ((a & 0b00000100) == 4) {
+			debugNode = DrawNode::create();
+			game->mapLayer->addChild(debugNode, ZIndexRails);
+			debugNode->drawDot({ _dx + 14, _dy }, 3, color);
+		}
+
+		if ((a & 0b00001000) == 8) {
+			debugNode = DrawNode::create();
+			game->mapLayer->addChild(debugNode, ZIndexRails);
+			debugNode->drawDot({ _dx + 14, _dy + 7 }, 3, color);
+		}
+
+		if ((a & 0b00010000) == 16) {
+			debugNode = DrawNode::create();
+			game->mapLayer->addChild(debugNode, ZIndexRails);
+			debugNode->drawDot({ _dx + 14, _dy + 14 }, 3, color);
+		}
+
+		if ((a & 0b00100000) == 32) {
+			debugNode = DrawNode::create();
+			game->mapLayer->addChild(debugNode, ZIndexRails);
+			debugNode->drawDot({ _dx + 7, _dy + 14 }, 3, color);
+		}
+
+		if ((a & 0b01000000) == 64) {
+			debugNode = DrawNode::create();
+			game->mapLayer->addChild(debugNode, ZIndexRails);
+			debugNode->drawDot({ _dx, _dy + 14 }, 3, color);
+		}
+
+		if ((a & 0b10000000) == 128) {
+			debugNode = DrawNode::create();
+			game->mapLayer->addChild(debugNode, ZIndexRails);
+			debugNode->drawDot({ _dx, _dy + 7 }, 3, color);
+		}
+
+		if ((c & 0b1) == 1) {
+			debugNode = DrawNode::create();
+			game->mapLayer->addChild(debugNode, ZIndexRails);
+			debugNode->drawDot({ _dx + 7, _dy + 7 }, 3, color);
+		}		
 	}
 }

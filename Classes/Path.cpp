@@ -8,7 +8,7 @@ namespace GameObjects {
 	Path::Path()
 	{
 		Field *Game = Field::getInstance();
-		Size visibleSize = Director::getInstance()->getVisibleSize();		
+		Size visibleSize = Director::getInstance()->getVisibleSize();
 		size = { (int)(visibleSize.width / (Game->scale * 10)), (int)(visibleSize.height / (Game->scale * 10)) };
 		Graph = new GraphItem*[size.width];
 		for (int i = 0; i < size.width; i++)
@@ -16,7 +16,7 @@ namespace GameObjects {
 			Graph[i] = new GraphItem[size.height];
 		}
 	}
-	
+
 	Path::~Path()
 	{
 	}
@@ -29,7 +29,7 @@ namespace GameObjects {
 		{ 3, 1 }, { -3, 1 }, { -3, 1 }, { -3, -1 }
 	};
 
-	const TrackItem Path::track[16] = {		
+	const TrackItem Path::track[16] = {
 		{ 0, { { 0, 0 }, { 0, -1 },{ 0, -2 },{ 0, -3 },{ 0, -4 },{ 0, -5 },{ 0, -6 },{ 0, -7 },{ 0, -8 },{ 0, -9 } } },
 		{ 0, { { 0, 0 },{ 1, 0 },{ 2, 0 },{ 3, 0 },{ 4, 0 },{ 5, 0 },{ 6, 0 },{ 7, 0 },{ 8, 0 },{ 9, 0 } } },
 		{ 0, { { 0, 0 },{ 0.71f, 0.71f },{ 1.41f, 1.41f },{ 2.12f, 2.12f },{ 2.83f, 2.83f },{ 3.54f, 3.54f },{ 4.24f, 4.24f },{ 4.95f, 4.95f },{ 5.66f, 5.66f },{ 6.36f, 6.36f },{ 7.07f, 7.07f },{ 7.78f, 7.78f },{ 8.49f, 8.49f },{ 9.19f, 9.19f } } },
@@ -49,8 +49,66 @@ namespace GameObjects {
 		{ 7, { { 0, 0 },{ 0.02f, -1 },{ 0.1f, -2 },{ 0.22f, -2.99f },{ 0.4f, -3.97f },{ 0.62f, -4.95f },{ 0.89f, -5.91f },{ 1.21f, -6.86f },{ 1.58f, -7.79f },{ 1.99f, -8.7f },{ 2.45f, -9.59f },{ 2.95f, -10.45f },{ 3.49f, -11.29f },{ 4.08f, -12.1f },{ 4.7f, -12.88f },{ 5.37f, -13.63f },{ 6.07f, -14.35f },{ 6.8f, -15.03f },{ 7.57f, -15.67f },{ 8.37f, -16.27f },{ 9.19f, -16.83f },{ 10.05f, -17.35f },{ 10.93f, -17.82f },{ 11.83f, -18.26f },{ 12.75f, -18.64f },{ 13.69f, -18.98f },{ 14.65f, -19.27f },{ 15.62f, -19.51f },{ 16.6f, -19.71f },{ 17.59f, -19.85f },{ 18.59f, -19.95f } } },
 		{ 7, { { 0, 0 },{ 1, 0.02f },{ 2, 0.1f },{ 2.99f, 0.22f },{ 3.97f, 0.4f },{ 4.95f, 0.62f },{ 5.91f, 0.89f },{ 6.86f, 1.21f },{ 7.79f, 1.58f },{ 8.7f, 1.99f },{ 9.59f, 2.45f },{ 10.45f, 2.95f },{ 11.29f, 3.49f },{ 12.1f, 4.08f },{ 12.88f, 4.7f },{ 13.63f, 5.37f },{ 14.35f, 6.07f },{ 15.03f, 6.8f },{ 15.67f, 7.57f },{ 16.27f, 8.37f },{ 16.83f, 9.19f },{ 17.35f, 10.05f },{ 17.82f, 10.93f },{ 18.26f, 11.83f },{ 18.64f, 12.75f },{ 18.98f, 13.69f },{ 19.27f, 14.65f },{ 19.51f, 15.62f },{ 19.71f, 16.6f },{ 19.85f, 17.59f },{ 19.95f, 18.59f } } }
 	};
+	
+	
 
-	bool Path::Init(MapPoint Point, int Enter){
+	const AccessItems Path::access[2][16] = {
+		{
+			{ { { 0b11000001,0b0,{ 0, -1 } } } },
+			{ { { 0b00000111,0b0,{ 0, 0 } } } },
+			{ { { 0b00010001,0b1,{ 0, 0 } } } },
+			{ { { 0b01000100,0b1,{ 0, -1 } } } },
+
+			/*{ { { 0b00000000,0b0,{ 0, -1 } } } },
+			{ { { 0b00000000,0b0,{ 0, 0 } } } },
+			{ { { 0b00000000,0b0,{ 0, 0 } } } },
+			{ { { 0b00000000,0b0,{ 0, -1 } } } },*/
+
+			// base circle													
+			{ { { 0b00010000,0b0,{ -1, 0 } },{ 0b00011100,0b0,{ -1, 1 } },{ 0b01000110,0b1,{ -1, 2 } },{ 0b11000001,0b0,{ 0, 0 } } } },
+			{ { { 0b01100100,0b1,{ -1, 0 } },{ 0b01110000,0b0,{ -2, 0 } },{ 0b00010000,0b0,{ -3, 0 } },{ 0b00000111,0b0,{ -3, 1 } } } },
+			{ { { 0b01000000,0b0,{ -1, -1 } },{ 0b01110000,0b0,{ -2, -1 } },{ 0b00011001,0b1,{ -3, -1 } },{ 0b00000111,0b0,{ -1, 0 } } } },
+			{ { { 0b00010010,0b1,{ -1, -1 } },{ 0b00100010,0b1,{ -1, -2 } },{ 0b11100001,0b0,{ -1, -3 } } } },
+			{ { { 0b11000011,0b0,{ 0, -1 } },{ 0b00100010,0b1,{ 0, -2 } },{ 0b00100100,0b1,{ 0, -3 } } } },
+			{ { { 0b01001000,0b1,{ 0, -1 } },{ 0b10001000,0b1,{ 1, -1 } },{ 0b10000111,0b0,{ 2, -1 } } } },
+			{ { { 0b00001111,0b0,{ 0, 0 } },{ 0b10001000,0b1,{ 1, 0 } },{ 0b10010000,0b1,{ 2, 0 } } } },
+			{ { { 0b00110001,0b1,{ 0, 0 } },{ 0b00011100,0b0,{ 0, 1 } },{ 0b00000100,0b0,{ 0, 2 } },{ 0b11000001,0b0,{ 1, 2 } } } },
+
+			// small circle
+			{ { { 0b00010000,0b0,{ -1, 0 } },{ 0b01000100,0b1,{ -1, 1 } },{ 0b00010000,0b0,{ -2, 1 } },{ 0b11000001,0b0,{ 0, 0 } }, { 0b00000111,0b0,{ -2, 2 } } } },
+			{ { { 0b01000000,0b0,{ -1, -1 } },{ 0b00010010,0b1,{ -2, -1 } },{ 0b11100001,0b0,{ -2, -2 } },{ 0b00000111,0b0,{ -1, 0 } } } },
+			{ { { 0b11000011,0b0,{ 0, -1 } },{ 0b00101000,0b1,{ 0, -2 } },{ 0b10000111,0b0,{ 1, -2 } } } },
+			{ { { 0b00001111,0b0,{ 0, 0 } },{ 0b10010000,0b1,{ 1, 0 } },{ 0b00000100,0b0,{ 1, 1 } },{ 0b11000001,0b0,{ 2, 1 } } } }
+		},{
+			{ { { 0b11000001,0b0,{ 0, 0 } } } },
+			{ { { 0b00000111,0b0,{ -1, 0 } } } },
+			{ { { 0b00010001,0b1,{ -1, -1 } } } },
+			{ { { 0b01000100,0b1,{ -1, 0 } } } },
+
+			/*{ { { 0b00000000,0b0,{ 0, -1 } } } },
+			{ { { 0b00000000,0b0,{ 0, 0 } } } },
+			{ { { 0b00000000,0b1,{ 0, 0 } } } },
+			{ { { 0b00000000,0b1,{ 0, -1 } } } },*/
+
+			// base circle
+			{ { { 0b00010000,0b0,{0, -3 } },{ 0b00011100,0b0,{ 0, -2 } },{ 0b01000110,0b1,{ 0, -1 } },{ 0b11000001,0b0,{ 1, -3 } } } },
+			{ { { 0b01100100,0b1,{ 2, -1 } },{ 0b01110000,0b0,{ 1, -1 } },{ 0b00010000,0b0,{ 0, -1 } },{ 0b00000111,0b0,{ 0, 0 } } } },
+			{ { { 0b01000000,0b0,{ 2, 0 } },{ 0b01110000,0b0,{ 1, 0 } },{ 0b00011001,0b1,{ 0, 0 } },{ 0b00000111,0b0,{ 2, 1 } } } },
+			{ { { 0b00010010,0b1,{ 0, 2 } },{ 0b00100010,0b1,{ 0, 1 } },{ 0b11100001,0b0,{ 0, 0 } } } },
+			{ { { 0b11000011,0b0,{ -1, 2 } },{ 0b00100010,0b1,{ -1, 1 } },{ 0b00100100,0b1,{ -1, 0 } } } },
+			{ { { 0b01001000,0b1,{ -3, 0 } },{ 0b10001000,0b1,{ -2, 0 } },{ 0b10000111,0b0,{ -1, 0 } } } },
+			{ { { 0b00001111,0b0,{ -3, -1 } },{ 0b10001000,0b1,{ -2, -1 } },{ 0b10010000,0b1,{ -1, -1 } } } },
+			{ { { 0b00110001,0b1,{ -1, -3 } },{ 0b00011100,0b0,{ -1, -2 } },{ 0b00000100,0b0,{ -1, -1 } },{ 0b11000001,0b0,{ 0, -1 } } } },
+
+			// small circle
+			{ { { 0b00010000,0b0,{ 1, -2 } },{ 0b01000100,0b1,{ 1, -1 } },{ 0b00010000,0b0,{ 0, -1 } },{ 0b11000001,0b0,{ 2, -2 } },{ 0b00000111,0b0,{ 0, 0 } } } },
+			{ { { 0b01000000,0b0,{ 1, 1 } },{ 0b00010010,0b1,{ 0, 1 } },{ 0b11100001,0b0,{ 0, 0 } },{ 0b00000111,0b0,{ 1, 2 } } } },
+			{ { { 0b11000011,0b0,{ -2, 1 } },{ 0b00101000,0b1,{ -2, 0 } },{ 0b10000111,0b0,{ -1, 0 } } } },
+			{ { { 0b00001111,0b0,{ -2, -2 } },{ 0b10010000,0b1,{ -1, -2 } },{ 0b00000100,0b0,{ -1, -1 } },{ 0b11000001,0b0,{ 0, -1 } } } }
+		}
+	};
+
+	bool Path::Init(MapPoint Point) { //, int Enter
 		bool f = false;
 		Field *Game = Field::getInstance();
 		
@@ -63,13 +121,25 @@ namespace GameObjects {
 		Area.p = -1;
 		int p = -1;
 		bool pf = false;
+		//bool pf = false;
+		int Enter1 = -1;
+		int Enter2 = -1;
 		if (startCell->configuration != None) {
-			if (startCell->straightConnection[Enter] == 0 && !(startCell->straightConnection[Cell::Related[Enter]] == 0)) {
+			for (int i = 0; i < 8; i++) {
+				if (Enter1 == -1) {
+					if (startCell->straightConnection[i] > 0) {
+						Enter1 = i;
+						Enter2 = Cell::Related[i];
+						pf = true;
+					}
+				}
+			}
+			/*if (startCell->straightConnection[Enter] == 0 && !(startCell->straightConnection[Cell::Related[Enter]] == 0)) {
 				pf = true;
 			}
 			if (startCell->straightConnection[Enter] != 0 && startCell->divergingConnection[Enter] == 0) {
 				pf = true;
-			}
+			}*/
 		}
 
 		if (pf) {
@@ -82,15 +152,18 @@ namespace GameObjects {
 				graph(Point)->In[i] = 0;
 				graph(Point)->Out[i] = -1;
 			}
-			graph(Point)->d[Enter] = 1;
-			graph(Point)->d[Cell::Related[Enter]] = 2;
+			//graph(Point)->d[Enter] = 1;
+			//graph(Point)->d[Cell::Related[Enter]] = 1;
+			graph(Point)->d[Enter1] = 2;
+			graph(Point)->d[Enter2] = 1;
 			graph(Point)->isArea = true;
 			GraphItems.insert(GraphItems.end(), graph(Point));			
 			f = true;
 
 			// debug
-			//debugNode = DrawNode::create();
-			//Game->mapLayer->addChild(debugNode, ZIndexRails);
+			/*debugNode = DrawNode::create();
+			debugNode->setName("_debugItem");
+			Game->mapLayer->addChild(debugNode, ZIndexRails);*/
 		}
 		return f;
 	}
@@ -129,7 +202,7 @@ namespace GameObjects {
 			Area.cos = (float)Area.d.x / (float)Area.dt;
 			
 			for (auto i = BorderItems.begin(); i != BorderItems.end();) {
-				if (Path::IsArea(*i)) {
+				if (Path::isArea(*i)) {
 					for (auto c = 0; c < 20; c++) {
 						d = { i->x + closer[c].x, i->y + closer[c].y };
 						if (Path::inWindow(d)) {
@@ -360,14 +433,17 @@ namespace GameObjects {
 		}
 	}
 
-	void Path::Connect(Cell *out, int outPoint, TrackElement element, int d, int enter){
-		MapPoint p = { out->x + Elements::offset[enter][element].dx, out->y + Elements::offset[enter][element].dy };
+	void Path::Connect(Cell *out, int outPoint, TrackElement element, int d, int enter)
+	{
+		ElementOffset offset = Elements::offset[enter][element];
+		MapPoint p = { out->x + offset.dx, out->y + offset.dy };	
 		
-		if (Path::inWindow(p)){
-			if (Path::IsArea(p)){
+		if (Path::inWindow(p)) {			
+			if (Path::isArea(p)) {
 				Cell *in = &Field::getInstance()->cells[p.x][p.y];
-				int inPoint = Elements::offset[enter][element].p;
-				if (in->isAllow(Elements::offset[enter][element].p, element)){
+				int inPoint = offset.p;
+				if (Path::isAllow(out, outPoint, enter, in, inPoint, Elements::second[enter], element)) {
+				//if (in->isAllow(element, enter, Area.s)) {
 					GraphItem *i = graph({ in->x, in->y });
 					if (i->d[inPoint] == 0 || (i->d[inPoint] > 0 && i->d[inPoint] > d)){
 						i->d[inPoint] = d;
@@ -384,7 +460,7 @@ namespace GameObjects {
 		}
 	}
 
-	bool Path::IsArea(MapPoint Point){
+	bool Path::isArea(MapPoint Point){
 		bool f = false;
 		if (graph(Point)->isArea){
 			f = true;
@@ -420,6 +496,87 @@ namespace GameObjects {
 
 	bool Path::inWindow(MapPoint Point){
 		return (Point.x + origin.x) > 0 && (Point.y + origin.y) > 0 && (Point.x + origin.x) < size.width && (Point.y + origin.y) < size.height;
+	}
+
+	bool Path::isAllow(Cell *out, int outPoint, int outEnter, Cell *in, int inPoint, int inEnter, TrackElement element)
+	{
+		//return true;
+		Field *game = Field::getInstance();
+		bool f = true;
+
+		AccessItems accessItems = Path::access[outEnter][element];
+		// check In
+		if (in->configuration != Configuration::None) {
+			if (in->divergingConnection[inPoint] != 0) {
+				f = false;
+			}
+			//not the same el
+			if (f && in->straightConnection[inPoint] > 0 && in->straightConnection[inPoint]->Element == element) {				
+				f = false;
+			}
+			//not right continue from end
+			if (f && (in->straightConnection[inPoint] == 0 && in->straightConnection[Cell::Related[inPoint]] == 0)) {
+				f = false;
+			}
+			//intersection 
+			if (f && in->straightConnection[inPoint] > 0) {
+				AccessItems accesInItems = Path::access[in->straightConnection[inPoint]->Enter][in->straightConnection[inPoint]->Element];
+				accessItems = Path::intersectAccessElements({ out->x, out->y }, accessItems, { in->x, in->y }, accesInItems);
+			}
+		}
+
+		//check Out
+		if (f && out->configuration != Configuration::None) {
+			if (out->divergingConnection[outPoint] != 0) {
+				f = false;
+			}
+			if (f && out->straightConnection[outPoint] > 0 && out->straightConnection[outPoint]->Element == element) {
+				f = false;
+			}
+			if (f && (out->straightConnection[outPoint] == 0 && out->straightConnection[Cell::Related[outPoint]] == 0)) {
+				f = false;
+			}
+
+			if (f && out->straightConnection[outPoint] > 0) {
+				AccessItems accesOutItems = Path::access[out->straightConnection[outPoint]->Enter][out->straightConnection[outPoint]->Element];
+				accessItems = Path::intersectAccessElements({ out->x, out->y }, accessItems, { out->x, out->y }, accesOutItems);
+			}
+		}
+
+		if (f) {			
+			//AccessItems accessItems = Path::access[outEnter][element];
+			for (int i = 0; i < accessItems.items.size(); i++) {
+				Cell cell = game->cells[out->x + accessItems.items[i].p.x][out->y + accessItems.items[i].p.y];
+				if (f && (cell.access > 0 || accessItems.items[i].c >0)) {
+					byte b = accessItems.items[i].access;
+					byte c = accessItems.items[i].c;
+					if ((b & cell.access) > 0 || (c & cell.accessParam) > 0) {
+						//writeDebugNode(cell.x, cell.y, accessItems.items[i].access, Color4F::ORANGE);
+						f = false;
+						CCLOG("false");
+					}
+				}
+			}
+		}
+		return f;
+	}
+
+	AccessItems Path::intersectAccessElements(MapPoint point, AccessItems items, MapPoint intersectPoint, AccessItems intersectItems)
+	{
+		Field *game = Field::getInstance();
+		for (int i = 0; i < intersectItems.items.size(); i++) {
+			Cell intersectCell  = game->cells[intersectPoint.x + intersectItems.items[i].p.x][intersectPoint.y + intersectItems.items[i].p.y];
+			for (int l = 0; l < items.items.size(); l++) {
+				Cell cell = game->cells[point.x + items.items[l].p.x][point.y + items.items[l].p.y];
+				if (cell.x == intersectCell.x && cell.y == intersectCell.y) {
+					byte a = items.items[l].access;
+					byte c = items.items[l].c;
+					items.items[l].access = a ^ (a & intersectItems.items[i].access);
+					items.items[l].c = c ^ (c & intersectItems.items[i].c);
+				}
+			}
+		}
+		return items;
 	}
 
 	Vec2 Path::GetPosition(TrackPosition position)

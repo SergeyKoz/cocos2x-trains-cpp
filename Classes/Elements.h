@@ -15,6 +15,13 @@ namespace GameObjects {
 	struct MapPoint {
 		int x;
 		int y;
+	public:
+		bool operator==(const MapPoint& p) {
+			return x == p.x && y == p.y;
+		}
+		bool operator!=(const MapPoint& p) {
+			return x != p.x || y != p.y;
+		}
 	};
 
 	struct MapIndent {
@@ -140,7 +147,7 @@ namespace GameObjects {
 	struct ElementOffset {
 		int dx;
 		int dy;
-		int p;
+		int p;		
 		SwitchElement sw;
 	};
 

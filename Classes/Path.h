@@ -55,6 +55,26 @@ namespace GameObjects {
 		int SpeedLimit;
 		vector<Vec2> items;
 	};
+
+	struct AccessItem {		
+		byte access;
+		byte c;
+		//bool c;
+		MapPoint p;
+	};
+
+	struct AccessItems {
+		vector<AccessItem> items;
+	};
+
+	/*struct AccessItem {
+		Vec2 p;
+		byte access;
+	};
+
+	struct AccessItems {
+		vector<Vec2> items;
+	};*/
 	
 	class Path
 	{
@@ -65,6 +85,12 @@ namespace GameObjects {
 
 		static const MapPoint closer[20];
 		static const TrackItem track[16];
+		
+		static const AccessItems access[2][16];
+		//static const AccessItems access1[16];
+		//static const byte accessConfig[9];
+		//static const byte accessMasc[8];
+
 		Area Area;		
 		GraphItem **Graph;
 		vector<GraphItem*> GraphItems;
@@ -74,15 +100,18 @@ namespace GameObjects {
 		MapSize size;
 		MapPoint origin;
 
-		bool Init(MapPoint Point, int Enter);
+		bool Init(MapPoint Point); //, int Enter
 		void Show(MapPoint Point, int Enter);
 		void Find(Cell *c, int p = -1);
 		void Set();
 		GraphItem *graph(MapPoint Point);
 		void Connect(Cell *out, int outPoint, TrackElement element, int d, int enter);
-		bool IsArea(MapPoint Point);
 
+		bool isArea(MapPoint Point);
 		bool inWindow(MapPoint Point);
+		bool isAllow(Cell *out, int outPoint, int outEnter, Cell *in, int inPoint, int inEnter, TrackElement element);
+
+		static AccessItems intersectAccessElements(MapPoint point, AccessItems items, MapPoint intersectPoint, AccessItems intersectItems);
 
 		static Vec2 GetPosition(TrackPosition position);
 		static TrackPosition GetPosition(TrackPosition position, int increase);

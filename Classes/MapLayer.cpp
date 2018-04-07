@@ -1,6 +1,8 @@
 #include "MapLayer.h"
 #include <math.h>
 
+#include <bitset>
+
 USING_NS_CC;
 
 // on "init" you need to initialize your instance
@@ -35,6 +37,38 @@ void MapLayer::onEnter()
 	//Cmd::Exec("save default");
 
 	Cmd::Exec("open default");
+
+	/*byte a = 0b00000000;
+	byte b = 0b11111111;
+	byte c = 0b00001111;
+	byte d = 0b11110000;
+	byte e = 0b10101010;
+	byte f = 0b01010101;
+
+	byte x = c & d;
+	std::string str = std::bitset<8>(x).to_string(); // 00001111
+	x = b & c;
+	str = std::bitset<8>(x).to_string(); // 00001111
+	x = e & f;
+	str = std::bitset<8>(x).to_string(); // 00000000
+
+
+	x = 0b111100000 ^ 0b111111000;
+	str = std::bitset<9>(x).to_string(); // 00001100
+
+
+	c = 0b11100000;
+	x = c ^ (c & 0b00000111);
+	str = std::bitset<8>(x).to_string(); // 00001100
+
+	x = 0b1111 + 0b0000;
+	str = std::bitset<4>(x).to_string(); 
+
+	x = 0b0000 + 0b1111;
+	str = std::bitset<4>(x).to_string();
+
+	x = 0b1111 + 0b0011;
+	str = std::bitset<4>(x).to_string();*/
 }
 
 bool MapLayer::onTouchBegan(Touch* touch, Event* event)
@@ -46,8 +80,10 @@ bool MapLayer::onTouchBegan(Touch* touch, Event* event)
 		Vec2 d = { (-pos.x + startLocation.x) / (Game->scale * 10), (-pos.y + startLocation.y) / (Game->scale * 10) };		
 		MapPoint c = { (int)round(d.x), (int)round(d.y) };
 		if (Game->constuctionMode == ConstructRails) {
-			int p = getStartPoint(c, { (d.x - c.x), (d.y - c.y) });
-			if (path.Init(c, p)) {
+			//int p = getStartPoint(c, { (d.x - c.x), (d.y - c.y) });			
+			if (path.Init(c)) {//, p
+				//CCLOG("Start --%.d,%.d,%.d|", c.x, c.y, p);
+				CCLOG("Start --%.d,%.d", c.x, c.y);
 				touchMode = BuildRails;
 			}
 		}
@@ -410,7 +446,15 @@ void MapLayer::testNetSector(int x, int y) {
 	command = "path --add --switch=[{\"cell\":{\"x\":" + p(11, x) + ",\"y\":" + p(24, y) + "},\"point\":5,\"position\":\"Diverging\"},{\"cell\":{\"x\":" + p(5, x) + ",\"y\":" + p(25, y) + "},\"point\":6,\"position\":\"Diverging\"}]";
 	Cmd::Exec(command);
 
-	//Game->cells[11 + x][24 + y].switches[5]->changePosition();
+	command = "path --add --path=[{\"from\":{\"x\":" + p(44, x) + ",\"y\":" + p(27, y) + "},\"to\":{\"x\":" + p(42, x) + ",\"y\":" + p(25, y) + "},\"point\":2},{\"from\":{\"x\":" + p(45, x) + ",\"y\":" + p(27, y) + "},\"to\":{\"x\":" + p(44, x) + ",\"y\":" + p(27, y) + "},\"point\":0},{\"from\":{\"x\":" + p(46, x) + ",\"y\":" + p(27, y) + "},\"to\":{\"x\":" + p(45, x) + ",\"y\":" + p(27, y) + "},\"point\":0},{\"from\":{\"x\":" + p(48, x) + ",\"y\":" + p(25, y) + "},\"to\":{\"x\":" + p(46, x) + ",\"y\":" + p(27, y) + "},\"point\":0}]";
+	Cmd::Exec(command);
+	command = "path --add --switch=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(25, y) + "},\"point\":2}]";
+	Cmd::Exec(command);
+	command = "path --add --path=[{\"from\":{\"x\":" + p(35, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(32, x) + ",\"y\":" + p(24, y) + "},\"point\":7},{\"from\":{\"x\":" + p(36, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(35, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(37, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(36, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(38, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(37, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(39, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(38, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(40, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(39, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(42, x) + ",\"y\":" + p(25, y) + "},\"to\":{\"x\":" + p(40, x) + ",\"y\":" + p(23, y) + "},\"point\":0}]";
+	Cmd::Exec(command);
+	//command = "path --add --path=[{\"from\":{\"x\":" + p(35, x) + ",\"y\":" + p(24, y) + "},\"to\":{\"x\":" + p(34, x) + ",\"y\":" + p(25, y) + "},\"point\":7},{\"from\":{\"x\":" + p(38, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(35, x) + ",\"y\":" + p(24, y) + "},\"point\":7},{\"from\":{\"x\":" + p(39, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(38, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(48, x) + ",\"y\":" + p(23, y) + "}\,\"to\":{\"x\":" + p(39, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(42, x) + ",\"y\":" + p(25, y) + "},\"to\":{\"x\":" + p(40, x) + ",\"y\":" + p(23, y) + "},\"point\":0}]";
+	//Cmd::Exec(command);
+		//Game->cells[11 + x][24 + y].switches[5]->changePosition();
 	//Game->cells[5 + x][25 + y].switches[6]->changePosition();
 
 
