@@ -158,20 +158,15 @@ namespace GameObjects {
 		Elements();
 		~Elements();
 
-		//static const char rules[16][24][140];
 		static const ElementOffset offset[2][16];
 		static const int second[2];
 
-		static Elements *getInstance();
 		static Sprite *GetEmpty();
 		static Sprite *GetTrackElement(MapPoint Point, TrackElement Element);
 		static Sprite *GetSwitchElement(MapPoint Point, SwitchElement Element);
 		static Sprite *GetSemaphoreElement(MapPoint Point, SemaphorElement Element);
 		static Sprite *GetCarElement(CarElement Element);
-		static MenuItemImage *GetMenuElement(MenuElement Element);
-		
-		//static void setRules(int x, int y, TrackElement Element);
-		//static void setRule(Cell *c, int x, int y, int p, TrackElement e1, TrackElement e2);
+		static MenuItemImage *GetMenuElement(MenuElement Element);	
 	};
 }
 #endif /*__GAME_ELEMENTS_H__*/

@@ -70,9 +70,8 @@ namespace GameObjects {
 		static ConnectionConfig *GetConnectConfig(int dx, int dy, int Point);
 		
 		//debug
-		DrawNode *debugNode;
-
-		void writeDebugNode(int x, int y, int a, int c, Color4F color);
+		//DrawNode *debugNode;
+		//void writeDebugNode(int x, int y, int a, int c, Color4F color);
 	};
 }
 

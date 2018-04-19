@@ -4,10 +4,6 @@
 #include "Cmd.h"
 #include "Path.h"
 
-#include <bitset>
-#include <chrono>
-#include <thread>
-
 namespace GameObjects {
 
 	Cell::Cell()
@@ -17,24 +13,6 @@ namespace GameObjects {
 			divergingConnection[i] = 0;
 			switches[i] = 0;
 			semaphores[i] = 0;
-
-			/*allowSwitch[i] = true;
-			allowEnter[i][Vertical] = true;
-			allowEnter[i][Horizontal] = true;
-			allowEnter[i][Item45] = true;
-			allowEnter[i][Item135] = true;
-			allowEnter[i][BaseCircleSect0] = true;
-			allowEnter[i][BaseCircleSect1] = true;
-			allowEnter[i][BaseCircleSect2] = true;
-			allowEnter[i][BaseCircleSect3] = true;
-			allowEnter[i][BaseCircleSect4] = true;
-			allowEnter[i][BaseCircleSect5] = true;
-			allowEnter[i][BaseCircleSect6] = true;
-			allowEnter[i][BaseCircleSect7] = true;
-			allowEnter[i][SmallCilcleSect0] = true;
-			allowEnter[i][SmallCilcleSect1] = true;
-			allowEnter[i][SmallCilcleSect2] = true;
-			allowEnter[i][SmallCilcleSect3] = true;*/
 		}
 		access = 0;
 		accessParam = 0;
@@ -219,15 +197,12 @@ namespace GameObjects {
 
 			for (int i = 0; i < accessItems.items.size(); i++) {
 				accessItem = accessItems.items[i];
-				//if (game->cells[x + accessItem.p.x][y + accessItem.p.y].access == 0) {
-					game->cells[x + accessItem.p.x][y + accessItem.p.y].access = game->cells[x + accessItem.p.x][y + accessItem.p.y].access | accessItem.access;
-					game->cells[x + accessItem.p.x][y + accessItem.p.y].accessParam = game->cells[x + accessItem.p.x][y + accessItem.p.y].accessParam | accessItem.c;
-					
-					// debug
-					//if (accessItem.access > 0) {
-						//writeDebugNode(x + accessItem.p.x, y + accessItem.p.y, accessItem.access, accessItem.c, Color4F::BLUE);
-					//}
-				//}
+				game->cells[x + accessItem.p.x][y + accessItem.p.y].access = game->cells[x + accessItem.p.x][y + accessItem.p.y].access | accessItem.access;
+				game->cells[x + accessItem.p.x][y + accessItem.p.y].accessParam = game->cells[x + accessItem.p.x][y + accessItem.p.y].accessParam | accessItem.c;					
+				// debug
+				//if (accessItem.access > 0) {
+					//writeDebugNode(x + accessItem.p.x, y + accessItem.p.y, accessItem.access, accessItem.c, Color4F::BLUE);
+				//}				
 			}
 		}
 
@@ -235,8 +210,7 @@ namespace GameObjects {
 			AccessItems accessItems = Path::access[1][Element];
 			AccessItem accessItem;
 			for (int i = 0; i < accessItems.items.size(); i++) {
-				accessItem = accessItems.items[i];
-				
+				accessItem = accessItems.items[i];				
 				// debug
 				//writeDebugNode(x + accessItem.p.x, y + accessItem.p.y, accessItem.access, accessItem.c, Color4F::RED);
 			}
@@ -309,7 +283,7 @@ namespace GameObjects {
 		this->semaphores[Point] = 0;
 	}
 	
-	void Cell::writeDebugNode(int x, int y, int a, int c, Color4F color) {
+	/*void Cell::writeDebugNode(int x, int y, int a, int c, Color4F color) {
 		Field *game = Field::getInstance();
 
 		float _dx, _dy, _dx1, _dx2, _dy1, _dy2;
@@ -369,5 +343,5 @@ namespace GameObjects {
 			game->mapLayer->addChild(debugNode, ZIndexRails);
 			debugNode->drawDot({ _dx + 7, _dy + 7 }, 3, color);
 		}		
-	}
+	}*/
 }

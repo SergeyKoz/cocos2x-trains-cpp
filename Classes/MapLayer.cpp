@@ -51,22 +51,15 @@ void MapLayer::onEnter()
 	str = std::bitset<8>(x).to_string(); // 00001111
 	x = e & f;
 	str = std::bitset<8>(x).to_string(); // 00000000
-
-
 	x = 0b111100000 ^ 0b111111000;
 	str = std::bitset<9>(x).to_string(); // 00001100
-
-
 	c = 0b11100000;
 	x = c ^ (c & 0b00000111);
 	str = std::bitset<8>(x).to_string(); // 00001100
-
 	x = 0b1111 + 0b0000;
-	str = std::bitset<4>(x).to_string(); 
-
+	str = std::bitset<4>(x).to_string();
 	x = 0b0000 + 0b1111;
 	str = std::bitset<4>(x).to_string();
-
 	x = 0b1111 + 0b0011;
 	str = std::bitset<4>(x).to_string();*/
 }
@@ -80,9 +73,7 @@ bool MapLayer::onTouchBegan(Touch* touch, Event* event)
 		Vec2 d = { (-pos.x + startLocation.x) / (Game->scale * 10), (-pos.y + startLocation.y) / (Game->scale * 10) };		
 		MapPoint c = { (int)round(d.x), (int)round(d.y) };
 		if (Game->constuctionMode == ConstructRails) {
-			//int p = getStartPoint(c, { (d.x - c.x), (d.y - c.y) });			
 			if (path.Init(c)) {//, p
-				//CCLOG("Start --%.d,%.d,%.d|", c.x, c.y, p);
 				CCLOG("Start --%.d,%.d", c.x, c.y);
 				touchMode = BuildRails;
 			}
