@@ -10,8 +10,8 @@ namespace GameObjects {
 
 	class Cell;
 		
-	enum Configuration{
-		None,
+	enum Configuration {
+		Undefined,
 		Polar,
 		Ortogonal
 	};
@@ -39,7 +39,7 @@ namespace GameObjects {
 		~Cell();
 
 		int x, y;
-		Configuration configuration = None;
+		Configuration configuration = Configuration::Undefined;
 		Entry *straightConnection[8];
 		Entry *divergingConnection[8];
 		Switch *switches[8];

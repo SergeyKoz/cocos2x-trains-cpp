@@ -37,6 +37,7 @@ namespace GameObjects {
 		
 	enum TrackElement
 	{
+		None = -1,
 		Vertical = 0,
 		Horizontal = 1,
 		Item45 = 2,

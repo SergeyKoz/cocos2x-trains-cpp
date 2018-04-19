@@ -102,7 +102,7 @@ int MapLayer::getStartPoint(MapPoint c, Vec2 d)
 	int p = -1;
 	Field *Game = Field::getInstance();
 
-	if (Game->cells[c.x][c.y].configuration == GameObjects::Configuration::None) {
+	if (Game->cells[c.x][c.y].configuration == GameObjects::Configuration::Undefined) {
 		bool f1 = d.y < (2 * d.x);
 		bool f2 = d.y < (d.x / 2);
 		bool f3 = d.y >(-d.x / 2);

@@ -50,20 +50,13 @@ namespace GameObjects {
 		{ 7, { { 0, 0 },{ 1, 0.02f },{ 2, 0.1f },{ 2.99f, 0.22f },{ 3.97f, 0.4f },{ 4.95f, 0.62f },{ 5.91f, 0.89f },{ 6.86f, 1.21f },{ 7.79f, 1.58f },{ 8.7f, 1.99f },{ 9.59f, 2.45f },{ 10.45f, 2.95f },{ 11.29f, 3.49f },{ 12.1f, 4.08f },{ 12.88f, 4.7f },{ 13.63f, 5.37f },{ 14.35f, 6.07f },{ 15.03f, 6.8f },{ 15.67f, 7.57f },{ 16.27f, 8.37f },{ 16.83f, 9.19f },{ 17.35f, 10.05f },{ 17.82f, 10.93f },{ 18.26f, 11.83f },{ 18.64f, 12.75f },{ 18.98f, 13.69f },{ 19.27f, 14.65f },{ 19.51f, 15.62f },{ 19.71f, 16.6f },{ 19.85f, 17.59f },{ 19.95f, 18.59f } } }
 	};
 	
-	
-
 	const AccessItems Path::access[2][16] = {
 		{
 			{ { { 0b11000001,0b0,{ 0, -1 } } } },
 			{ { { 0b00000111,0b0,{ 0, 0 } } } },
 			{ { { 0b00010001,0b1,{ 0, 0 } } } },
 			{ { { 0b01000100,0b1,{ 0, -1 } } } },
-
-			/*{ { { 0b00000000,0b0,{ 0, -1 } } } },
-			{ { { 0b00000000,0b0,{ 0, 0 } } } },
-			{ { { 0b00000000,0b0,{ 0, 0 } } } },
-			{ { { 0b00000000,0b0,{ 0, -1 } } } },*/
-
+			
 			// base circle													
 			{ { { 0b00010000,0b0,{ -1, 0 } },{ 0b00011100,0b0,{ -1, 1 } },{ 0b01000110,0b1,{ -1, 2 } },{ 0b11000001,0b0,{ 0, 0 } } } },
 			{ { { 0b01100100,0b1,{ -1, 0 } },{ 0b01110000,0b0,{ -2, 0 } },{ 0b00010000,0b0,{ -3, 0 } },{ 0b00000111,0b0,{ -3, 1 } } } },
@@ -85,11 +78,6 @@ namespace GameObjects {
 			{ { { 0b00010001,0b1,{ -1, -1 } } } },
 			{ { { 0b01000100,0b1,{ -1, 0 } } } },
 
-			/*{ { { 0b00000000,0b0,{ 0, -1 } } } },
-			{ { { 0b00000000,0b0,{ 0, 0 } } } },
-			{ { { 0b00000000,0b1,{ 0, 0 } } } },
-			{ { { 0b00000000,0b1,{ 0, -1 } } } },*/
-
 			// base circle
 			{ { { 0b00010000,0b0,{0, -3 } },{ 0b00011100,0b0,{ 0, -2 } },{ 0b01000110,0b1,{ 0, -1 } },{ 0b11000001,0b0,{ 1, -3 } } } },
 			{ { { 0b01100100,0b1,{ 2, -1 } },{ 0b01110000,0b0,{ 1, -1 } },{ 0b00010000,0b0,{ 0, -1 } },{ 0b00000111,0b0,{ 0, 0 } } } },
@@ -108,7 +96,7 @@ namespace GameObjects {
 		}
 	};
 
-	bool Path::Init(MapPoint Point) { //, int Enter
+	bool Path::Init(MapPoint Point) {
 		bool f = false;
 		Field *Game = Field::getInstance();
 		
@@ -121,7 +109,6 @@ namespace GameObjects {
 		Area.p = -1;
 		int p = -1;
 		bool pf = false;
-		//bool pf = false;
 		int Enter1 = -1;
 		int Enter2 = -1;
 		if (startCell->configuration != None) {
@@ -134,12 +121,6 @@ namespace GameObjects {
 					}
 				}
 			}
-			/*if (startCell->straightConnection[Enter] == 0 && !(startCell->straightConnection[Cell::Related[Enter]] == 0)) {
-				pf = true;
-			}
-			if (startCell->straightConnection[Enter] != 0 && startCell->divergingConnection[Enter] == 0) {
-				pf = true;
-			}*/
 		}
 
 		if (pf) {
@@ -149,11 +130,10 @@ namespace GameObjects {
 			for (int i = 0; i < 8; i++){
 				graph(Point)->f[i] = false;
 				graph(Point)->d[i] = 0;
+				graph(Point)->e[i] = TrackElement::None;
 				graph(Point)->In[i] = 0;
 				graph(Point)->Out[i] = -1;
 			}
-			//graph(Point)->d[Enter] = 1;
-			//graph(Point)->d[Cell::Related[Enter]] = 1;
 			graph(Point)->d[Enter1] = 2;
 			graph(Point)->d[Enter2] = 1;
 			graph(Point)->isArea = true;
@@ -191,8 +171,66 @@ namespace GameObjects {
 			(Area.e.x >= 0 && !(Area.e.x == Point.x && Area.e.y == Point.y))){
 			changed = true;
 		}
-
 		MapPoint d;
+		if (changed || Area.p != Enter) {
+			Area.p = Enter;
+			Field *Game = Field::getInstance();
+			Cell *current = &Game->cells[Point.x][Point.y];
+			if (graph(Point)->isArea) {				
+				int p = -1;
+				if (graph(Point)->Out[Enter] >= 0 && graph(Point)->f[Enter] && graph(Point)->d[Enter] > 0) {
+					p = Enter;
+				}				
+				if (p >= 0 && (Area.d.x != 0 || Area.d.y != 0)) {
+					int i = 0;
+					int nextPoint;
+					Cell *next;
+					ConnectionConfig *connect;
+					PathItem *item;
+					MapPoint c = { current->x, current->y }, n;
+					bool a = true;
+					vector<PathItem*> pathItems;
+					while (a && graph(c)->d[p] > 0 && graph(c)->In[p] != 0) {
+						next = graph(c)->In[p];
+						n = { next->x, next->y };
+						nextPoint = Cell::Related[graph(c)->Out[p]];
+						d.x = n.x - c.x;
+						d.y = n.y - c.y;
+						connect = Cell::GetConnectConfig(d.x, d.y, p);
+						for (auto l = 0; l < pathItems.size(); l++) {
+							PathItem* item = pathItems[l];
+							if (a) {
+								a = checkIntersection({ item->next->x, item->next->y }, item->enter, item->elementType, n, connect->enter, connect->element);
+							}
+						}
+						item = new PathItem;
+						item->elementType = connect->element;
+						item->element = connect->enter == 0 ? Elements::GetTrackElement(c, connect->element) : Elements::GetTrackElement(n, connect->element);
+						item->enter = connect->enter;
+						item->next = next;
+						item->current = current;
+						item->point = p;
+						pathItems.insert(pathItems.end(), item);
+						p = nextPoint;
+						current = next;
+						c = { current->x, current->y };
+						i++;
+					}
+					if (a) {
+						for (auto c = 0; c < PathItems.size(); c++) {
+							Game->mapLayer->removeChild(PathItems[c]->element, true);
+						}
+						PathItems.clear();
+						for (auto c = 0; c < pathItems.size(); c++) {
+							PathItems.insert(PathItems.end(), pathItems[c]);
+							Game->mapLayer->addChild(pathItems[c]->element, ZIndexRails);
+						}
+					}
+				}
+			}
+		} //changed
+
+		
 		if (changed) {
 			Area.d.x = Point.x - Area.s.x;
 			Area.d.y = Point.y - Area.s.y;
@@ -232,69 +270,11 @@ namespace GameObjects {
 				}
 				InsideItems.clear();
 			}
-			Find(Area.sc);
+
+			Director::getInstance()->getScheduler()->performFunctionInCocosThread([=] {
+				Find(Area.sc);
+			});
 		}
-
-		if (changed || Area.p != Enter) {
-			Area.p = Enter;
-			Field *Game = Field::getInstance();
-			Cell *current = &Game->cells[Point.x][Point.y];
-			if (graph(Point)->isArea) {
-				/*int min = 0, p = -1;
-				for (int c = 0; c < 8; c++){
-					if (graph(Point)->Out[c] >= 0 && graph(Point)->f[c] && graph(Point)->d[c] > 0 && (min == 0 || graph(Point)->d[c] < min)){
-						min = graph(Point)->d[c];
-						p = c;
-					}
-				}
-				*/
-				int p = -1;
-				if (graph(Point)->Out[Enter] >= 0 && graph(Point)->f[Enter] && graph(Point)->d[Enter] > 0) {
-					p = Enter;
-				}
-
-				for (auto c = 0; c < PathItems.size(); c++){
-					Game->mapLayer->removeChild(PathItems[c]->element, true);
-				}
-				PathItems.clear();
-				if (p >= 0 && (Area.d.x != 0 || Area.d.y != 0)) {
-					int i = 0;
-					int nextPoint;
-					Cell *next;
-					ConnectionConfig *connect;
-					PathItem *item;
-					MapPoint c = { current->x, current->y }, n;					
-					while (graph(c)->d[p] > 0 && graph(c)->In[p] != 0) {						
-						next = graph(c)->In[p];
-						n = { next->x, next->y };
-						nextPoint = Cell::Related[graph(c)->Out[p]];
-						d.x = n.x - c.x;
-						d.y = n.y - c.y;
-						connect = Cell::GetConnectConfig(d.x, d.y, p);
-						item = new PathItem;
-						item->elementType = connect->element;
-						if (connect->enter == 0) {
-							item->element = Elements::GetTrackElement(c, connect->element);
-						}
-						else {
-							item->element = Elements::GetTrackElement(n, connect->element);
-						}
-						item->enter = connect->enter;
-						item->next = next;
-						item->current = current;						
-						item->point = p;
-						PathItems.insert(PathItems.end(), item);
-						p = nextPoint;
-						current = next;
-						c = { current->x, current->y };
-						i++;
-					}
-					for (auto c = 0; c < PathItems.size(); c++){
-						Game->mapLayer->addChild(PathItems[c]->element, ZIndexRails);
-					}
-				}
-			}
-		} //changed
 	}
 
 	void Path::Set() {
@@ -443,16 +423,16 @@ namespace GameObjects {
 				Cell *in = &Field::getInstance()->cells[p.x][p.y];
 				int inPoint = offset.p;
 				if (Path::isAllow(out, outPoint, enter, in, inPoint, Elements::second[enter], element)) {
-				//if (in->isAllow(element, enter, Area.s)) {
 					GraphItem *i = graph({ in->x, in->y });
 					if (i->d[inPoint] == 0 || (i->d[inPoint] > 0 && i->d[inPoint] > d)){
 						i->d[inPoint] = d;
+						i->e[inPoint] = element;
 						i->In[inPoint] = out;
 						i->Out[inPoint] = outPoint;
-					}
+					}					
 				}
 			} else {
-				if (!graph(p)->isBorder /*&& (element == Horizontal || element == Vertical || element == Item45 || element == Item135)*/){
+				if (!graph(p)->isBorder){
 					BorderItems.insert(BorderItems.end(), p);
 					graph(p)->isBorder = true;
 				}				
@@ -483,6 +463,7 @@ namespace GameObjects {
 					graph(Point)->In[i] = 0;
 					graph(Point)->Out[i] = -1;
 					graph(Point)->d[i] = 0;
+					graph(Point)->e[i] = TrackElement::None;
 				}
 				GraphItems.insert(GraphItems.end(), graph(Point));
 			}
@@ -500,13 +481,11 @@ namespace GameObjects {
 
 	bool Path::isAllow(Cell *out, int outPoint, int outEnter, Cell *in, int inPoint, int inEnter, TrackElement element)
 	{
-		//return true;
-		Field *game = Field::getInstance();
 		bool f = true;
 
 		AccessItems accessItems = Path::access[outEnter][element];
 		// check In
-		if (in->configuration != Configuration::None) {
+		if (in->configuration != Configuration::Undefined) {
 			if (in->divergingConnection[inPoint] != 0) {
 				f = false;
 			}
@@ -517,16 +496,23 @@ namespace GameObjects {
 			//not right continue from end
 			if (f && (in->straightConnection[inPoint] == 0 && in->straightConnection[Cell::Related[inPoint]] == 0)) {
 				f = false;
+			}			
+			// check base circle
+			if (f && in->configuration == Configuration::Polar) {
+				f = checkBaseCircle(in, inPoint, inEnter, element);
 			}
 			//intersection 
 			if (f && in->straightConnection[inPoint] > 0) {
 				AccessItems accesInItems = Path::access[in->straightConnection[inPoint]->Enter][in->straightConnection[inPoint]->Element];
-				accessItems = Path::intersectAccessElements({ out->x, out->y }, accessItems, { in->x, in->y }, accesInItems);
+				accessItems = Path::getIntersection({ out->x, out->y }, accessItems, { in->x, in->y }, accesInItems);
 			}
+		}
+		if (f) {
+			f = checkBaseCircle(element, inEnter, graph({ in->x, in->y })->e[Cell::Related[inPoint]]);
 		}
 
 		//check Out
-		if (f && out->configuration != Configuration::None) {
+		if (f && out->configuration != Configuration::Undefined) {
 			if (out->divergingConnection[outPoint] != 0) {
 				f = false;
 			}
@@ -536,24 +522,41 @@ namespace GameObjects {
 			if (f && (out->straightConnection[outPoint] == 0 && out->straightConnection[Cell::Related[outPoint]] == 0)) {
 				f = false;
 			}
-
+			if (f  && out->configuration == Configuration::Polar) {
+				f = checkBaseCircle(out, outPoint, outEnter, element);			
+			}
 			if (f && out->straightConnection[outPoint] > 0) {
 				AccessItems accesOutItems = Path::access[out->straightConnection[outPoint]->Enter][out->straightConnection[outPoint]->Element];
-				accessItems = Path::intersectAccessElements({ out->x, out->y }, accessItems, { out->x, out->y }, accesOutItems);
+				accessItems = Path::getIntersection({ out->x, out->y }, accessItems, { out->x, out->y }, accesOutItems);
 			}
 		}
-
+		if (f) {
+			f = checkBaseCircle(element, outEnter, graph({ out->x, out->y })->e[Cell::Related[outPoint]]);
+		}
+		
 		if (f) {			
-			//AccessItems accessItems = Path::access[outEnter][element];
 			for (int i = 0; i < accessItems.items.size(); i++) {
-				Cell cell = game->cells[out->x + accessItems.items[i].p.x][out->y + accessItems.items[i].p.y];
+				Cell cell = Field::getInstance()->cells[out->x + accessItems.items[i].p.x][out->y + accessItems.items[i].p.y];
 				if (f && (cell.access > 0 || accessItems.items[i].c >0)) {
-					byte b = accessItems.items[i].access;
-					byte c = accessItems.items[i].c;
-					if ((b & cell.access) > 0 || (c & cell.accessParam) > 0) {
-						//writeDebugNode(cell.x, cell.y, accessItems.items[i].access, Color4F::ORANGE);
+					if ((accessItems.items[i].access & cell.access) > 0 || (accessItems.items[i].c & cell.accessParam) > 0) {
 						f = false;
-						CCLOG("false");
+					}
+				}
+			}
+		}
+		return f;
+	}
+	
+	bool Path::checkIntersection(MapPoint point1, int enter1, TrackElement element1, MapPoint point2, int enter2, TrackElement element2)
+	{
+		bool f = true;
+		AccessItems accessItems1 = Path::access[enter1][element1];
+		AccessItems accessItems2 = Path::access[enter2][element2];
+		if (f) {
+			for (int i = 0; i < accessItems1.items.size(); i++) {
+				for (int c = 0; c < accessItems2.items.size(); c++) {
+					if (f && point1.x + accessItems1.items[i].p.x == point2.x + accessItems2.items[c].p.x && point1.y + accessItems1.items[i].p.y == point2.y + accessItems2.items[c].p.y && ((accessItems1.items[i].access & accessItems2.items[c].access) > 0 || (accessItems1.items[i].c & accessItems2.items[c].c) > 0)) {
+						f = false;
 					}
 				}
 			}
@@ -561,7 +564,7 @@ namespace GameObjects {
 		return f;
 	}
 
-	AccessItems Path::intersectAccessElements(MapPoint point, AccessItems items, MapPoint intersectPoint, AccessItems intersectItems)
+	AccessItems Path::getIntersection(MapPoint point, AccessItems items, MapPoint intersectPoint, AccessItems intersectItems)
 	{
 		Field *game = Field::getInstance();
 		for (int i = 0; i < intersectItems.items.size(); i++) {
@@ -577,6 +580,59 @@ namespace GameObjects {
 			}
 		}
 		return items;
+	}
+	
+	bool Path::checkBaseCircle(Cell *cell, int point, int enter, TrackElement element)
+	{
+		bool f = true;
+		int r = Cell::Related[point];
+		TrackElement el1 = TrackElement::None, el2 = TrackElement::None;
+		if (cell->straightConnection[r] > 0) {
+			el1 = cell->straightConnection[r]->Element;
+		}
+		if (cell->divergingConnection[r] > 0) {
+			el2 = cell->divergingConnection[r]->Element;
+		} if (element == TrackElement::BaseCircleSect0 && enter == 1 && (el1 == TrackElement::BaseCircleSect1 || el2 == TrackElement::BaseCircleSect1)) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect1 && enter == 0 && (el1 == TrackElement::BaseCircleSect0 || el2 == TrackElement::BaseCircleSect0)) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect2 && enter == 1 && (el1 == TrackElement::BaseCircleSect3 || el2 == TrackElement::BaseCircleSect3)) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect3 && enter == 0 && (el1 == TrackElement::BaseCircleSect2 || el2 == TrackElement::BaseCircleSect2)) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect4 && enter == 1 && (el1 == TrackElement::BaseCircleSect5 || el2 == TrackElement::BaseCircleSect5)) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect5 && enter == 0 && (el1 == TrackElement::BaseCircleSect4 || el2 == TrackElement::BaseCircleSect4)) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect6 && enter == 1 && (el1 == TrackElement::BaseCircleSect7 || el2 == TrackElement::BaseCircleSect7)) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect7 && enter == 0 && (el1 == TrackElement::BaseCircleSect6 || el2 == TrackElement::BaseCircleSect6)) {
+			f = false;
+		}
+		return f;
+	}
+
+	bool Path::checkBaseCircle(TrackElement element, int enter, TrackElement graphElement)
+	{
+		bool f = true;
+		if (element == TrackElement::BaseCircleSect0 && enter == 1 && graphElement == TrackElement::BaseCircleSect1) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect1 && enter == 0 && graphElement == TrackElement::BaseCircleSect0) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect2 && enter == 1 && graphElement == TrackElement::BaseCircleSect3) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect3 && enter == 0 && graphElement == TrackElement::BaseCircleSect2) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect4 && enter == 1 && graphElement == TrackElement::BaseCircleSect5) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect5 && enter == 0 && graphElement == TrackElement::BaseCircleSect4) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect6 && enter == 1 && graphElement == TrackElement::BaseCircleSect7) {
+			f = false;
+		} else if (element == TrackElement::BaseCircleSect7 && enter == 0 && graphElement == TrackElement::BaseCircleSect6) {
+			f = false;
+		}
+		return f;
 	}
 
 	Vec2 Path::GetPosition(TrackPosition position)

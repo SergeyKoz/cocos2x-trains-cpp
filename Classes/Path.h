@@ -38,6 +38,7 @@ namespace GameObjects {
 		MapPoint p;
 		int d[8];
 		bool f[8];
+		TrackElement e[8];
 		Cell *In[8];
 		int Out[8];
 	};
@@ -111,8 +112,12 @@ namespace GameObjects {
 		bool inWindow(MapPoint Point);
 		bool isAllow(Cell *out, int outPoint, int outEnter, Cell *in, int inPoint, int inEnter, TrackElement element);
 
-		static AccessItems intersectAccessElements(MapPoint point, AccessItems items, MapPoint intersectPoint, AccessItems intersectItems);
+		bool checkIntersection(MapPoint point1, int enter1, TrackElement element1, MapPoint point2, int enter2, TrackElement element2);
+		static AccessItems getIntersection(MapPoint point, AccessItems items, MapPoint intersectPoint, AccessItems intersectItems);
 
+		bool checkBaseCircle(Cell *cell, int point, int enter, TrackElement element);
+		bool checkBaseCircle(TrackElement element, int enter, TrackElement graphElement);
+		
 		static Vec2 GetPosition(TrackPosition position);
 		static TrackPosition GetPosition(TrackPosition position, int increase);
 
