@@ -26,7 +26,8 @@ namespace GameObjects {
 	{
 		int c = this->cars.size();
 		
-		//this->cars.insert(cars.end(), car);		
+		//this->cars.insert(cars.end(), car);
+		car.initContactSystem(id);
 
 		this->cars.push_back(car);
 
@@ -61,6 +62,8 @@ namespace GameObjects {
 			speed.speeds[i] = 0;
 		}
 
+		GetMove(GetSpeed());
+		
 		/*for (int i = 0; i < 20; i++) {
 			debugItems[i] = Vec2(0, 0);
 		}*/
@@ -90,8 +93,10 @@ namespace GameObjects {
 		}*/
 
 		//pin->setPosition(this->cars[0].move.p);
-
-		GetMove(GetSpeed());
+		Director::getInstance()->getScheduler()->performFunctionInCocosThread([&] {
+			GetMove(GetSpeed());
+		});
+		
 		RunMove();
 	}
 

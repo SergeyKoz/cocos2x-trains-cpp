@@ -1,6 +1,8 @@
 #ifndef __GAME_TRAIN_H__
 #define __GAME_TRAIN_H__
 
+#include <exception>
+
 #include "Elements.h"
 #include "Car.h"
 #include "Switch.h"
@@ -33,6 +35,14 @@ namespace GameObjects {
 		vector<Switch*> overSwitches;
 	};
 
+	class TrainCollision : public exception
+	{
+		virtual const char* what() const throw()
+		{
+			return "Tains collision";
+		}
+	};
+
 	class Train
 	{
 	public:
@@ -53,6 +63,7 @@ namespace GameObjects {
 
 		int acceleration = 1;
 		int length = 0; //length of the train
+		int id;
 
 		TrackPosition position;
 		SpeedProgram speed;

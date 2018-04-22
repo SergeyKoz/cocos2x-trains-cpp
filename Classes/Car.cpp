@@ -28,12 +28,13 @@ namespace GameObjects {
 		size.height -= 2 * k;
 		size.width -= 2 * k;
 		
-		auto physicsBody = PhysicsBody::createBox(size, PhysicsMaterial());
+		physicsBody = PhysicsBody::createBox(size, PhysicsMaterial());
 		//physicsBody->setMass(MASS_DEFAULT);
 		//physicsBody->setVelocityLimit(PHYSICS_INFINITY);
 
 		physicsBody->setDynamic(true);
 		physicsBody->setGravityEnable(false);
+		physicsBody->setContactTestBitmask(true);
 		
 		this->resource->setPhysicsBody(physicsBody);
 
@@ -41,8 +42,12 @@ namespace GameObjects {
 	}
 
 	Car::~Car()
+	{		
+	}
+
+	void Car::initContactSystem(int bitmask)
 	{
-		
+		physicsBody->setCollisionBitmask(bitmask);
 	}
 
 	TrackPosition Car::SetPosition(TrackPosition position) {		

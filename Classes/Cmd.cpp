@@ -231,6 +231,7 @@ namespace GameObjects {
 			}
 
 			Train train;
+			train.id = std::stoi(opts["id"]);
 			train.direction = direction;
 			CarElement car;
 			for (int i = 0; i < args.size(); i++) {				
@@ -251,6 +252,7 @@ namespace GameObjects {
 				}
 				train.AddCar(Car(car));
 			}
+			
 			train.SetPosition({ &game->cells[x][y], point, indent });
 			game->addTrain(train);
 		}
@@ -313,17 +315,18 @@ namespace GameObjects {
 		if (opts["add"] == "") {
 			Field *Game = Field::getInstance();
 			rapidjson::Document jsonDoc;
+
+			if (opts["switch"] != "") {
+				jsonDoc.Parse<kParseDefaultFlags>(opts["switch"].c_str());
+				for (int i = jsonDoc.Size() - 1; i >= 0; i--) {
+					Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].RemoveSwitch(jsonDoc[i]["point"].GetInt());
+				}
+			}
+
 			if (opts["path"] != "") {
 				jsonDoc.Parse<kParseDefaultFlags>(opts["path"].c_str());
 				for (int i = jsonDoc.Size() - 1; i >= 0; i--) {
 					Game->cells[jsonDoc[i]["from"]["x"].GetInt()][jsonDoc[i]["from"]["y"].GetInt()].Disconnect(&Game->cells[jsonDoc[i]["to"]["x"].GetInt()][jsonDoc[i]["to"]["y"].GetInt()], jsonDoc[i]["point"].GetInt());
-				}
-			}
-
-			if (opts["switch"] != "") {
-				jsonDoc.Parse<kParseDefaultFlags>(opts["switch"].c_str());				
-				for (int i = jsonDoc.Size() - 1; i >= 0; i--) {
-					Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].RemoveSwitch(jsonDoc[i]["point"].GetInt());
 				}
 			}
 		}

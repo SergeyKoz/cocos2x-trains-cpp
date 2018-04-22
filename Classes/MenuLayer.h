@@ -16,6 +16,8 @@ public:
 	void menuCloseCallback(cocos2d::Ref* pSender);
 	void menuUndoButtonCallback(cocos2d::Ref* pSender);	
 	void menuRedoButtonCallback(cocos2d::Ref* pSender);
+	void menuStartButtonCallback(cocos2d::Ref* pSender);
+	void menuPauseButtonCallback(cocos2d::Ref* pSender);
 
 	GameObjects::MenuItem *TasksButton;
 	GameObjects::MenuItem *ZoomInButton;

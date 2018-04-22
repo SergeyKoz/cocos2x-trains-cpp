@@ -38,7 +38,7 @@ public:
 	int getStartPoint(MapPoint c, Vec2 d);
 
 	void testNet();
-	void testNetSector(int x, int y);
+	void testNetSector(int x, int y, int train);
 
 	string p(int p, int d);
 };

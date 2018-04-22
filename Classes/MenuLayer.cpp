@@ -20,9 +20,9 @@ bool MenuLayer::init()
 	this->RedoButton = new GameObjects::MenuItem(items, pos({ -3, -1 }), Elements::GetMenuElement(MenuElement::RedoButton), CC_CALLBACK_1(MenuLayer::menuRedoButtonCallback, this), false, true);
 	this->RailsButton = new GameObjects::MenuItem(items, pos({ -13, -1 }), { Elements::GetMenuElement(MenuElement::RailsButton), Elements::GetMenuElement(MenuElement::RailsButtonChecked) }, CC_CALLBACK_1(MenuLayer::menuRailsButtonCallback, this), true, true, false);
 	this->SemaforesButton = new GameObjects::MenuItem(items, pos({ -11, -1 }), { Elements::GetMenuElement(MenuElement::SemaforesButton), Elements::GetMenuElement(MenuElement::SemaforesButtonChecked) }, CC_CALLBACK_1(MenuLayer::menuSemaforesButtonCallback, this), true, true, false);
-	this->StartButton = new GameObjects::MenuItem(items, pos({ -23, -1 }), Elements::GetMenuElement(MenuElement::StartButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), true, true);
-	this->PauseButton = new GameObjects::MenuItem(items, pos({ -23, -1 }), Elements::GetMenuElement(MenuElement::RedoButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), true, false);
-	this->StopButton = new GameObjects::MenuItem(items, pos({ -21, -1 }), Elements::GetMenuElement(MenuElement::PauseButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), true, false);
+	this->StartButton = new GameObjects::MenuItem(items, pos({ -23, -1 }), Elements::GetMenuElement(MenuElement::StartButton), CC_CALLBACK_1(MenuLayer::menuStartButtonCallback, this), true, true);
+	this->PauseButton = new GameObjects::MenuItem(items, pos({ -23, -1 }), Elements::GetMenuElement(MenuElement::PauseButton), CC_CALLBACK_1(MenuLayer::menuPauseButtonCallback, this), true, false);
+	this->StopButton = new GameObjects::MenuItem(items, pos({ -21, -1 }), Elements::GetMenuElement(MenuElement::StopButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), true, false);
 	this->FastButton = new GameObjects::MenuItem(items, pos({ -19, -1 }), Elements::GetMenuElement(MenuElement::FastButton), CC_CALLBACK_1(MenuLayer::menuDefaultCallback, this), true, false);
 
 	auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png", CC_CALLBACK_1(MenuLayer::menuCloseCallback, this));
@@ -88,6 +88,20 @@ void MenuLayer::menuUndoButtonCallback(Ref* pSender)
 void MenuLayer::menuRedoButtonCallback(Ref* pSender)
 {
 	Cmd::Redo();
+}
+
+void MenuLayer::menuStartButtonCallback(Ref* pSender)
+{
+	Field::getInstance()->gameMode = GameMode::ModeOn;	
+	this->StartButton->show(false);
+	this->PauseButton->show(true);
+}
+
+void MenuLayer::menuPauseButtonCallback(Ref* pSender)
+{
+	Field::getInstance()->gameMode = GameMode::ModeOff;	
+	this->StartButton->show(true);
+	this->PauseButton->show(false);
 }
 
 void MenuLayer::menuCloseCallback(Ref* pSender)

@@ -301,18 +301,11 @@ namespace GameObjects {
 				switchCommand += StringUtils::format("%s{\"cell\":{\"x\":%d,\"y\":%d},\"point\":%d}",
 					switchCommand == "" ? "" : ",", PathItems[c]->next->x, PathItems[c]->next->y, toPoint);
 			}
-		}
-		string command;
+		}		
 		PathItems.clear();
-		if (pathCommand != "") {
-			command = "path --add --path=[" + pathCommand + "]";
-			Cmd::Exec(command);
-		}
-
-		if (switchCommand != "") {
-			command = "path --add --switch=[" + switchCommand + "]";
-			Cmd::Exec(command);
-		}
+		
+		string command = "path --add" + (pathCommand != "" ? " --path=[" + pathCommand + "]" : "") + (switchCommand != "" ? " --switch=[" + switchCommand + "]" : "");
+		Cmd::Exec(command);
 
 		for (int x = 0; x < (int)size.width; x++){
 			for (int y = 0; y < (int)size.height; y++){

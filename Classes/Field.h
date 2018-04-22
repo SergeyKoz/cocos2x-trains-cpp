@@ -38,6 +38,12 @@ namespace GameObjects {
 		ZIndexMenu = 6,
 		ZIndexTrainsLabel = 7,
 	};
+
+	enum GameMode
+	{
+		ModeOn = 1,
+		ModeOff = 0,
+	};
 	
 	class Field
 	{
@@ -49,8 +55,9 @@ namespace GameObjects {
 		Size sector = {200, 200};
 		Cell cells[SizeX][SizeY];
 		int scale = 2;
-		ConstructionMode constuctionMode = ConstructNone;
-		TrafficSide trafficSide = RightHandTraffic; //LeftHandTraffic;
+		ConstructionMode constuctionMode = ConstructionMode::ConstructNone;
+		TrafficSide trafficSide = TrafficSide::RightHandTraffic; //LeftHandTraffic;
+		GameMode gameMode = GameMode::ModeOff;
 		
 		Scene *scene;
 

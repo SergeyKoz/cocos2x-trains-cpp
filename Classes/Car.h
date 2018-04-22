@@ -5,13 +5,7 @@
 
 namespace GameObjects {
 
-	/*enum CarTypes {
-		Locomotive = 1,
-		TankCar = 2,
-		PassengerCar = 3,
-		FreightCar = 4,
-		Switcher = 5,
-	};*/
+	class Train;
 
 	struct CarSettings {
 		int base;
@@ -31,6 +25,7 @@ namespace GameObjects {
 		~Car();
 
 		TrackPosition SetPosition(TrackPosition position);
+		void initContactSystem(int bitmask);
 
 		void GetMove(int speed);
 		void RunMove();
@@ -46,6 +41,8 @@ namespace GameObjects {
 		CarPosition move;
 		CarPosition shift;
 		Sprite *resource;
+	private:
+		PhysicsBody *physicsBody;
 	};
 }
 #endif /*__GAME_CAR_H__*/
