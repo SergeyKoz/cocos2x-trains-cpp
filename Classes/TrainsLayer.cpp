@@ -40,7 +40,7 @@ void TrainsLayer::trainsMoveCallback(float dt)
 		}	
 		/*end = std::chrono::steady_clock::now();
 		std::chrono::duration<double> elapsed_seconds = end - start;
-		CCLOG("%f seconds", elapsed_seconds.count());*/
+		CCLOG("%f callcack seconds", elapsed_seconds.count());*/
 	}
 }
 
@@ -50,8 +50,7 @@ bool TrainsLayer::onContactBegin(PhysicsContact &contact)
 		PhysicsBody *a = contact.getShapeA()->getBody();
 		PhysicsBody *b = contact.getShapeB()->getBody();
 		if (a->getCollisionBitmask() != b->getCollisionBitmask()) {
-			throw collision;
-			
+			throw collision;			
 		}
 	}
 	catch (exception& e)

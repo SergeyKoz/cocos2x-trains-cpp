@@ -336,7 +336,7 @@ void MapLayer::testNet()
 	start = std::chrono::steady_clock::now();
 	int x;
 	int y; 
-	int dx = 5, dy = 5;
+	int dx = 1, dy = 1;
 	
 	int train = 1;
 
@@ -446,6 +446,12 @@ void MapLayer::testNetSector(int x, int y, int train) {
 	//////Cmd::Exec(command);
 	command = "path --add --path=[{\"from\":{\"x\":" + p(35, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(32, x) + ",\"y\":" + p(24, y) + "},\"point\":7},{\"from\":{\"x\":" + p(36, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(35, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(37, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(36, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(38, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(37, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(39, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(38, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(40, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(39, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(42, x) + ",\"y\":" + p(25, y) + "},\"to\":{\"x\":" + p(40, x) + ",\"y\":" + p(23, y) + "},\"point\":0}]";
 	Cmd::Exec(command);
+
+	command = "path --add --path=[{\"from\":{\"x\":" + p(7, x) + ",\"y\":" + p(16, y) + "},\"to\":{\"x\":" + p(6, x) + ",\"y\":" + p(17, y) + "},\"point\":7},{\"from\":{\"x\":" + p(8, x) + ",\"y\":" + p(15, y) + "},\"to\":{\"x\":" + p(7, x) + ",\"y\":" + p(16, y) + "},\"point\":7}] --switch=[{\"cell\":{\"x\":" + p(8, x) + ",\"y\":" + p(15, y) + "},\"point\":3}]";
+	Cmd::Exec(command);
+	command = "path --add --path=[{\"from\":{\"x\":" + p(6, x) + ",\"y\":" + p(17, y) + "},\"to\":{\"x\":" + p(5, x) + ",\"y\":" + p(20, y) + "},\"point\":6}] --switch=[{\"cell\":{\"x\":" + p(5, x) + ",\"y\":" + p(20, y) + "},\"point\":6}]";
+	Cmd::Exec(command);
+
 	//command = "path --add --path=[{\"from\":{\"x\":" + p(35, x) + ",\"y\":" + p(24, y) + "},\"to\":{\"x\":" + p(34, x) + ",\"y\":" + p(25, y) + "},\"point\":7},{\"from\":{\"x\":" + p(38, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(35, x) + ",\"y\":" + p(24, y) + "},\"point\":7},{\"from\":{\"x\":" + p(39, x) + ",\"y\":" + p(23, y) + "},\"to\":{\"x\":" + p(38, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(48, x) + ",\"y\":" + p(23, y) + "}\,\"to\":{\"x\":" + p(39, x) + ",\"y\":" + p(23, y) + "},\"point\":0},{\"from\":{\"x\":" + p(42, x) + ",\"y\":" + p(25, y) + "},\"to\":{\"x\":" + p(40, x) + ",\"y\":" + p(23, y) + "},\"point\":0}]";
 	//Cmd::Exec(command);
 		//Game->cells[11 + x][24 + y].switches[5]->changePosition();
@@ -495,10 +501,10 @@ void MapLayer::testNetSector(int x, int y, int train) {
 	Cmd::Exec(command);
 	//Game->cells[23 + x][17 + y].semaphores[5]->SetPosition(SemaphorePosition::Reverse);
 	
-	command = "train --add --id=" + to_string(train++) + " --position={\"cell\":{\"x\":" + p(40, x) + ",\"y\":" + p(2, y) + "},\"point\":0,\"indent\":0} --direction=Forward Locomotive Locomotive TankCar TankCar TankCar Locomotive";
+	command = "train --add --id=" + to_string(train++) + " --position={\"cell\":{\"x\":" + p(40, x) + ",\"y\":" + p(2, y) + "},\"point\":0,\"indent\":0,\"element\":\"Horizontal\"} --direction=Forward Locomotive Locomotive TankCar TankCar TankCar Locomotive";
 	Cmd::Exec(command);
 
-	command = "train --add --id=" + to_string(train++) + " --position={\"cell\":{\"x\":" + p(5, x) + ",\"y\":" + p(26, y) + "},\"point\":6,\"indent\":0} --direction=Back Switcher TankCar TankCar TankCar Switcher";
+	command = "train --add --id=" + to_string(train++) + " --position={\"cell\":{\"x\":" + p(5, x) + ",\"y\":" + p(26, y) + "},\"point\":6,\"indent\":0,\"element\":\"Verical\"} --direction=Back Switcher TankCar TankCar TankCar Switcher";
 	Cmd::Exec(command);
 
 	/*Train *train = new Train();

@@ -66,6 +66,7 @@ namespace GameObjects {
 		void RemoveEntry(Cell *cell, int FromPoint, int ToPoint, Configuration Configuration, TrackElement Element, int Enter);
 
 		Entry *getEntry(int Point);
+		Entry *getEntry(int Point, TrackElement element);
 
 		static ConnectionConfig *GetConnectConfig(int dx, int dy, int Point);
 		

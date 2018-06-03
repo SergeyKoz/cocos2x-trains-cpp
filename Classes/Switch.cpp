@@ -2,6 +2,7 @@
 #include "Switch.h"
 #include "Field.h"
 #include "Cell.h"
+#include "MenuLayer.h"
 
 USING_NS_CC;
 
@@ -99,30 +100,51 @@ namespace GameObjects {
 	}
 
 	void Switch::changePosition()
-	{
-		if (this->Position == SwitchPosition::Straight) {
-			this->positions[SwitchPosition::Straight]->element->setVisible(false);
-			this->positions[SwitchPosition::Diverging]->element->setVisible(true);
-			this->Position = SwitchPosition::Diverging;
-		} else {
-			this->positions[SwitchPosition::Diverging]->element->setVisible(false);
-			this->positions[SwitchPosition::Straight]->element->setVisible(true);
-			this->Position = SwitchPosition::Straight;
-		}		
+	{	
+		setPosition(this->Position == SwitchPosition::Straight ? SwitchPosition::Diverging : SwitchPosition::Straight);
 	}
 
 	void Switch::setPosition(SwitchPosition position)
 	{
-		if (position == SwitchPosition::Straight && Position == SwitchPosition::Diverging) {
-			
+		bool changed = false;
+		if (position == SwitchPosition::Straight && Position == SwitchPosition::Diverging) {			
 			this->positions[SwitchPosition::Diverging]->element->setVisible(false);
 			this->positions[SwitchPosition::Straight]->element->setVisible(true);
 			this->Position = position;
+			changed = true;
 		}
 		if (position == SwitchPosition::Diverging && Position == SwitchPosition::Straight) {
 			this->positions[SwitchPosition::Straight]->element->setVisible(false);
 			this->positions[SwitchPosition::Diverging]->element->setVisible(true);
 			this->Position = position;
+			changed = true;
+		}
+		
+		if (changed) {			
+			try {
+				TrainSwitchCollision collision;
+				if (!overTrains.empty()) {
+					throw collision;
+				}
+			}
+			catch (exception& e)
+			{
+				CCLOG("< %s", e.what());
+				Field *game = Field::getInstance();
+				game->gameMode = GameMode::ModeOff;
+
+				MenuLayer *menu = (MenuLayer*)game->menuLayer;
+				menu->PauseButton->enable(false);
+			}
+
+			if (!lookTrains.empty()) {
+				//reset all trains
+				
+				for (int i = 0; i < lookTrains.size(); i++)
+				{	
+					lookTrains[i]->SpeedReset();
+				}
+			}
 		}
 	}
 
@@ -133,4 +155,24 @@ namespace GameObjects {
 		game->mapLayer->removeChild(positions[Straight]->element);
 		game->mapLayer->removeChild(positions[Diverging]->element);
 	}
+
+	void Switch::listenOver(Train *train)
+	{
+		overTrains.push_back(train);
+	}
+
+	void Switch::removeOver(Train *train)
+	{
+		overTrains.erase(std::remove(overTrains.begin(), overTrains.end(), train), overTrains.end());
+	}
+
+	void Switch::removeLook(Train *train)
+	{
+		lookTrains.erase(std::remove(lookTrains.begin(), lookTrains.end(), train), lookTrains.end());
+	}
+
+	void Switch::listenLook(Train *train)
+	{
+		lookTrains.push_back(train);
+	}	
 }

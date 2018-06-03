@@ -63,22 +63,11 @@ namespace GameObjects {
 
 	void Car::GetMove(int speed)
 	{
-		//move
 		Axis1 = Path::GetPosition(Axis1, speed);		
 		Vec2 p1 = Path::GetPosition(Axis1);
 		Axis2 = Path::GetPosition(Axis2, speed);		
 		Vec2 p2 = Path::GetPosition(Axis2);
 		this->move = { { (p1.x + (p2.x - p1.x) / 2), (p1.y + (p2.y - p1.y) / 2) }, (atan2((p2.x - p1.x), (p2.y - p1.y)) + hPI) * Deg };
-
-		/*TrackPosition pos = Path::GetPosition(Axis1, speed);
-		Axis1 = pos;
-		Vec2 p1 = Path::GetPosition(pos);
-		pos = Path::GetPosition(Axis2, speed);
-		Axis2 = pos;
-		Vec2 p2 = Path::GetPosition(pos);*/
-		//CarPosition move = { { (p1.x + (p2.x - p1.x) / 2), (p1.y + (p2.y - p1.y) / 2) }, (atan2((p2.x - p1.x), (p2.y - p1.y)) + hPI) * Deg };
-		//this->shift = { move.p - this->position.p, move.a - this->position.a };
-		//this->move = move;		
 	}
 
 	void Car::RunMove()

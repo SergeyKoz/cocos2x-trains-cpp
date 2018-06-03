@@ -54,7 +54,10 @@ namespace GameObjects {
 
 	struct TrackItem {
 		int SpeedLimit;
-		vector<Vec2> items;
+		MapPoint shift;
+		int entry[8];
+		int length;
+		vector<Vec2> items;		
 	};
 
 	struct AccessItem {		
@@ -120,6 +123,7 @@ namespace GameObjects {
 		
 		static Vec2 GetPosition(TrackPosition position);
 		static TrackPosition GetPosition(TrackPosition position, int increase);
+		static TrackPosition backPosition(TrackPosition position);
 
 		/*		
 		GetPosition(Position, Increase, EstimateObjects)

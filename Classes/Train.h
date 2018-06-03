@@ -43,6 +43,14 @@ namespace GameObjects {
 		}
 	};
 
+	class TrainSwitchCollision : public exception
+	{
+		virtual const char* what() const throw()
+		{
+			return "Tains switch collision";
+		}
+	};
+
 	class Train
 	{
 	public:
@@ -75,15 +83,14 @@ namespace GameObjects {
 		void RunMove();
 		void SpeedReset();
 
+	private:
+
 		void checkOverTrack();
 		bool checkLookTrack(int move);
 		bool applySpeed(int Speed);
 		void applySpeedLimit(int limit);
-
 		void slowDown(int Speed, int Indent);
-
-		//Node* pin = 0;
-
+		
 		/* debug */
 		/*DrawNode *debugNode;
 		Vec2 debugItems[20];
@@ -93,6 +100,7 @@ namespace GameObjects {
 		void addDebugPoint();
 		void addDebugPoint(TrackPosition pos);
 		void debugReset();*/
+		
 	};
 }
 #endif /*__GAME_TRAIN_H__*/

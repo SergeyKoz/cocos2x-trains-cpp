@@ -149,6 +149,71 @@ namespace GameObjects {
 		return item;
 	}
 
+	TrackElement Elements::getTrackElement(string element)
+	{
+		TrackElement el = TrackElement::None;
+		if (element == "Vertical") {
+			el = TrackElement::Vertical;
+		} else if (element == "Horizontal") {
+			el = TrackElement::Horizontal;
+		} else if (element == "Item45") {
+			el = TrackElement::Item45;
+		} else if (element == "Item135") {
+			el = TrackElement::Item135;
+		} else if (element == "BaseCircleSect0") {
+			el = TrackElement::BaseCircleSect0;
+		} else if (element == "BaseCircleSect1") {
+			el = TrackElement::BaseCircleSect1;
+		} else if (element == "BaseCircleSect2") {
+			el = TrackElement::BaseCircleSect2;
+		} else if (element == "BaseCircleSect3") {
+			el = TrackElement::BaseCircleSect3;
+		} else if (element == "BaseCircleSect4") {
+			el = TrackElement::BaseCircleSect4;
+		} else if (element == "BaseCircleSect5") {
+			el = TrackElement::BaseCircleSect5;
+		} else if (element == "BaseCircleSect6") {
+			el = TrackElement::BaseCircleSect6;
+		} else if (element == "BaseCircleSect7") {
+			el = TrackElement::BaseCircleSect7;
+		} else if (element == "SmallCilcleSect0") {
+			el = TrackElement::SmallCilcleSect0;
+		} else if (element == "SmallCilcleSect1") {
+			el = TrackElement::SmallCilcleSect1;
+		} else if (element == "SmallCilcleSect2") {
+			el = TrackElement::SmallCilcleSect2;
+		} else if (element == "SmallCilcleSect3") {
+			el = TrackElement::SmallCilcleSect3;
+		}
+		return el;
+	}
+
+	string Elements::getTrackElement(TrackElement Element)
+	{
+		string element = "None";
+		switch (Element)
+		{		
+		case TrackElement::Vertical: element = "Vertical"; break;
+		case TrackElement::Horizontal: element = "Horizontal"; break;
+		case TrackElement::Item45: element = "Item45"; break;
+		case TrackElement::Item135: element = "Item135"; break;
+		case TrackElement::BaseCircleSect0: element = "BaseCircleSect0"; break;
+		case TrackElement::BaseCircleSect1: element = "BaseCircleSect1"; break;
+		case TrackElement::BaseCircleSect2: element = "BaseCircleSect2"; break;
+		case TrackElement::BaseCircleSect3: element = "BaseCircleSect3"; break;
+		case TrackElement::BaseCircleSect4: element = "BaseCircleSect4"; break;
+		case TrackElement::BaseCircleSect5: element = "BaseCircleSect5"; break;
+		case TrackElement::BaseCircleSect6: element = "BaseCircleSect6"; break;
+		case TrackElement::BaseCircleSect7: element = "BaseCircleSect7"; break;
+		case TrackElement::SmallCilcleSect0: element = "SmallCilcleSect0"; break;
+		case TrackElement::SmallCilcleSect1: element = "SmallCilcleSect1"; break;
+		case TrackElement::SmallCilcleSect2: element = "SmallCilcleSect2"; break;
+		case TrackElement::SmallCilcleSect3: element = "SmallCilcleSect3"; break;
+		default: element = "None"; break;
+		}
+		return element;
+	}
+
 	Sprite *Elements::GetSwitchElement(MapPoint Point, SwitchElement Element) {
 		Sprite *item;
 		Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("rails.png");
@@ -479,5 +544,78 @@ namespace GameObjects {
 		if (Element == FreightCar) {
 		}
 		return item;
+	}
+
+	CarElement Elements::getCarElement(string element)
+	{
+		CarElement el;
+		if (element == "Locomotive") {
+			el = CarElement::Locomotive;
+		}
+		else if (element == "TankCar") {
+			el = CarElement::TankCar;
+		}
+		else if (element == "PassengerCar") {
+			el = CarElement::PassengerCar;
+		}
+		else if (element == "FreightCar") {
+			el = CarElement::FreightCar;
+		}
+		else if (element == "Switcher") {
+			el = CarElement::Switcher;
+		}				
+		return el;
+	}
+
+	string Elements::getCarElement(CarElement Element)
+	{
+		string element;
+		switch (Element)
+		{
+		case CarElement::Locomotive: element = "Locomotive"; break;
+		case CarElement::TankCar: element = "TankCar"; break;
+		case CarElement::PassengerCar: element = "PassengerCar"; break;
+		case CarElement::FreightCar: element = "FreightCar"; break;
+		case CarElement::Switcher: element = "Switcher"; break;
+		default: element = ""; break;
+		}
+		return element;
+	}
+
+	TrainDirection Elements::getDirection(string direction)
+	{
+		TrainDirection el;
+		if (direction == "Forward") {
+			el = TrainDirection::Forward;
+		} else if (direction == "Back") {
+			el = TrainDirection::Back;
+		}		
+		return el;
+	}
+
+	SwitchPosition Elements::getSwitchPosition(string position)
+	{
+		SwitchPosition el;
+		if (position == "Straight") {
+			el = SwitchPosition::Straight;
+		} else if (position == "Diverging") {
+			el = SwitchPosition::Diverging;
+		}
+		return el;
+	}
+
+	SemaphorePosition Elements::getSemaphorePosition(string position)
+	{
+		SemaphorePosition el;
+		if (position == "Go") {
+			el = SemaphorePosition::Go;
+		}
+		else if (position == "Reverse") {
+			el = SemaphorePosition::Reverse;
+		}
+		else if (position == "Stop") {
+			el = SemaphorePosition::Stop;
+		}
+		return el;
 	}
 }

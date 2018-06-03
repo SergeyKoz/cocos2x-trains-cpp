@@ -187,19 +187,9 @@ namespace GameObjects {
 
 				for (SizeType i = 0; i < jsonDoc.Size(); i++) {
 					Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].SetSwitch(jsonDoc[i]["point"].GetInt());
-
-					//if (variables.find("jon") == variables.end())
-
 					if (jsonDoc[i].HasMember("position")) {
 						string position = jsonDoc[i]["position"].GetString();
-						//if (position != "") {
-						SwitchPosition pos;
-						if (position == "Straight") {
-							pos = SwitchPosition::Straight;
-						}
-						if (position == "Diverging") {
-							pos = SwitchPosition::Diverging;
-						}
+						SwitchPosition pos = Elements::getSwitchPosition(position);
 						Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].switches[jsonDoc[i]["point"].GetInt()]->setPosition(pos);
 					}
 				}
@@ -221,39 +211,19 @@ namespace GameObjects {
 			int point = jsonDoc["point"].GetInt();
 			int x = jsonDoc["cell"]["x"].GetInt();
 			int y = jsonDoc["cell"]["y"].GetInt();
-
-			TrainDirection direction;		
-			if (opts["direction"] == "Forward") {
-				direction = TrainDirection::Forward;
-			}
-			if (opts["direction"] == "Back") {
-				direction = TrainDirection::Back;
-			}
+			TrackElement element = Elements::getTrackElement(jsonDoc["element"].GetString());
+			TrainDirection direction = Elements::getDirection(opts["direction"]);
 
 			Train train;
 			train.id = std::stoi(opts["id"]);
 			train.direction = direction;
 			CarElement car;
-			for (int i = 0; i < args.size(); i++) {				
-				if (args[i] == "Locomotive") {
-					car = CarElement::Locomotive;
-				}
-				if (args[i] == "TankCar") {
-					car = CarElement::TankCar;
-				}
-				if (args[i] == "PassengerCar") {
-					car = CarElement::PassengerCar;
-				}
-				if (args[i] == "FreightCar") {
-					car = CarElement::FreightCar;
-				}
-				if (args[i] == "Switcher") {
-					car = CarElement::Switcher;
-				}
-				train.AddCar(Car(car));
+			for (int i = 0; i < args.size(); i++) {
+				car = Elements::getCarElement(args[i]);
+				train.AddCar(car);
 			}
-			
-			train.SetPosition({ &game->cells[x][y], point, indent });
+
+			train.SetPosition({ &game->cells[x][y], point, indent, element });
 			game->addTrain(train);
 		}
 	}
@@ -264,17 +234,8 @@ namespace GameObjects {
 			rapidjson::Document jsonDoc;
 			jsonDoc.Parse<kParseDefaultFlags>(opts["cell"].c_str());
 			Field::getInstance()->cells[jsonDoc["x"].GetInt()][jsonDoc["y"].GetInt()].SetSemaphore(std::stoi(opts["point"]));
-			if (opts["position"] != "") {
-				SemaphorePosition pos;				
-				if (opts["position"] == "Go") {
-					pos = SemaphorePosition::Go;
-				}
-				if (opts["position"] == "Reverse") {
-					pos = SemaphorePosition::Reverse;
-				}
-				if (opts["position"] == "Stop") {
-					pos = SemaphorePosition::Stop;
-				}
+			if (opts["position"] != "") {				
+				SemaphorePosition pos = Elements::getSemaphorePosition(opts["position"]);
 				Field::getInstance()->cells[jsonDoc["x"].GetInt()][jsonDoc["y"].GetInt()].semaphores[std::stoi(opts["point"])]->SetPosition(pos);
 			}
 		}

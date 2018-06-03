@@ -23,7 +23,7 @@ namespace GameObjects {
 	}
 
 	int Cell::Related[8] = { 4, 5, 6, 7, 0, 1, 2, 3};
-
+	
 	ConnectionConfig *Cell::GetConnectConfig(int dx, int dy, int Point){ 
 		ConnectionConfig *connect = new ConnectionConfig;
 
@@ -257,6 +257,10 @@ namespace GameObjects {
 
 	Entry *Cell::getEntry(int Point) {		
 		return this->switches[Point] == 0 || (this->switches[Point] > 0 && this->switches[Point]->Position == SwitchPosition::Straight) ? this->straightConnection[Point] : this->divergingConnection[Point];
+	}
+
+	Entry *Cell::getEntry(int Point, TrackElement element) {
+		return this->switches[Point] == 0 || (this->switches[Point] > 0 && this->straightConnection[Point]->Element == element) ? this->straightConnection[Point] : this->divergingConnection[Point];
 	}
 
 	void Cell::SetSwitch(int Point)

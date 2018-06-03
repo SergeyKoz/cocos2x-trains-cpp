@@ -26,8 +26,7 @@ namespace GameObjects {
 	class Switch
 	{
 
-	public:
-		
+	public:		
 		Switch(Cell *cell, int Point);
 		~Switch();
 	
@@ -39,8 +38,13 @@ namespace GameObjects {
 		void setPosition(SwitchPosition position);
 		void remove();
 
-		Train *over;
-		vector<Train*> look;
+		vector<Train*> lookTrains;
+		void listenLook(Train *train);
+		void removeLook(Train *train);
+
+		vector<Train*> overTrains;
+		void listenOver(Train *train);
+		void removeOver(Train *train);
 	};
 }
 

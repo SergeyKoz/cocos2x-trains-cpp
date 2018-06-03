@@ -2,6 +2,7 @@
 #include "Car.h"
 #include "Path.h"
 #include <math.h>
+//#include <thread>
 
 namespace GameObjects {
 
@@ -93,8 +94,16 @@ namespace GameObjects {
 		}*/
 
 		//pin->setPosition(this->cars[0].move.p);
-		Director::getInstance()->getScheduler()->performFunctionInCocosThread([&] {
+
+		/*std::thread t([&] {
 			GetMove(GetSpeed());
+		});
+		t.detach();*/
+
+
+
+		Director::getInstance()->getScheduler()->performFunctionInCocosThread([&] {
+			GetMove(GetSpeed());			
 		});
 		
 		RunMove();
@@ -118,7 +127,6 @@ namespace GameObjects {
 		this->position = Path::GetPosition(this->position, move);
 		for (int i = 0; i < cars.size(); i++) {
 			cars[i].GetMove(move);
-			//cars[i].RunMove();
 		}
 	}
 
@@ -171,11 +179,11 @@ namespace GameObjects {
 	{
 		speed.lookPointer = speed.pointer;
 		speed.lookPointers = 0;
-
+		//debug
 		//debugReset();
 
 		speed.lookPosition = direction == TrainDirection::Forward ? Path::GetPosition(cars[0].Axis1, 2) : Path::GetPosition(cars[cars.size() - 1].Axis2, -2);
-
+		//debug
 		//addDebugPoint();
 
 		vector<Semaphore*>::iterator i;
@@ -183,6 +191,18 @@ namespace GameObjects {
 			(*i)->remove(this);
 		}
 		this->speed.lookSemaphores.clear();
+
+		vector<Switch*>::iterator c;
+		for (c = this->speed.lookSwitches.begin(); c != this->speed.lookSwitches.end(); ++c) {
+			(*c)->removeLook(this);
+		}
+		this->speed.lookSwitches.clear();
+
+		for (c = this->speed.overSwitches.begin(); c != this->speed.overSwitches.end(); ++c) {
+			(*c)->removeOver(this);
+		}
+		this->speed.overSwitches.clear();
+
 		this->speed.limit = this->speed.overLimit;		
 		applySpeedLimit(this->speed.limit);
 	}
@@ -195,88 +215,50 @@ namespace GameObjects {
 		TrackPosition pos = direction == TrainDirection::Forward ? position : cars[cars.size() - 1].Axis2;
 		Entry *entry;
 		bool first = true;
+
+		if (direction == TrainDirection::Back) {
+			pos = Path::backPosition(pos);
+		}
 		
 		while (i > 0)
 		{
-			if (direction == TrainDirection::Forward) {
-				entry = pos.cell->getEntry(pos.point);
-				if (pos.indent - i >= 0) {
-					pos.indent = pos.indent - i;
-					i = 0;
-					if (Path::track[entry->Element].SpeedLimit > 0 && Path::track[entry->Element].SpeedLimit < limit) {						
-						limit = Path::track[entry->Element].SpeedLimit;
-					}
- 				}
-				if (pos.indent - i < 0) {
-					int nextPoint = Cell::Related[pos.point];
-
-					if (pos.cell->switches[pos.point] > 0) {
-						switches.push_back(pos.cell->switches[pos.point]);
-					}
-					if (pos.cell->switches[nextPoint] > 0) {
-						switches.push_back(pos.cell->switches[nextPoint]);
-					}
-					if (first && pos.cell->semaphores[nextPoint] != 0 && pos.cell->semaphores[nextPoint]->Position == SemaphorePosition::Go) {
-						pos.cell->semaphores[nextPoint]->remove(this);
-						this->speed.lookSemaphores.erase(std::remove(this->speed.lookSemaphores.begin(), this->speed.lookSemaphores.end(), pos.cell->semaphores[nextPoint]), this->speed.lookSemaphores.end());
-					}
-
-					first = false;
-
-					if (pos.cell->getEntry(nextPoint) != 0) {
-						i = i - (pos.indent + 1);
-						entry = pos.cell->getEntry(nextPoint);
-						pos.cell = entry->to;
-						pos.point = entry->Point;
-						pos.indent = Path::track[entry->Element].items.size() - 1;
-						if (Path::track[entry->Element].SpeedLimit > 0 && Path::track[entry->Element].SpeedLimit < limit) {
-							limit = Path::track[entry->Element].SpeedLimit;
-						}
-					} else {
-						pos.indent = 0;
-						i = 0;
-					}
+			entry = pos.cell->getEntry(pos.point, pos.element);
+			if (pos.indent - i >= 0) {
+				pos.indent = pos.indent - i;
+				i = 0;
+				if (Path::track[entry->Element].SpeedLimit > 0 && Path::track[entry->Element].SpeedLimit < limit) {						
+					limit = Path::track[entry->Element].SpeedLimit;
 				}
-			}
+ 			}
+			if (pos.indent - i < 0) {
+				int nextPoint = Cell::Related[pos.point];
+				//switches
+				if (pos.cell->switches[pos.point] > 0) {
+					switches.push_back(pos.cell->switches[pos.point]);
+				}
+				if (pos.cell->switches[nextPoint] > 0) {
+					switches.push_back(pos.cell->switches[nextPoint]);
+				}
+				//semaphores
+				if (first && pos.cell->semaphores[nextPoint] != 0 && pos.cell->semaphores[nextPoint]->Position == SemaphorePosition::Go) {
+					pos.cell->semaphores[nextPoint]->remove(this);
+					this->speed.lookSemaphores.erase(std::remove(this->speed.lookSemaphores.begin(), this->speed.lookSemaphores.end(), pos.cell->semaphores[nextPoint]), this->speed.lookSemaphores.end());
+				}
 
-			if (direction == TrainDirection::Back) {				
-				entry = pos.cell->getEntry(pos.point);
-				int TrackLength = Path::track[entry->Element].items.size();
-				if (pos.indent + i < TrackLength) {
-					pos.indent = pos.indent + i;
-					i = 0;
+				first = false;
+				if (pos.cell->getEntry(nextPoint) != 0) {
+					i = i - (pos.indent + 1);
+					entry = pos.cell->getEntry(nextPoint);
+					pos.cell = entry->to;
+					pos.point = entry->Point;
+					pos.indent = Path::track[entry->Element].length - 1;
+					pos.element = entry->Element;
 					if (Path::track[entry->Element].SpeedLimit > 0 && Path::track[entry->Element].SpeedLimit < limit) {
 						limit = Path::track[entry->Element].SpeedLimit;
 					}
-				}
-				if (pos.indent + i >= TrackLength) {
-					int nextPoint = Cell::Related[entry->Point];
-
-					if (entry->to->switches[entry->Point] > 0) {
-						switches.push_back(entry->to->switches[entry->Point]);
-					}
-					if (entry->to->switches[Cell::Related[entry->Point]] > 0) {
-						switches.push_back(entry->to->switches[Cell::Related[entry->Point]]);
-					}
-					if (first && entry->to->semaphores[Cell::Related[entry->Point]] != 0 && entry->to->semaphores[Cell::Related[entry->Point]]->Position == SemaphorePosition::Go) {
-						entry->to->semaphores[Cell::Related[entry->Point]]->remove(this);
-						this->speed.lookSemaphores.erase(std::remove(this->speed.lookSemaphores.begin(), this->speed.lookSemaphores.end(), entry->to->semaphores[Cell::Related[entry->Point]]), this->speed.lookSemaphores.end());
-					}
-
-					first = false;
-
-					if (entry->to->getEntry(nextPoint) != 0) {
-						i = i - TrackLength + pos.indent - 1;
-						pos.cell = entry->to;
-						pos.indent = 0;
-						pos.point = nextPoint;
-						if (Path::track[entry->Element].SpeedLimit > 0 && Path::track[entry->Element].SpeedLimit < limit) {
-							limit = Path::track[entry->Element].SpeedLimit;
-						}
-					} else {
-						pos.indent = TrackLength - i;
-						i = 0;
-					}
+				} else {
+					pos.indent = 0;
+					i = 0;
 				}
 			}
 		}
@@ -290,6 +272,9 @@ namespace GameObjects {
 				for (j = switches.begin(); j < switches.end(); ++j)
 				{
 					speed.overSwitches.push_back(*j);
+					(*j)->listenOver(this);
+					(*j)->removeLook(this);
+					speed.lookSwitches.erase(std::remove(speed.lookSwitches.begin(), speed.lookSwitches.end(), (*j)), speed.lookSwitches.end());
 				}
 			}
 		} else {
@@ -298,6 +283,9 @@ namespace GameObjects {
 			{
 				if (*j != *c) {
 					speed.overSwitches.insert(c, *j);
+					(*j)->listenOver(this);
+					(*j)->removeLook(this);
+					speed.lookSwitches.erase(std::remove(speed.lookSwitches.begin(), speed.lookSwitches.end(), (*j)), speed.lookSwitches.end());
 				}
 				k++;
 				c = speed.overSwitches.begin() + k;
@@ -306,6 +294,7 @@ namespace GameObjects {
 			while (k < speed.overSwitches.size())
 			{
 				c = speed.overSwitches.end() - 1;
+				speed.overSwitches.back()->removeOver(this);
 				speed.overSwitches.pop_back();
 			}
 		}
@@ -313,148 +302,204 @@ namespace GameObjects {
 
 	bool Train::checkLookTrack(int move)
 	{
+		Entry *entry, *nextEntry, *_entry;
+
 		bool limitEvent = false;
 		bool switchtEvent = false;
 		bool semaphoreEvent = false;
 		bool endEvent = false;
-		int indent;
+		int indent = 0;
 		int k = direction == TrainDirection::Forward ? 1 : -1;
 		int speed = k * move;		
-		vector<Switch*> switches;
-		TrackPosition pos = this->speed.lookPosition;
 		int i = move > 0 ? move : -move;
-		Entry *entry;
+		move = speed;
 
-		while (i > 0 && !(limitEvent || switchtEvent || semaphoreEvent || endEvent))
-		{			
-			if (direction == TrainDirection::Forward) {
-				entry = pos.cell->getEntry(pos.point);
-				int TrackLength = Path::track[entry->Element].items.size();
-				if (pos.indent + i < TrackLength) {
-					pos.indent = pos.indent + i;
+		TrackPosition pos = this->speed.lookPosition;
+
+		if (direction == TrainDirection::Back) {
+			pos = Path::backPosition(pos);
+		} 
+				
+		while (i > 0 && !(semaphoreEvent || endEvent || switchtEvent))
+		{
+			entry = pos.cell->getEntry(pos.point, pos.element);
+			TrackItem track = Path::track[entry->Element];
+			if (pos.indent + i < track.length) {
+				pos.indent = pos.indent + i;
+				if (track.SpeedLimit > 0 && track.SpeedLimit < speed) {
+					speed = track.SpeedLimit;
+					limitEvent = true;
+					indent = move - i;
+						
+					//debug
+					//addDebugPoint(Path::GetPosition(this->speed.lookPosition, indent));
+				}
+
+				//in switch
+				if (entry->to->getEntry(Cell::Related[entry->Point]) != 0) {
+					_entry = entry->to->getEntry(Cell::Related[entry->Point]);
+					if ((_entry->Element == TrackElement::Horizontal || _entry->Element == TrackElement::Vertical) && _entry->to->getEntry(Cell::Related[_entry->Point]) != 0) {
+						_entry = _entry->to->getEntry(Cell::Related[_entry->Point]);
+						if ((_entry->Element == TrackElement::Horizontal || _entry->Element == TrackElement::Vertical) && _entry->to->switches[_entry->Point] > 0) {							
+							this->speed.lookSwitches.push_back(_entry->to->switches[_entry->Point]);
+							_entry->to->switches[_entry->Point]->listenLook(this);
+							if (_entry->Element != _entry->to->getEntry(_entry->Point)->Element)
+							{
+								//closed
+								switchtEvent = true;
+								indent = move - i + Path::track[entry->Element].length - 5;
+							}
+						}
+					}
+
+					if (_entry->Element == TrackElement::Item135 || _entry->Element == TrackElement::Item45) {
+						if (!switchtEvent && _entry->to->switches[_entry->Point] > 0) {
+							this->speed.lookSwitches.push_back(_entry->to->switches[_entry->Point]);
+							_entry->to->switches[_entry->Point]->listenLook(this);
+							if (_entry->Element != _entry->to->getEntry(_entry->Point)->Element)
+							{
+								//closed
+								switchtEvent = true;
+								indent = move - i + Path::track[entry->Element].length - 5;
+							}
+						}
+					}
+				}
+
+				if (!switchtEvent && entry->to->switches[entry->Point] > 0) {
+					this->speed.lookSwitches.push_back(entry->to->switches[entry->Point]);
+					entry->to->switches[entry->Point]->listenLook(this);
+					if (entry->Element != entry->to->getEntry(entry->Point)->Element)
+					{
+						//closed
+						switchtEvent = true;
+						switch (entry->Element)
+						{
+						case TrackElement::BaseCircleSect0: case TrackElement::BaseCircleSect1: case TrackElement::BaseCircleSect2: case TrackElement::BaseCircleSect3: case TrackElement::BaseCircleSect4: case TrackElement::BaseCircleSect5: case TrackElement::BaseCircleSect6: case TrackElement::BaseCircleSect7:
+							indent = move - i + Path::track[entry->Element].length - 25;
+							break;
+						default:
+							indent = move - i + Path::track[entry->Element].length - 15;
+							break;
+						}
+					}
+				}
+				i = 0;
+			}
+			if (pos.indent + i >= track.length) {
+				int nextPoint = Cell::Related[entry->Point];
+				if (entry->to->getEntry(nextPoint) != 0) {
+					i = i - track.length + pos.indent;
+
+					pos.cell = entry->to;
+					pos.indent = 0;
+					pos.point = nextPoint;
+					pos.element = entry->to->getEntry(nextPoint)->Element;
+
+					//in switch
 					
-					if (Path::track[entry->Element].SpeedLimit > 0 && Path::track[entry->Element].SpeedLimit < speed) {
-						speed = Path::track[entry->Element].SpeedLimit;
-						limitEvent = true;
-						indent = move - i - 1;
-						//addDebugPoint(Path::GetPosition(this->speed.lookPosition, k * indent));
+					if (entry->to->getEntry(Cell::Related[entry->Point]) != 0) {
+						_entry = entry->to->getEntry(Cell::Related[entry->Point]);
+						if ((_entry->Element == TrackElement::Horizontal || _entry->Element == TrackElement::Vertical) && _entry->to->getEntry(Cell::Related[_entry->Point]) != 0) {
+							_entry = _entry->to->getEntry(Cell::Related[_entry->Point]);
+							if ((_entry->Element == TrackElement::Horizontal || _entry->Element == TrackElement::Vertical) && _entry->to->switches[_entry->Point] > 0) {
+								this->speed.lookSwitches.push_back(_entry->to->switches[_entry->Point]);
+								_entry->to->switches[_entry->Point]->listenLook(this);
+								if (_entry->Element != _entry->to->getEntry(_entry->Point)->Element)
+								{
+									//closed
+									switchtEvent = true;
+									indent = move - i + Path::track[entry->Element].length - 5;
+									i = 0;
+								}
+							}							
+						}
+
+						if ((_entry->Element == TrackElement::Item135 || _entry->Element == TrackElement::Item45) && !switchtEvent && _entry->to->switches[_entry->Point] > 0) {
+							this->speed.lookSwitches.push_back(_entry->to->switches[_entry->Point]);
+							_entry->to->switches[_entry->Point]->listenLook(this);
+							if (_entry->Element != _entry->to->getEntry(_entry->Point)->Element)
+							{
+								//closed
+								switchtEvent = true;
+								indent = move - i + Path::track[entry->Element].length - 5;
+								i = 0;
+							}														
+						}
 					}
-					i = 0;
-				}
-				if (pos.indent + i >= TrackLength) {
-					int nextPoint = Cell::Related[entry->Point];
-										
+					
+					if (!switchtEvent && entry->to->switches[entry->Point] > 0) {
+						this->speed.lookSwitches.push_back(entry->to->switches[entry->Point]);
+						entry->to->switches[entry->Point]->listenLook(this);
+						if (entry->Element != entry->to->getEntry(entry->Point)->Element)
+						{
+							//closed
+							switchtEvent = true;								
+							switch (entry->Element)
+							{							
+							case TrackElement::BaseCircleSect0: case TrackElement::BaseCircleSect1: case TrackElement::BaseCircleSect2: case TrackElement::BaseCircleSect3: case TrackElement::BaseCircleSect4: case TrackElement::BaseCircleSect5: case TrackElement::BaseCircleSect6: case TrackElement::BaseCircleSect7:
+								indent = move - i + Path::track[entry->Element].length - 25;
+								break;
+							default:
+								indent = move - i + Path::track[entry->Element].length - 15;
+								break;
+							}
+							i = 0;
+						}
+					}
+
+					//out switch
 					if (pos.cell->switches[pos.point] > 0) {
-						switches.push_back(pos.cell->switches[pos.point]);
-					}
-					if (pos.cell->switches[Cell::Related[pos.point]] > 0) {
-						switches.push_back(pos.cell->switches[Cell::Related[pos.point]]);
+						this->speed.lookSwitches.push_back(pos.cell->switches[pos.point]);
+						pos.cell->switches[pos.point]->listenLook(this);
 					}
 
-					if (entry->to->getEntry(nextPoint) != 0) {
-						i = i - TrackLength + pos.indent;						
-						pos.cell = entry->to;
-						pos.indent = 0;
-						pos.point = nextPoint;
+					//in semaphore
+					if (pos.cell->semaphores[entry->Point] != 0) {
+						pos.cell->semaphores[entry->Point]->listen(this);
+						this->speed.lookSemaphores.push_back(pos.cell->semaphores[entry->Point]);
+						if (pos.cell->semaphores[entry->Point]->Position == SemaphorePosition::Stop || pos.cell->semaphores[entry->Point]->Position == SemaphorePosition::Reverse) {
+							semaphoreEvent = true;
 
-						if (entry->to->semaphores[entry->Point] != 0) {
-							entry->to->semaphores[entry->Point]->listen(this);
-							this->speed.lookSemaphores.push_back(entry->to->semaphores[entry->Point]);
-							if (entry->to->semaphores[entry->Point]->Position == SemaphorePosition::Stop || entry->to->semaphores[entry->Point]->Position == SemaphorePosition::Reverse) {
-								semaphoreEvent = true;
-								indent = move - i;
-							}
-						}
-
-						if (Path::track[entry->Element].SpeedLimit > 0 && Path::track[entry->Element].SpeedLimit < speed) {
-							speed = Path::track[entry->Element].SpeedLimit;
-							limitEvent = true;
 							indent = move - i;
-							//addDebugPoint(Path::GetPosition(this->speed.lookPosition, k * indent));
 						}
-
-						if (i <= 0) {
-							entry = pos.cell->getEntry(pos.point);
-							if (Path::track[entry->Element].SpeedLimit > 0 && Path::track[entry->Element].SpeedLimit < speed) {
-								speed = Path::track[entry->Element].SpeedLimit;
-								limitEvent = true;
-								indent = move + i;
-								//addDebugPoint(Path::GetPosition(this->speed.lookPosition, k * indent));
-							}
-						}
-					} else {						
-						endEvent = true;
-						indent = move - (i - TrackLength + pos.indent) - 1;
-						i = 0;
 					}
-				}
-			}
 
-			if (direction == TrainDirection::Back) {
-				entry = pos.cell->getEntry(pos.point);
-				if (pos.indent - i >= 0) {
-					pos.indent = pos.indent - i;
+					if (track.SpeedLimit > 0 && track.SpeedLimit < speed) {
+						speed = track.SpeedLimit;
+						limitEvent = true;
+							
+						indent = move - i;
+
+						//debug
+						//addDebugPoint(Path::GetPosition(this->speed.lookPosition, indent));
+					}
+				} else {						
+					endEvent = true;
+					indent = move - (i - track.length + pos.indent) - 1;
 					i = 0;
 				}
-				if (pos.indent - i < 0) {
-					int nextPoint = Cell::Related[pos.point];
-					/*if (pos.cell->switches[pos.point] > 0) {
-						switches.push_back(pos.cell->switches[pos.point]);
-					}
-					if (pos.cell->switches[nextPoint] > 0) {
-						switches.push_back(pos.cell->switches[nextPoint]);
-					}*/
-
-					if (pos.cell->getEntry(nextPoint) != 0) {
-						i = i - (pos.indent + 1);
-
-						if (pos.cell->semaphores[pos.point] != 0) {
-							pos.cell->semaphores[pos.point]->listen(this);
-							this->speed.lookSemaphores.push_back(pos.cell->semaphores[pos.point]);
-							if (pos.cell->semaphores[pos.point]->Position == SemaphorePosition::Stop || pos.cell->semaphores[pos.point]->Position == SemaphorePosition::Reverse) {
-								semaphoreEvent = true;
-								indent = - (move + i) - 1;
-							}
-						}
-
-						entry = pos.cell->getEntry(nextPoint);
-						pos.cell = entry->to;
-						pos.point = entry->Point;
-						pos.indent = Path::track[entry->Element].items.size() - 1;
-
-						if (Path::track[entry->Element].SpeedLimit > 0 && Path::track[entry->Element].SpeedLimit < speed) {
-							speed = Path::track[entry->Element].SpeedLimit;
-							limitEvent = true;
-							indent = - (move + i) - 1;							
-							//addDebugPoint(Path::GetPosition(this->speed.lookPosition, k * indent));
-						}
-					} else {
-						endEvent = true;
-						i = i - (pos.indent + 1);
-						indent = -(move + i) - 1;
-						//pos.indent = 0;
-						i = 0;
-					}
-				}
-			}
+			}			
 		}
 
 		if (semaphoreEvent || endEvent || switchtEvent) {
 			slowDown(0, indent);
 		} else if (limitEvent) {
-			//limitEvent = false;
 			slowDown(k * speed, indent);
 		}
 
-		bool f = limitEvent || switchtEvent || semaphoreEvent || endEvent;
+		bool f = limitEvent || semaphoreEvent || endEvent || switchtEvent;
 		if (!f) {
+			if (direction == TrainDirection::Back) {
+				pos = Path::backPosition(pos);
+			}
 			this->speed.lookPosition = pos;
 			// debug
 			//addDebugPoint();
 		}
 		return !f;
 	}
-	
+
 	void Train::applySpeedLimit(int limit)
 	{
 		int k = direction == TrainDirection::Forward ? 1 : -1;
@@ -503,7 +548,7 @@ namespace GameObjects {
 	}
 	
 	void Train::slowDown(int Speed, int Indent)
-	{
+	{	
 		int k = direction == TrainDirection::Forward ? 1 : -1;
 		Speed *= k;
 		int lookPointer = this->speed.lookPointer;
@@ -601,5 +646,6 @@ namespace GameObjects {
 		for (int i = 0; i < 20; i++) {
 			debugNode->drawDot(debugItems[i], 2.0, Color4F::WHITE);
 		}
-	}*/
+	}
+	*/
 }

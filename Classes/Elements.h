@@ -11,6 +11,9 @@ using namespace std;
 namespace GameObjects {
 
 	class Cell;
+	enum SemaphorePosition;
+	enum TrainDirection;
+	enum SwitchPosition;
 
 	struct MapPoint {
 		int x;
@@ -27,12 +30,6 @@ namespace GameObjects {
 	struct MapIndent {
 		float dx;
 		float dy;
-	};
-
-	struct TrackPosition {
-		Cell *cell;
-		int point;
-		int indent;
 	};
 		
 	enum TrackElement
@@ -145,6 +142,13 @@ namespace GameObjects {
 		Switcher = 5,
 	};
 
+	struct TrackPosition {
+		Cell *cell;
+		int point;
+		int indent;
+		TrackElement element;
+	};
+
 	struct ElementOffset {
 		int dx;
 		int dy;
@@ -163,10 +167,17 @@ namespace GameObjects {
 
 		static Sprite *GetEmpty();
 		static Sprite *GetTrackElement(MapPoint Point, TrackElement Element);
+		static TrackElement getTrackElement(string Element);
+		static string getTrackElement(TrackElement Element);
 		static Sprite *GetSwitchElement(MapPoint Point, SwitchElement Element);
 		static Sprite *GetSemaphoreElement(MapPoint Point, SemaphorElement Element);
 		static Sprite *GetCarElement(CarElement Element);
-		static MenuItemImage *GetMenuElement(MenuElement Element);	
+		static CarElement getCarElement(string Element);
+		static string getCarElement(CarElement Element);
+		static MenuItemImage *GetMenuElement(MenuElement Element);
+		static TrainDirection getDirection(string direction);
+		static SwitchPosition getSwitchPosition(string position);
+		static SemaphorePosition getSemaphorePosition(string position);
 	};
 }
 #endif /*__GAME_ELEMENTS_H__*/

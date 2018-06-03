@@ -64,7 +64,7 @@ namespace GameObjects {
 
 		listener->onTouchEnded = [&, s](Touch* touch, Event* event) { //[=]
 			if (!trains.empty()) {
-				vector<Train*>::iterator i = trains.begin();;
+				vector<Train*>::iterator i = trains.begin();
 				for (int i = 0; i < trains.size(); i++)
 				{
 					/*if (Position == SemaphorePosition::Reverse) {
@@ -98,9 +98,6 @@ namespace GameObjects {
 		game->mapLayer->removeChild(this->Resources.go);
 		game->mapLayer->removeChild(this->Resources.reverse);
 		game->mapLayer->removeChild(this->Resources.stop);
-		/*this->Resources.go->release();
-		this->Resources.reverse->release();
-		this->Resources.stop->release();*/
 	}
 
 	bool Semaphore::Show(MapPoint Point, MapIndent Indent)
