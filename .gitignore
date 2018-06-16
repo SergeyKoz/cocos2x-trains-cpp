@@ -9,3 +9,8 @@ proj.win10
 proj.win32
 proj.win8.1-universal
 CMakeLists.txt
+vendor/primitives/.vs
+vendor/primitives/primitives/obj
+vendor/primitives/rails.png
+vendor/track/.vs
+vendor/track/track/obj
