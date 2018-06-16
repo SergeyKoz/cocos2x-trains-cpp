@@ -1,0 +1,8 @@
+﻿<Window x:Class="track.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="806" Width="1040">
+    <Grid>
+        <Canvas Name="PrimitivesCanvas"/>
+    </Grid>
+</Window>
