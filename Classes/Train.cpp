@@ -198,8 +198,9 @@ namespace GameObjects {
 		}
 		this->speed.lookSwitches.clear();
 
-		for (c = this->speed.overSwitches.begin(); c != this->speed.overSwitches.end(); ++c) {
-			(*c)->removeOver(this);
+		vector<Switch*>::iterator j;
+		for (j = this->speed.overSwitches.begin(); j != this->speed.overSwitches.end(); ++j) {
+			(*j)->removeOver(this);
 		}
 		this->speed.overSwitches.clear();
 

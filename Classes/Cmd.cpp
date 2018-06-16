@@ -47,7 +47,11 @@ namespace GameObjects {
 		Cmd *inst = Cmd::getInstance();
 
 		Command *cmd = inst->decode(cmdline);
+		if (inst->history.size() > inst->pointer) {
+			inst->history.resize(inst->pointer);
+		}
 		inst->history.insert(inst->history.end(), *cmd);
+
 		inst->pointer++;
 		(*(MenuLayer*)Field::getInstance()->menuLayer).UndoButton->enable(true);
 	

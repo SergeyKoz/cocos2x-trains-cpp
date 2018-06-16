@@ -44,24 +44,45 @@ void MapLayer::onEnter()
 	byte d = 0b11110000;
 	byte e = 0b10101010;
 	byte f = 0b01010101;
-
 	byte x = c & d;
-	std::string str = std::bitset<8>(x).to_string(); // 00001111
+	std::string str = std::bitset<8>(x).to_string(); //0b00001111 & 0b11110000 = 00000000
 	x = b & c;
-	str = std::bitset<8>(x).to_string(); // 00001111
+	str = std::bitset<8>(x).to_string(); // 0b11111111 & 0b00001111 = 00001111
 	x = e & f;
-	str = std::bitset<8>(x).to_string(); // 00000000
+	str = std::bitset<8>(x).to_string(); // 0b10101010 & 0b01010101 = 00000000
 	x = 0b111100000 ^ 0b111111000;
 	str = std::bitset<9>(x).to_string(); // 00001100
-	c = 0b11100000;
-	x = c ^ (c & 0b00000111);
+	x = 0b111111000 ^ 0b111100000;
+	str = std::bitset<9>(x).to_string(); // 00001100
+	x = 0b11110000 ^ 0b11100101; // 00010101
+	str = std::bitset<8>(x).to_string();
+	x = 0b00010101 & 0b11100101; // 00000101
+	str = std::bitset<8>(x).to_string();
+	byte _c = 0b11110000;
+	byte _d = 0b11100101;
+	x = (_c ^ _d) & _d; // 00000101
+	str = std::bitset<8>(x).to_string();
+	x = 0b11110000 ^ 0b00000101; // 0b11110101
+	str = std::bitset<8>(x).to_string();
+	x = 0b11110000 - 0b11100101; // 0b11100101
+	str = std::bitset<8>(x).to_string();
+	x = 0b11110000 ^ 0b00110011;
+	str = std::bitset<9>(x).to_string(); 
+	x = x ^ 0b00110011;
+	str = std::bitset<9>(x).to_string(); // 00110000
+	c = 0b11100111;
+	x = c ^ 0b00000111;	
 	str = std::bitset<8>(x).to_string(); // 00001100
 	x = 0b1111 + 0b0000;
 	str = std::bitset<4>(x).to_string();
 	x = 0b0000 + 0b1111;
 	str = std::bitset<4>(x).to_string();
-	x = 0b1111 + 0b0011;
-	str = std::bitset<4>(x).to_string();*/
+	x = 0b1001 | 0b1011;
+	str = std::bitset<4>(x).to_string();
+	x = 0b1001 ^ 0b1011;
+	str = std::bitset<8>(x).to_string();
+	x = 0b1011 ^ 0b1001;
+	str = std::bitset<8>(x).to_string();*/
 }
 
 bool MapLayer::onTouchBegan(Touch* touch, Event* event)

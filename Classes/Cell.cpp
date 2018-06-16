@@ -4,6 +4,8 @@
 #include "Cmd.h"
 #include "Path.h"
 
+//#include <bitset>
+
 namespace GameObjects {
 
 	Cell::Cell()
@@ -11,6 +13,7 @@ namespace GameObjects {
 		for (int i = 0; i < 8; i++){
 			straightConnection[i] = 0;
 			divergingConnection[i] = 0;
+			connection[i] = 0;
 			switches[i] = 0;
 			semaphores[i] = 0;
 		}
@@ -195,13 +198,23 @@ namespace GameObjects {
 			AccessItems accessItems = Path::access[0][Element];
 			AccessItem accessItem;
 
+			MapPoint p;
+
 			for (int i = 0; i < accessItems.items.size(); i++) {
 				accessItem = accessItems.items[i];
-				game->cells[x + accessItem.p.x][y + accessItem.p.y].access = game->cells[x + accessItem.p.x][y + accessItem.p.y].access | accessItem.access;
-				game->cells[x + accessItem.p.x][y + accessItem.p.y].accessParam = game->cells[x + accessItem.p.x][y + accessItem.p.y].accessParam | accessItem.c;					
+				p = { x + accessItem.p.x , y + accessItem.p.y };
+				//game->cells[p.x][p.y].access = game->cells[p.x][p.y].access | accessItem.access;
+				//game->cells[p.x][p.y].accessParam = game->cells[p.x][p.y].accessParam | accessItem.c;
+				accessItem = {(byte)((game->cells[p.x][p.y].access ^ accessItem.access) & accessItem.access), (byte)((game->cells[p.x][p.y].accessParam ^ accessItem.c) & accessItem.c), p};
+				if (accessItem.access > 0 || accessItem.c) {
+					entry->accessConfig.push_back(accessItem);
+					game->cells[p.x][p.y].access = game->cells[p.x][p.y].access | accessItem.access;
+					game->cells[p.x][p.y].accessParam = game->cells[p.x][p.y].accessParam | accessItem.c;
+				}
+				
 				// debug
 				//if (accessItem.access > 0) {
-					//writeDebugNode(x + accessItem.p.x, y + accessItem.p.y, accessItem.access, accessItem.c, Color4F::BLUE);
+				//	writeDebugNode(p.x, p.y, accessItem.access, accessItem.c, Color4F::BLUE);
 				//}				
 			}
 		}
@@ -232,25 +245,51 @@ namespace GameObjects {
 
 	void Cell::RemoveEntry(Cell *cell, int FromPoint, int ToPoint, Configuration Configuration, TrackElement Element, int Enter)
 	{
-
 		Entry *straightEntry = straightConnection[ToPoint];
 		Entry *divergingEntry = divergingConnection[ToPoint];
 
+		Field *game = Field::getInstance();
+		MapPoint p;
+
 		if (Enter == 0) {
-			Cmd *inst = Cmd::getInstance();
-			Field::getInstance()->mapLayer->removeChild(inst->history[inst->pointer].elements.back());			
-			inst->history[inst->pointer].elements.pop_back();
+			Cmd *cmd = Cmd::getInstance();
+			game->mapLayer->removeChild(cmd->history[cmd->pointer].elements.back());
+			cmd->history[cmd->pointer].elements.pop_back();
 		}
+
+		AccessItem accessItem;
+		AccessItems accessItems = Path::access[0][Element];
 
 		if (divergingConnection[ToPoint] != NULL) {
 			if (divergingConnection[ToPoint]->Element == Element) {
+
+				//remove access data
+				for (int i = 0; i < divergingConnection[ToPoint]->accessConfig.size(); i++) {
+					accessItem = divergingConnection[ToPoint]->accessConfig[i];
+					p = accessItem.p;		
+					game->cells[p.x][p.y].access = game->cells[p.x][p.y].access ^ accessItem.access;
+					game->cells[p.x][p.y].accessParam = game->cells[p.x][p.y].accessParam ^ accessItem.c;
+				}
+				
 				delete(divergingConnection[ToPoint]);
 				divergingConnection[ToPoint] = 0;
 			}			
 		} else {
 			if (straightConnection[ToPoint]->Element == Element) {
+				
+				for (int i = 0; i < straightConnection[ToPoint]->accessConfig.size(); i++) {
+					accessItem = straightConnection[ToPoint]->accessConfig[i];
+					p = accessItem.p;
+					game->cells[p.x][p.y].access = game->cells[p.x][p.y].access ^ accessItem.access;
+					game->cells[p.x][p.y].accessParam = game->cells[p.x][p.y].accessParam ^ accessItem.c;
+				}
+
 				delete(straightConnection[ToPoint]);
 				straightConnection[ToPoint] = 0;
+
+				if (straightConnection[Cell::Related[ToPoint]] == 0) {
+					configuration = Configuration::Undefined;
+				}
 			}
 		}
 	}

@@ -2,6 +2,10 @@
 
 namespace GameObjects {
 
+	Command::Command()
+	{	
+	}
+
 	Command::Command(string command, map<string, string> opts, vector<string> args)
 	{
 		Command::command = command;

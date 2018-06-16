@@ -4,11 +4,13 @@
 #include "Elements.h"
 #include "Switch.h"
 #include "Semaphore.h"
+//#include "Path.h"
 //#include <iostream>
 
 namespace GameObjects {
 
 	class Cell;
+	struct AccessItem;
 		
 	enum Configuration {
 		Undefined,
@@ -29,6 +31,7 @@ namespace GameObjects {
 		int Point;
 		int Enter;
 		Sprite *Resource;
+		vector<AccessItem> accessConfig;
 	};
 	
 	class Cell
@@ -45,12 +48,11 @@ namespace GameObjects {
 		Switch *switches[8];
 		Semaphore *semaphores[8];
 
+		Entry *connection[8];
+
 		byte access;
 		byte accessParam;
 
-		//bool allowSwitch[8];
-		//bool allowEnter[8][16];
-		
 		static int Related[8];
 
 		void Connect(Cell *cell, int Point, bool Back = false);

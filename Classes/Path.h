@@ -8,11 +8,6 @@ using namespace std;
 
 namespace GameObjects {
 
-	/*struct MapPoint {
-		int x;
-		int y;
-	};*/
-
 	struct MapSize {
 		int width;
 		int height;
@@ -63,7 +58,6 @@ namespace GameObjects {
 	struct AccessItem {		
 		byte access;
 		byte c;
-		//bool c;
 		MapPoint p;
 	};
 
@@ -71,15 +65,6 @@ namespace GameObjects {
 		vector<AccessItem> items;
 	};
 
-	/*struct AccessItem {
-		Vec2 p;
-		byte access;
-	};
-
-	struct AccessItems {
-		vector<Vec2> items;
-	};*/
-	
 	class Path
 	{
 
@@ -88,12 +73,8 @@ namespace GameObjects {
 		~Path();
 
 		static const MapPoint closer[20];
-		static const TrackItem track[16];
-		
+		static const TrackItem track[16];		
 		static const AccessItems access[2][16];
-		//static const AccessItems access1[16];
-		//static const byte accessConfig[9];
-		//static const byte accessMasc[8];
 
 		Area Area;		
 		GraphItem **Graph;
@@ -104,7 +85,7 @@ namespace GameObjects {
 		MapSize size;
 		MapPoint origin;
 
-		bool Init(MapPoint Point); //, int Enter
+		bool Init(MapPoint Point);
 		void Show(MapPoint Point, int Enter);
 		void Find(Cell *c, int p = -1);
 		void Set();
@@ -125,11 +106,6 @@ namespace GameObjects {
 		static TrackPosition GetPosition(TrackPosition position, int increase);
 		static TrackPosition backPosition(TrackPosition position);
 
-		/*		
-		GetPosition(Position, Increase, EstimateObjects)
-		GetPositionCoordinates(Position)
-		EstimateObject(Indent, OutPoint, InPoint, Cell, Position)
-		*/
 		//DrawNode *debugNode;
 	};
 }

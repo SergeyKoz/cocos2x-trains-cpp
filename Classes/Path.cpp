@@ -167,12 +167,11 @@ namespace GameObjects {
 			Point.y = size.height - origin.y - 1;
 		}
 
-		if ((Area.e.x == -1 && !(Area.s.x == Point.x && Area.s.y == Point.y)) || 
-			(Area.e.x >= 0 && !(Area.e.x == Point.x && Area.e.y == Point.y))){
+		if ((Area.e.x == -1 && !(Area.s.x == Point.x && Area.s.y == Point.y)) || (Area.e.x >= 0 && !(Area.e.x == Point.x && Area.e.y == Point.y))) {
 			changed = true;
 		}
 		MapPoint d;
-		if (changed || Area.p != Enter) {
+		if (changed || Area.p != Enter) {			
 			Area.p = Enter;
 			Field *Game = Field::getInstance();
 			Cell *current = &Game->cells[Point.x][Point.y];
@@ -226,12 +225,16 @@ namespace GameObjects {
 							Game->mapLayer->addChild(pathItems[c]->element, ZIndexRails);
 						}
 					}
+				} else if (Area.d.x == 0 && Area.d.y == 0) {
+					for (auto c = 0; c < PathItems.size(); c++) {
+						Game->mapLayer->removeChild(PathItems[c]->element, true);
+					}
+					PathItems.clear();									
 				}
 			}
 		} //changed
-
-		
-		if (changed) {
+				
+		if (changed) {			
 			Area.d.x = Point.x - Area.s.x;
 			Area.d.y = Point.y - Area.s.y;
 			Area.e = Point;

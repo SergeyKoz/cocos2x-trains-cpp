@@ -15,6 +15,7 @@ namespace GameObjects {
 	{
 		
 	public:
+		Command();
 		Command(string command, map<string, string> opts, vector<string> args);
 		~Command();
 		string command;
