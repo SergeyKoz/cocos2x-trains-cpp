@@ -12,5 +12,6 @@ CMakeLists.txt
 vendor/primitives/.vs
 vendor/primitives/primitives/obj
 vendor/primitives/rails.png
+vendor/primitives/objects.png
 vendor/track/.vs
 vendor/track/track/obj

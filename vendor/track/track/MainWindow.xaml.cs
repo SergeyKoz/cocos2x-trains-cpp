@@ -27,44 +27,21 @@ namespace track
         public int FieldSize = 100;
 
         public int sld = 10;
-
-        Boolean WriteGrid = false;
-                
+        
         public MainWindow()
         {
             InitializeComponent();
-
-            if (WriteGrid)
-            {
-                Line LineItem1 = new Line();
-                LineItem1.X1 = 0;
-                LineItem1.Y1 = 0;
-                LineItem1.X2 = 1024;
-                LineItem1.Y2 = 768;
-                LineItem1.Stroke = Brushes.Blue;
-                PrimitivesCanvas.Children.Add(LineItem1);
-
-                Line LineItem2 = new Line();
-                LineItem2.X1 = 1024;
-                LineItem2.Y1 = 0;
-                LineItem2.X2 = 0;
-                LineItem2.Y2 = 768;
-                LineItem2.Stroke = Brushes.Red;
-                PrimitivesCanvas.Children.Add(LineItem2);
-
-                double LineWidth = 0.3;
             
-                for (int i = 0; i < FieldSize; i++)
-                {
-                    PrimitivesCanvas.Children.Add(CreateLine(i * 10, 0, i * 10, FieldSize * 10, Brushes.Aqua, LineWidth));
-                    PrimitivesCanvas.Children.Add(CreateLine(0, i * 10, FieldSize * 10, i * 10, Brushes.Aqua, LineWidth));
-                }
-            }
-
+            Console.WriteLine("+---------------------------------------------------------------+");
+            Console.WriteLine("|                                                               |");
+            Console.WriteLine("|                                                               |");
+            Console.WriteLine("|                                                               |");
+            Console.WriteLine("|                                                               |");
+            Console.WriteLine("-----------------------------------------------------------------");
             ItemHV();
-
+            Console.WriteLine("-----------------------------------------------------------------");
             Item45135();
-
+            Console.WriteLine("-----------------------------------------------------------------");
             double l = 36.869;
 
             CircleTrack("BaseCircle0Track", 50, 0, l); // 1
@@ -75,11 +52,51 @@ namespace track
             CircleTrack("BaseCircle5Track", 50, 270 - l, 270); // 6
             CircleTrack("BaseCircle6Track", 50, 270, 270 + l); // 7
             CircleTrack("BaseCircle7Track", 50, 360 - l, 360); // 8
+            Console.WriteLine("-----------------------------------------------------------------");
+            double _s1 = 37;
+            //double __s1 = 25;
+            double _s2 = 21;
 
+            // crossovers 1
+            Console.WriteLine("-------- crossovers 1 -------------------------------------------");
+            CrossoverTrack("Crossover00Track", 25, 90, 90 - _s1, new Point(0, 0));           // ^/_
+            CrossoverTrack("Crossover00Track", 25, 270 - _s1, 270, new Point(14.93, -4.95)); // 
+
+            CrossoverTrack("Crossover01Track", 25, 270, 270 + _s1, new Point(0, 0));          // _/^ 
+            CrossoverTrack("Crossover01Track", 25, 90 + _s1, 90, new Point(14.93, 4.95));
+
+            CrossoverTrack("Crossover20Track", 25, 360 - _s1, 360, new Point(0, 0));
+            CrossoverTrack("Crossover20Track", 25, 180, 180 - _s1, new Point(5.03, 14.9));
+
+            CrossoverTrack("Crossover21Track", 25, 0, _s1, new Point(0, 0));
+            CrossoverTrack("Crossover21Track", 25, 180 + _s1, 180, new Point(-4.95, 14.93));
+
+            // crossovers 2
+            Console.WriteLine("-------- crossovers 2 -------------------------------------------");
+            CrossoverTrack("Crossover10Track", 31, 90 + l, 90 + l - _s2, new Point(0, 0));
+            CrossoverTrack("Crossover10Track", 31, 270 + l - _s2, 270 + l, new Point(9.78, 4.92)); //
+
+            CrossoverTrack("Crossover11Track", 31, 360 - l, 360 - l + _s2, new Point(0, 0));
+            CrossoverTrack("Crossover11Track", 31, 180 - l + _s2, 180 - l, new Point(4.92, 9.78)); //
+
+            CrossoverTrack("Crossover30Track", 31, l - _s2, l, new Point(0, 0));
+            CrossoverTrack("Crossover30Track", 31, 180 + l, 180 + l - _s2, new Point(-4.8, 9.83)); //
+
+            CrossoverTrack("Crossover31Track", 31, 90 - l, 90 - l + _s2, new Point(0, 0));
+            CrossoverTrack("Crossover31Track", 31, 270 - l + _s2, 270 - l, new Point(-9.78, 4.92)); //
+            Console.WriteLine("-----------------------------------------------------------------");
+                       
             CircleTrack("SmallCircle0Track", 20, 0, 90);
             CircleTrack("SmallCircle1Track", 20, 90, 180);
             CircleTrack("SmallCircle2Track", 20, 180, 270);
-            CircleTrack("SmallCircle3Track", 20, 270, 360);      
+            CircleTrack("SmallCircle3Track", 20, 270, 360);
+
+            Console.WriteLine("+---------------------------------------------------------------+");
+            Console.WriteLine("|                                                               |");
+            Console.WriteLine("|                                                               |");
+            Console.WriteLine("|                                                               |");
+            Console.WriteLine("|                                                               |");
+            Console.WriteLine("+---------------------------------------------------------------+");
         }
 
         public void CircleTrack(string var, int r, double a1, double a2)
@@ -194,19 +211,7 @@ namespace track
             luaV = luaV + String.Join(", ", lua_itemsV) + "}";
             Console.WriteLine(luaV);
         }
-
-        public Line CreateLine(double x1, double y1, double x2, double y2, Brush LineColor, double Thickness)
-        {
-            Line LineItem = new Line();
-            LineItem.X1 = x1 * PrimitivesScale;
-            LineItem.Y1 = y1 * PrimitivesScale;
-            LineItem.X2 = x2 * PrimitivesScale;
-            LineItem.Y2 = y2 * PrimitivesScale;
-            LineItem.StrokeThickness = Thickness;
-            LineItem.Stroke = LineColor;
-            return LineItem;
-        }
-
+        
         public String Str(double num)
         {
             String res;
@@ -214,6 +219,50 @@ namespace track
             res = num.ToString();
             res = res.Replace(",", ".");
             return res;
+        }
+
+        public void CrossoverTrack(string var, int r, double a1, double a2, Point s)
+        {
+            r = r * PrimitivesScale;
+            List<String> items = new List<String>();
+            double angle;
+            double a = 360 / (2 * Math.PI * (r / PrimitivesScale) * 10 / sld);           
+            
+            double x1, y1, px, py, dtx, dty;
+            px = Math.Cos(Math.PI * a1 / 180) * r;
+            py = Math.Sin(Math.PI * a1 / 180) * r;
+            if (a1 < a2)
+            {
+                angle = a1 + a;
+                while (angle < a2) // - a / 2
+                {
+                    x1 = Math.Cos(Math.PI * angle / 180) * r;
+                    y1 = Math.Sin(Math.PI * angle / 180) * r;
+                    dtx = x1 - px + s.X;
+                    dty = y1 - py + s.Y;
+                    items.Add("{" + Str(dtx) + ", " + Str(dty) + "}");
+                    angle += a;
+                }
+            }
+
+            if (a1 > a2)
+            {
+                angle = a1 - a;
+                while (angle > a2) // - a / 2
+                {
+                    x1 = Math.Cos(Math.PI * angle / 180) * r;
+                    y1 = Math.Sin(Math.PI * angle / 180) * r;
+                    dtx = x1 - px + s.X;
+                    dty = y1 - py + s.Y;
+                    items.Add("{" + Str(dtx) + ", " + Str(dty) + "}");
+                    angle -= a;
+                }
+            }
+
+            string lua = var + " = {";
+            string[] lua_items = items.ToArray();
+            lua = lua + String.Join(", ", lua_items) + "}";
+            Console.WriteLine(lua);
         }
     }
 }
