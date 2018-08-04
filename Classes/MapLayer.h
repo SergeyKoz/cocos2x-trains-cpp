@@ -40,5 +40,7 @@ public:
 	void testNet();
 	void testNetSector(int x, int y, int train);
 
+	//void debugBoard(Sprite *Crossover, Color4F color);
+
 	string p(int p, int d);
 };

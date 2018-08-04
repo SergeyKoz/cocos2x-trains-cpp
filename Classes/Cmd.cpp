@@ -182,7 +182,9 @@ namespace GameObjects {
 				jsonDoc.Parse<kParseDefaultFlags>(opts["path"].c_str());
 
 				for (SizeType i = 0; i < jsonDoc.Size(); i++) {
-					Game->cells[jsonDoc[i]["from"]["x"].GetInt()][jsonDoc[i]["from"]["y"].GetInt()].Connect(&Game->cells[jsonDoc[i]["to"]["x"].GetInt()][jsonDoc[i]["to"]["y"].GetInt()], jsonDoc[i]["point"].GetInt());
+					if (jsonDoc[i].HasMember("cell")) {
+						Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].Connect(Elements::getTrackElement(jsonDoc[i]["element"].GetString()), jsonDoc[i]["point"].GetInt());
+					}					
 				}
 			}
 
@@ -291,7 +293,13 @@ namespace GameObjects {
 			if (opts["path"] != "") {
 				jsonDoc.Parse<kParseDefaultFlags>(opts["path"].c_str());
 				for (int i = jsonDoc.Size() - 1; i >= 0; i--) {
-					Game->cells[jsonDoc[i]["from"]["x"].GetInt()][jsonDoc[i]["from"]["y"].GetInt()].Disconnect(&Game->cells[jsonDoc[i]["to"]["x"].GetInt()][jsonDoc[i]["to"]["y"].GetInt()], jsonDoc[i]["point"].GetInt());
+					if (jsonDoc[i].HasMember("cell")) {
+						Game->cells[jsonDoc[i]["cell"]["x"].GetInt()][jsonDoc[i]["cell"]["y"].GetInt()].Disconnect(Elements::getTrackElement(jsonDoc[i]["element"].GetString()), jsonDoc[i]["point"].GetInt());
+					}
+
+					/*if (jsonDoc[i].HasMember("from")) {
+						Game->cells[jsonDoc[i]["from"]["x"].GetInt()][jsonDoc[i]["from"]["y"].GetInt()].Disconnect(&Game->cells[jsonDoc[i]["to"]["x"].GetInt()][jsonDoc[i]["to"]["y"].GetInt()], jsonDoc[i]["point"].GetInt());
+					}*/
 				}
 			}
 		}

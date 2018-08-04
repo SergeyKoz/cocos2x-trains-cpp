@@ -19,14 +19,15 @@ namespace GameObjects {
 		SwitchElement Element;
 		
 		SwitchItem *straight = new SwitchItem();
-		Element = Elements::offset[cell->straightConnection[Point]->Enter][cell->straightConnection[Point]->Element].sw;
+		Element = Path::track[cell->straightConnection[Point]->Element].Switch[cell->straightConnection[Point]->Enter];
+
 		straight->element = Elements::GetSwitchElement({ cell->x, cell->y }, Element);
 		straight->element->setVisible(true);
 		straight->type = Element;
 		this->positions[Straight] = straight;
 		
 		SwitchItem *diverging = new SwitchItem();
-		Element = Elements::offset[cell->divergingConnection[Point]->Enter][cell->divergingConnection[Point]->Element].sw;
+		Element = Path::track[cell->divergingConnection[Point]->Element].Switch[cell->divergingConnection[Point]->Enter];
 		diverging->element = Elements::GetSwitchElement({ cell->x, cell->y }, Element);
 		diverging->element->setVisible(false);
 		diverging->type = Element;		

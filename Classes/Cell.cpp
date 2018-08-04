@@ -4,8 +4,6 @@
 #include "Cmd.h"
 #include "Path.h"
 
-//#include <bitset>
-
 namespace GameObjects {
 
 	Cell::Cell()
@@ -27,169 +25,38 @@ namespace GameObjects {
 
 	int Cell::Related[8] = { 4, 5, 6, 7, 0, 1, 2, 3};
 	
-	ConnectionConfig *Cell::GetConnectConfig(int dx, int dy, int Point){ 
-		ConnectionConfig *connect = new ConnectionConfig;
-
-		//horizontal		
-		if (dx == 1 && dy == 0){
-			*connect = {Ortogonal, Horizontal, Cell::Related[Point], 1};
-		}
-		if (dx == -1 && dy == 0){
-			*connect = {Ortogonal, Horizontal, Cell::Related[Point], 0};
-		}
-		
-		//Vertical
-		if (dx == 0 && dy == -1){
-			*connect = { Ortogonal, Vertical, Cell::Related[Point], 1 };
-		}	
-		if (dx == 0 && dy == 1){
-			*connect = { Ortogonal, Vertical, Cell::Related[Point], 0 };
-		}
-
-		//Item45
-		if (dx == 1 && dy == 1){
-			*connect = { Polar, Item45, Cell::Related[Point], 1 };
-		}	
-		if (dx == -1 && dy == -1){;
-		*connect = { Polar, Item45, Cell::Related[Point], 0 };
-		}
 	
-		//Item135
-		if (dx == 1 && dy == -1){
-			*connect = { Polar, Item135, Cell::Related[Point], 1 };
-		}	
-		if (dx == -1 && dy == 1){
-			*connect = { Polar, Item135, Cell::Related[Point], 0 };
-		}
-
-		//BaseCircleSect0	
-		if (dy == 3 && dx == -1 && Point == 2){
-			*connect = { Polar, BaseCircleSect0, 7, 1 };
-		}	
-		if (dy == -3 && dx == 1 && Point == 7){
-			*connect = { Ortogonal, BaseCircleSect0, 2, 0 };
-		}
-	
-		//BaseCircleSect1	
-		if (dy == 1 && dx == -3 && Point == 3){
-			*connect = { Ortogonal, BaseCircleSect1, 0, 1 };
-		}	
-		if (dy == -1 && dx == 3 && Point == 0){
-			*connect = { Polar, BaseCircleSect1, 3, 0 };
-		}
-	
-		//BaseCircleSect2	
-		if (dy == -1 && dx == -3 && Point == 4){
-			*connect = { Polar, BaseCircleSect2, 1, 1 };
-		}	
-		if (dy == 1 && dx == 3 && Point == 1){
-			*connect = { Ortogonal, BaseCircleSect2, 4, 0 };
-		}
-	
-		//BaseCircleSect3	
-		if (dy == -3 && dx == -1 && Point == 5){
-			*connect = { Ortogonal, BaseCircleSect3, 2, 1 };
-		}	
-		if (dy == 3 && dx == 1 && Point == 2){
-			*connect = { Polar, BaseCircleSect3, 5, 0 };
-		}
-	
-		//BaseCircleSect4
-		if (dy == -3 && dx == 1 && Point == 6){
-			*connect = { Polar, BaseCircleSect4, 3, 1 };
-		}	
-		if (dy == 3 && dx == -1 && Point == 3){
-			*connect = { Ortogonal, BaseCircleSect4, 6, 0 };
-		}
-	
-		//BaseCircleSect5
-		if (dy == -1 && dx == 3 && Point == 7){
-			*connect = { Ortogonal, BaseCircleSect5, 4, 1 };
-		}	
-		if (dy == 1 && dx == -3 && Point == 4){
-			*connect = { Polar, BaseCircleSect5, 7, 0 };
-		}
-	
-		//BaseCircleSect6
-		if (dy == 1 && dx == 3 && Point == 0){
-			*connect = { Polar, BaseCircleSect6, 5, 1 };
-		}	
-		if (dy == -1 && dx == -3 && Point == 5){
-			*connect = { Ortogonal, BaseCircleSect6, 0, 0 };
-		}
-	
-		//BaseCircleSect7
-		if (dy == 3 && dx == 1 && Point == 1){
-			*connect = { Ortogonal, BaseCircleSect7, 6, 1 };
-		}	
-		if (dy == -3 && dx == -1 && Point == 6){
-			*connect = { Polar, BaseCircleSect7, 1, 0 };
-		}
-	
-		//SmallCilcleSect0
-		if (dy == 2 && dx == -2 && Point == 2){
-			*connect = { Ortogonal, SmallCilcleSect0, 0, 1 };
-		}	
-		if (dy == -2 && dx == 2 && Point == 0){
-			*connect = { Ortogonal, SmallCilcleSect0, 2, 0 };
-		}
-	
-		//SmallCilcleSect1
-		if (dy == -2 && dx == -2 && Point == 4){
-			*connect = { Ortogonal, SmallCilcleSect1, 2, 1 };
-		}	
-		if (dy == 2 && dx == 2 && Point == 2){
-			*connect = { Ortogonal, SmallCilcleSect1, 4, 0 };
-		}
-	
-		//SmallCilcleSect2
-		if (dy == -2 && dx == 2 && Point == 6){
-			*connect = { Ortogonal, SmallCilcleSect2, 4, 1 };
-		}	
-		if (dy == 2 && dx == -2 && Point == 4){
-			*connect = { Ortogonal, SmallCilcleSect2, 6, 0 };
-		}
-	
-		//SmallCilcleSect3
-		if (dy == 2 && dx == 2 && Point == 0){
-			*connect = { Ortogonal, SmallCilcleSect3, 6, 1 };
-		}	
-		if (dy == -2 && dx == -2 && Point == 6){
-			*connect = { Ortogonal, SmallCilcleSect3, 0, 0 };
-		}
-		
-		return connect;
-	}
-
-	void Cell::Connect(Cell *cell, int Point, bool Back) //to point
+	void Cell::Connect(TrackElement element, int Point, bool Back) //from point
 	{
-		int dx = x - cell->x;
-		int dy = y - cell->y;
-		ConnectionConfig *connect = Cell::GetConnectConfig(dx, dy, Point);
-		SetEntry(cell, Point, connect->point, connect->config, connect->element, connect->enter);
-		if (!Back){
-			cell->Connect(this, connect->point, true);
-		}
-	}
-
-	void Cell::Disconnect(Cell *cell, int Point, bool Back) //to point
-	{
-		int dx = x - cell->x;
-		int dy = y - cell->y;
-		ConnectionConfig *connect = Cell::GetConnectConfig(dx, dy, Point);
-		RemoveEntry(cell, Point, connect->point, connect->config, connect->element, connect->enter);
+		
+		int enter = Path::track[element].entry[Point];
+		ElementOffset offset = Elements::offset[enter][element];
+		Cell *cell = &Field::getInstance()->cells[x + offset.d.x][y + offset.d.y];
+		SetEntry(cell, Point, offset.p, Cell::GetPointConfiguration(Point), element, enter);
 		if (!Back) {
-			cell->Disconnect(this, connect->point, true);
+			cell->Connect(element, offset.p, true);
 		}
 	}
+
+	void Cell::Disconnect(TrackElement element, int Point, bool Back) //from point
+	{
+		int enter = Path::track[element].entry[Point];
+		ElementOffset offset = Elements::offset[enter][element];
+		Cell *cell = &Field::getInstance()->cells[x + offset.d.x][y + offset.d.y];
+		RemoveEntry(cell, Point, offset.p, Cell::GetPointConfiguration(Point), element, enter);
+
+		if (!Back) {
+			cell->Disconnect(element, offset.p, true);
+		}
+	}
+
 
 	void Cell::SetEntry(Cell *cell, int FromPoint, int ToPoint, Configuration Configuration, TrackElement Element, int Enter)
 	{
-		Entry *entry = new Entry;
-		
+		Entry *entry = new Entry;		
 		entry->to = cell;
 		entry->Element = Element;
-		entry->Point = FromPoint;
+		entry->Point = ToPoint;
 		entry->Enter = Enter;
 
 		if (Enter == 0) {
@@ -213,9 +80,9 @@ namespace GameObjects {
 				}
 				
 				// debug
-				//if (accessItem.access > 0) {
-				//	writeDebugNode(p.x, p.y, accessItem.access, accessItem.c, Color4F::BLUE);
-				//}				
+				/*if (accessItem.access > 0) {
+					writeDebugNode(p.x, p.y, accessItem.access, accessItem.c, Color4F::BLUE);
+				}*/				
 			}
 		}
 
@@ -225,7 +92,7 @@ namespace GameObjects {
 			for (int i = 0; i < accessItems.items.size(); i++) {
 				accessItem = accessItems.items[i];				
 				// debug
-				//writeDebugNode(x + accessItem.p.x, y + accessItem.p.y, accessItem.access, accessItem.c, Color4F::RED);
+				writeDebugNode(x + accessItem.p.x, y + accessItem.p.y, accessItem.access, accessItem.c, Color4F::RED);
 			}
 		}*/
 		
@@ -236,17 +103,17 @@ namespace GameObjects {
 			inst->history[inst->pointer - 1].elements.push_back(image);			
 		}
 		configuration = Configuration;
-		if (straightConnection[ToPoint] == NULL) {
-			straightConnection[ToPoint] = entry;
+		if (straightConnection[FromPoint] == NULL) { // ToPoint
+			straightConnection[FromPoint] = entry;
 		} else {
-			divergingConnection[ToPoint] = entry;
+			divergingConnection[FromPoint] = entry;
 		}
 	}
 
 	void Cell::RemoveEntry(Cell *cell, int FromPoint, int ToPoint, Configuration Configuration, TrackElement Element, int Enter)
 	{
-		Entry *straightEntry = straightConnection[ToPoint];
-		Entry *divergingEntry = divergingConnection[ToPoint];
+		Entry *straightEntry = straightConnection[FromPoint]; //ToPoint
+		Entry *divergingEntry = divergingConnection[FromPoint];
 
 		Field *game = Field::getInstance();
 		MapPoint p;
@@ -260,34 +127,34 @@ namespace GameObjects {
 		AccessItem accessItem;
 		AccessItems accessItems = Path::access[0][Element];
 
-		if (divergingConnection[ToPoint] != NULL) {
-			if (divergingConnection[ToPoint]->Element == Element) {
+		if (divergingConnection[FromPoint] != NULL) {
+			if (divergingConnection[FromPoint]->Element == Element) {
 
 				//remove access data
-				for (int i = 0; i < divergingConnection[ToPoint]->accessConfig.size(); i++) {
-					accessItem = divergingConnection[ToPoint]->accessConfig[i];
+				for (int i = 0; i < divergingConnection[FromPoint]->accessConfig.size(); i++) {
+					accessItem = divergingConnection[FromPoint]->accessConfig[i];
 					p = accessItem.p;		
 					game->cells[p.x][p.y].access = game->cells[p.x][p.y].access ^ accessItem.access;
 					game->cells[p.x][p.y].accessParam = game->cells[p.x][p.y].accessParam ^ accessItem.c;
 				}
 				
-				delete(divergingConnection[ToPoint]);
-				divergingConnection[ToPoint] = 0;
+				delete(divergingConnection[FromPoint]);
+				divergingConnection[FromPoint] = 0;
 			}			
 		} else {
-			if (straightConnection[ToPoint]->Element == Element) {
+			if (straightConnection[FromPoint]->Element == Element) {
 				
-				for (int i = 0; i < straightConnection[ToPoint]->accessConfig.size(); i++) {
-					accessItem = straightConnection[ToPoint]->accessConfig[i];
+				for (int i = 0; i < straightConnection[FromPoint]->accessConfig.size(); i++) {
+					accessItem = straightConnection[FromPoint]->accessConfig[i];
 					p = accessItem.p;
 					game->cells[p.x][p.y].access = game->cells[p.x][p.y].access ^ accessItem.access;
 					game->cells[p.x][p.y].accessParam = game->cells[p.x][p.y].accessParam ^ accessItem.c;
 				}
 
-				delete(straightConnection[ToPoint]);
-				straightConnection[ToPoint] = 0;
+				delete(straightConnection[FromPoint]);
+				straightConnection[FromPoint] = 0;
 
-				if (straightConnection[Cell::Related[ToPoint]] == 0) {
+				if (straightConnection[Cell::Related[FromPoint]] == 0) {
 					configuration = Configuration::Undefined;
 				}
 			}
@@ -326,6 +193,11 @@ namespace GameObjects {
 		this->semaphores[Point] = 0;
 	}
 	
+	Configuration Cell::GetPointConfiguration(int point)
+	{
+		return point == 0 || point == 2 || point == 4 || point == 6 ? Configuration::Ortogonal : Configuration::Polar;
+	}
+
 	/*void Cell::writeDebugNode(int x, int y, int a, int c, Color4F color) {
 		Field *game = Field::getInstance();
 

@@ -49,7 +49,9 @@ namespace GameObjects {
 
 	struct TrackItem {
 		int SpeedLimit;
-		MapPoint shift;
+		MapPoint shift[2];
+		int point[8];
+		SwitchElement Switch[2];
 		int entry[8];
 		int length;
 		vector<Vec2> items;		
@@ -73,8 +75,8 @@ namespace GameObjects {
 		~Path();
 
 		static const MapPoint closer[20];
-		static const TrackItem track[16];		
-		static const AccessItems access[2][16];
+		static const TrackItem track[24];		
+		static const AccessItems access[2][24];
 
 		Area Area;		
 		GraphItem **Graph;
@@ -101,6 +103,9 @@ namespace GameObjects {
 
 		bool checkBaseCircle(Cell *cell, int point, int enter, TrackElement element);
 		bool checkBaseCircle(TrackElement element, int enter, TrackElement graphElement);
+
+		bool checkCrossover(Cell *cell, int point, int enter, TrackElement element);
+		bool checkCrossover(TrackElement element, int enter, TrackElement graphElement);
 		
 		static Vec2 GetPosition(TrackPosition position);
 		static TrackPosition GetPosition(TrackPosition position, int increase);

@@ -55,8 +55,10 @@ namespace GameObjects {
 
 		static int Related[8];
 
-		void Connect(Cell *cell, int Point, bool Back = false);
-		void Disconnect(Cell *cell, int Point, bool Back = false);
+		static Configuration GetPointConfiguration(int point);
+
+		void Connect(TrackElement element, int Point, bool Back = false);
+		void Disconnect(TrackElement element, int Point, bool Back = false);
 
 		void SetSwitch(int Point);
 		void RemoveSwitch(int Point);
@@ -69,9 +71,7 @@ namespace GameObjects {
 
 		Entry *getEntry(int Point);
 		Entry *getEntry(int Point, TrackElement element);
-
-		static ConnectionConfig *GetConnectConfig(int dx, int dy, int Point);
-		
+	
 		//debug
 		//DrawNode *debugNode;
 		//void writeDebugNode(int x, int y, int a, int c, Color4F color);

@@ -50,7 +50,15 @@ namespace GameObjects {
 		SmallCilcleSect0 = 12,
 		SmallCilcleSect1 = 13,
 		SmallCilcleSect2 = 14,
-		SmallCilcleSect3 = 15
+		SmallCilcleSect3 = 15,
+		Crossover00 = 16,
+		Crossover01 = 17,
+		Crossover10 = 18,
+		Crossover11 = 19,
+		Crossover20 = 20,
+		Crossover21 = 21,
+		Crossover30 = 22,
+		Crossover31 = 23
 	};
 
 	enum SwitchElement
@@ -86,7 +94,23 @@ namespace GameObjects {
 		SmallCilcleSect20 = 28,
 		SmallCilcleSect21 = 29,
 		SmallCilcleSect30 = 30,
-		SmallCilcleSect31 = 31
+		SmallCilcleSect31 = 31,
+		Crossover000 = 32,
+		Crossover001 = 33,
+		Crossover010 = 34,
+		Crossover011 = 35,
+		Crossover100 = 36,
+		Crossover101 = 37,
+		Crossover110 = 38,
+		Crossover111 = 39,
+		Crossover200 = 40,
+		Crossover201 = 41,
+		Crossover210 = 42,
+		Crossover211 = 43,
+		Crossover300 = 44,
+		Crossover301 = 45,
+		Crossover310 = 46,
+		Crossover311 = 47
 	};
 
 	enum MenuElement {
@@ -150,10 +174,8 @@ namespace GameObjects {
 	};
 
 	struct ElementOffset {
-		int dx;
-		int dy;
-		int p;		
-		SwitchElement sw;
+		MapPoint d;
+		int p;
 	};
 
 	class Elements
@@ -162,7 +184,7 @@ namespace GameObjects {
 		Elements();
 		~Elements();
 
-		static const ElementOffset offset[2][16];
+		static const ElementOffset offset[2][24];
 		static const int second[2];
 
 		static Sprite *GetEmpty();

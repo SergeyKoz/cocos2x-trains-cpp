@@ -4,41 +4,57 @@
 
 namespace GameObjects {
 
-	const ElementOffset Elements::offset[2][16] = {
+	const ElementOffset Elements::offset[2][24] = {
 		{ 
-			{ 0, -1, 2, SwitchElement::Vertical0 },
-			{ 1, 0, 4, SwitchElement::Horizontal0 },
-			{ 1, 1, 5, SwitchElement::Item450 },
-			{ 1, -1, 3, SwitchElement::Item1350 },
-			{ -1, 3, 7, SwitchElement::BaseCircleSect00 },
-			{ -3, 1, 0, SwitchElement::BaseCircleSect10 },
-			{ -3, -1, 1, SwitchElement::BaseCircleSect20 },
-			{ -1, -3, 2, SwitchElement::BaseCircleSect30 },
-			{ 1, -3, 3, SwitchElement::BaseCircleSect40 },
-			{ 3, -1, 4, SwitchElement::BaseCircleSect50 },
-			{ 3, 1, 5, SwitchElement::BaseCircleSect60 },
-			{ 1, 3, 6, SwitchElement::BaseCircleSect70 },
-			{ -2, 2, 0, SwitchElement::SmallCilcleSect00 },
-			{ -2, -2, 2, SwitchElement::SmallCilcleSect10 },
-			{ 2, -2, 4, SwitchElement::SmallCilcleSect20 },
-			{ 2, 2, 6, SwitchElement::SmallCilcleSect30 }
+			{ { 0, -1 }, 2 },
+			{ { 1, 0 }, 4 },
+			{ { 1, 1 }, 5 },
+			{ { 1, -1 }, 3 },
+			{ { -1, 3 }, 7 },
+			{ { -3, 1 }, 0 },
+			{ { -3, -1 }, 1 },
+			{ { -1, -3 }, 2 },
+			{ { 1, -3 }, 3 },
+			{ { 3, -1 }, 4 },
+			{ { 3, 1 }, 5 },
+			{ { 1, 3 }, 6 },
+			{ { -2, 2 }, 0 },
+			{ { -2, -2 }, 2 },
+			{ { 2, -2 }, 4 },
+			{ { 2, 2 }, 6 },
+			{ { 3, -1 }, 4 },
+			{ { 3, 1 }, 4 },
+			{ { 2, 1 }, 5 },
+			{ { 1, 2 }, 5 },
+			{ { 1, 3 }, 6 },
+			{ { -1, 3 }, 6 },
+			{ { -1, 2 }, 7 },
+			{ { -2, 1 }, 7 },
 		}, {
-			{ 0, 1, 6, SwitchElement::Vertical1 },
-			{ -1, 0, 0, SwitchElement::Horizontal1 },
-			{ -1, -1, 1, SwitchElement::Item451 },
-			{ -1, 1, 7, SwitchElement::Item1351 },
-			{ 1, -3, 2, SwitchElement::BaseCircleSect01 },
-			{ 3, -1, 3, SwitchElement::BaseCircleSect11 },
-			{ 3, 1, 4, SwitchElement::BaseCircleSect21 },
-			{ 1, 3, 5, SwitchElement::BaseCircleSect31 },
-			{ -1, 3, 6, SwitchElement::BaseCircleSect41 },
-			{ -3, 1, 7, SwitchElement::BaseCircleSect51 },
-			{ -3, -1, 0, SwitchElement::BaseCircleSect61 },
-			{ -1, -3, 1, SwitchElement::BaseCircleSect71 },
-			{ 2, -2, 2, SwitchElement::SmallCilcleSect01 },
-			{ 2, 2, 4, SwitchElement::SmallCilcleSect11 },
-			{ -2, 2, 6, SwitchElement::SmallCilcleSect21 },
-			{ -2, -2, 0, SwitchElement::SmallCilcleSect31 }
+			{ { 0, 1 }, 6 },
+			{ { -1, 0 }, 0 },
+			{ { -1, -1 }, 1 },
+			{ { -1, 1 }, 7 },
+			{ { 1, -3 }, 2 },
+			{ { 3, -1 }, 3 },
+			{ { 3, 1 }, 4 },
+			{ { 1, 3 }, 5 },
+			{ { -1, 3 }, 6 },
+			{ { -3, 1 }, 7 },
+			{ { -3, -1 }, 0 },
+			{ { -1, -3 }, 1 },
+			{ { 2, -2 }, 2 },
+			{ { 2, 2 }, 4 },
+			{ { -2, 2 }, 6 },
+			{ { -2, -2 }, 0 },
+			{ { -3, 1 }, 0 },
+			{ { -3, -1 }, 0 },
+			{ { -2, -1 }, 1 },
+			{ { -1, -2 }, 1 },
+			{ { -1, -3 }, 2 },
+			{ { 1, -3 }, 2 },
+			{ { 1, -2 }, 3 },
+			{ { 2, -1 }, 3 },
 		}
 	};
 
@@ -146,6 +162,59 @@ namespace GameObjects {
 			item->setPosition(Point.x * d - d, Point.y * d - d);
 		}
 
+		if (Element == Crossover00 || Element == Crossover01 || Element == Crossover20 || Element == Crossover21) {
+			item = Sprite::createWithTexture(texture, Rect(d, 16.5 * d, 3 * d, 2 * d));
+		}
+
+		if (Element == TrackElement::Crossover10 || Element == TrackElement::Crossover11 || Element == TrackElement::Crossover30 || Element == TrackElement::Crossover31) {
+			item = Sprite::createWithTexture(texture, Rect(15.5 * d, 15.5 * d, 2 * d, 3 * d));
+		}
+
+		if (Element == TrackElement::Crossover00) {
+			//item->setPosition(Point.x * d + 1.5 * d, Point.y * d - 0.5 * d);
+			item->setPosition(Point.x * d - 1.5 * d, Point.y * d + 0.5 * d);
+		}
+
+		if (Element == TrackElement::Crossover01) {
+			item->setFlipY(true);
+			//item->setPosition(Point.x * d + 1.5 * d, Point.y * d + 0.5 * d);
+			item->setPosition(Point.x * d - 1.5 * d, Point.y * d - 0.5 * d);
+		}
+
+		if (Element == TrackElement::Crossover10) {
+			item->setRotation(90);
+			//item->setPosition(Point.x * d + 1 * d, Point.y * d + 0.5 * d);
+			item->setPosition(Point.x * d - 1 * d, Point.y * d - 0.5 * d);
+		}
+
+		if (Element == TrackElement::Crossover11) {
+			item->setFlipX(true);
+			//item->setPosition(Point.x * d + 0.5 * d, Point.y * d + 1.0 * d);
+			item->setPosition(Point.x * d - 0.5 * d, Point.y * d - 1.0 * d);
+		}
+
+		if (Element == TrackElement::Crossover20) {
+			item->setRotation(90);
+			item->setPosition(Point.x * d - 0.5 * d, Point.y * d - 1.5 * d);
+		}
+
+		if (Element == TrackElement::Crossover21) {
+			item->setFlipY(true);
+			item->setRotation(90);
+			item->setPosition(Point.x * d + 0.5 * d, Point.y * d - 1.5 * d);
+		}
+		
+		
+		if (Element == TrackElement::Crossover30) {
+			item->setPosition(Point.x * d + 0.5 * d, Point.y * d - 1.0 * d);
+		}
+
+		if (Element == TrackElement::Crossover31) {
+			item->setFlipX(true);
+			item->setRotation(90);
+			item->setPosition(Point.x * d + 1.0 * d, Point.y * d - 0.5 * d);
+		}
+
 		return item;
 	}
 
@@ -184,6 +253,22 @@ namespace GameObjects {
 			el = TrackElement::SmallCilcleSect2;
 		} else if (element == "SmallCilcleSect3") {
 			el = TrackElement::SmallCilcleSect3;
+		} else if (element == "Crossover00") {
+			el = TrackElement::Crossover00;
+		} else if (element == "Crossover01") {
+			el = TrackElement::Crossover01;
+		} else if (element == "Crossover10") {
+			el = TrackElement::Crossover10;
+		} else if (element == "Crossover11") {
+			el = TrackElement::Crossover11;
+		} else if (element == "Crossover20") {
+			el = TrackElement::Crossover20;
+		} else if (element == "Crossover21") {
+			el = TrackElement::Crossover21;
+		} else if (element == "Crossover30") {
+			el = TrackElement::Crossover30;
+		} else if (element == "Crossover31") {
+			el = TrackElement::Crossover31;
 		}
 		return el;
 	}
@@ -209,6 +294,15 @@ namespace GameObjects {
 		case TrackElement::SmallCilcleSect1: element = "SmallCilcleSect1"; break;
 		case TrackElement::SmallCilcleSect2: element = "SmallCilcleSect2"; break;
 		case TrackElement::SmallCilcleSect3: element = "SmallCilcleSect3"; break;
+		case TrackElement::Crossover00: element = "Crossover00"; break;
+		case TrackElement::Crossover01: element = "Crossover01"; break;
+		case TrackElement::Crossover10: element = "Crossover10"; break;
+		case TrackElement::Crossover11: element = "Crossover11"; break;
+		case TrackElement::Crossover20: element = "Crossover20"; break;
+		case TrackElement::Crossover21: element = "Crossover21"; break;
+		case TrackElement::Crossover30: element = "Crossover30"; break;
+		case TrackElement::Crossover31: element = "Crossover31"; break;
+
 		default: element = "None"; break;
 		}
 		return element;
@@ -380,6 +474,102 @@ namespace GameObjects {
 			item = Sprite::createWithTexture(texture, Rect(31.5 * d, 5 * d, d, 1.5 * d));
 			item->setPosition(Point.x * d, Point.y * d - 0.75 * d);
 		}
+
+		//crossovers
+		if (Element == Crossover000 || Element == Crossover001 || Element == Crossover010 || Element == Crossover011 || Element == Crossover200 || Element == Crossover201 || Element == Crossover210 || Element == Crossover211) {
+			item = Sprite::createWithTexture(texture, Rect(d, 19.5 * d, 1.5 * d, 1.0 * d));
+		}
+		if (Element == Crossover100 || Element == Crossover101 || Element == Crossover110 || Element == Crossover111  || Element == Crossover300 || Element == Crossover301 || Element == Crossover310 || Element == Crossover311) {
+			item = Sprite::createWithTexture(texture, Rect(14.5 * d, 18.75 * d, 1.5 * d, 1.5 * d));
+		}
+
+		if (Element == Crossover000) {
+			item->setPosition(Point.x * d + 0.75 * d, Point.y * d - 0.0 * d);
+		}
+
+		if (Element == Crossover001) {
+			item->setRotation(180);
+			item->setPosition(Point.x * d - 0.75 * d, Point.y * d - 0.0 * d);
+		}
+
+		if (Element == Crossover010) {
+			item->setFlipY(true);
+			item->setPosition(Point.x * d + 0.75 * d, Point.y * d - 0.0 * d);
+		}
+
+		if (Element == Crossover011) {
+			item->setFlipY(true);
+			item->setRotation(180);
+			item->setPosition(Point.x * d - 0.75 * d, Point.y * d - 0.0 * d);
+		}
+		
+		if (Element == Crossover200) {
+			item->setRotation(270);
+			item->setPosition(Point.x * d - 0.0 * d, Point.y * d + 0.75 * d);
+		}
+
+		if (Element == Crossover201) {
+			item->setRotation(90);
+			item->setPosition(Point.x * d - 0.0 * d, Point.y * d - 0.75 * d);
+		}
+		
+		if (Element == Crossover210) {
+			item->setRotation(270);
+			item->setFlipY(true);
+			item->setPosition(Point.x * d - 0.0 * d, Point.y * d + 0.75 * d);
+		}
+
+		if (Element == Crossover211) {
+			item->setRotation(90);
+			item->setFlipY(true);
+			item->setPosition(Point.x * d - 0.0 * d, Point.y * d - 0.75 * d);
+		}
+
+		//----------------
+		if (Element == Crossover100) {
+			item->setFlipY(true);
+			item->setFlipX(true);
+			item->setRotation(90);
+			item->setPosition(Point.x * d + 0.5 * d, Point.y * d + 0.25 * d);
+		}
+
+		if (Element == Crossover101) {
+			item->setRotation(90);
+			item->setPosition(Point.x * d - 0.5 * d, Point.y * d - 0.25 * d);
+		}
+
+		if (Element == Crossover110) {
+			item->setFlipY(true);
+			item->setPosition(Point.x * d + 0.25 * d, Point.y * d + 0.5 * d);
+		}
+
+		if (Element == Crossover111) {
+			item->setFlipX(true);
+			item->setPosition(Point.x * d - 0.25 * d, Point.y * d - 0.5 * d);
+		}
+
+		if (Element == Crossover300) {
+			item->setFlipY(true);
+			item->setFlipX(true);
+			item->setPosition(Point.x * d - 0.25 * d, Point.y * d + 0.5 * d);
+		}
+
+		if (Element == Crossover301) {
+			item->setPosition(Point.x * d + 0.25 * d, Point.y * d - 0.5 * d);
+		}
+
+
+		if (Element == Crossover310) {
+			item->setFlipX(true);
+			item->setRotation(90);
+			item->setPosition(Point.x * d - 0.5 * d, Point.y * d + 0.25 * d);
+		}
+		if (Element == Crossover311) {
+			item->setFlipY(true);
+			item->setRotation(90);
+			item->setPosition(Point.x * d + 0.5 * d, Point.y * d - 0.25 * d);
+		}
+
 		return item;
 	}
 

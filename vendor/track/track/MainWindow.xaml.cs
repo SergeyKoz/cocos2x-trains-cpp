@@ -240,7 +240,7 @@ namespace track
                     y1 = Math.Sin(Math.PI * angle / 180) * r;
                     dtx = x1 - px + s.X;
                     dty = y1 - py + s.Y;
-                    items.Add("{" + Str(dtx) + ", " + Str(dty) + "}");
+                    items.Add("{" + Str(dtx) + "f, " + Str(dty) + "f}");
                     angle += a;
                 }
             }
@@ -254,7 +254,7 @@ namespace track
                     y1 = Math.Sin(Math.PI * angle / 180) * r;
                     dtx = x1 - px + s.X;
                     dty = y1 - py + s.Y;
-                    items.Add("{" + Str(dtx) + ", " + Str(dty) + "}");
+                    items.Add("{" + Str(dtx) + "f, " + Str(dty) + "f}");
                     angle -= a;
                 }
             }

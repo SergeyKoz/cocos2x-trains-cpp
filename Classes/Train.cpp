@@ -376,7 +376,18 @@ namespace GameObjects {
 						switchtEvent = true;
 						switch (entry->Element)
 						{
-						case TrackElement::BaseCircleSect0: case TrackElement::BaseCircleSect1: case TrackElement::BaseCircleSect2: case TrackElement::BaseCircleSect3: case TrackElement::BaseCircleSect4: case TrackElement::BaseCircleSect5: case TrackElement::BaseCircleSect6: case TrackElement::BaseCircleSect7:
+						case TrackElement::BaseCircleSect0:
+						case TrackElement::BaseCircleSect1:
+						case TrackElement::BaseCircleSect2: 
+						case TrackElement::BaseCircleSect3:
+						case TrackElement::BaseCircleSect4: 
+						case TrackElement::BaseCircleSect5: 
+						case TrackElement::BaseCircleSect6: 
+						case TrackElement::BaseCircleSect7:
+						case TrackElement::Crossover00:
+						case TrackElement::Crossover01:
+						case TrackElement::Crossover20:
+						case TrackElement::Crossover21:
 							indent = move - i + Path::track[entry->Element].length - 25;
 							break;
 						default:
@@ -438,7 +449,18 @@ namespace GameObjects {
 							switchtEvent = true;								
 							switch (entry->Element)
 							{							
-							case TrackElement::BaseCircleSect0: case TrackElement::BaseCircleSect1: case TrackElement::BaseCircleSect2: case TrackElement::BaseCircleSect3: case TrackElement::BaseCircleSect4: case TrackElement::BaseCircleSect5: case TrackElement::BaseCircleSect6: case TrackElement::BaseCircleSect7:
+							case TrackElement::BaseCircleSect0:
+							case TrackElement::BaseCircleSect1:
+							case TrackElement::BaseCircleSect2:
+							case TrackElement::BaseCircleSect3:
+							case TrackElement::BaseCircleSect4:
+							case TrackElement::BaseCircleSect5:
+							case TrackElement::BaseCircleSect6:
+							case TrackElement::BaseCircleSect7:
+							case TrackElement::Crossover00:
+							case TrackElement::Crossover01:
+							case TrackElement::Crossover20:
+							case TrackElement::Crossover21:
 								indent = move - i + Path::track[entry->Element].length - 25;
 								break;
 							default:

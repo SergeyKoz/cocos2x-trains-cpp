@@ -29,35 +29,48 @@ namespace GameObjects {
 		{ 3, 1 }, { -3, 1 }, { -3, 1 }, { -3, -1 }
 	};
 
-	const TrackItem Path::track[16] = {
-		{ 0,{ 0, -1 },{ 2, 2, 1, 2, 2, 2, 0, 2 },10,{ { 0, 0 }, { 0, -1 },{ 0, -2 },{ 0, -3 },{ 0, -4 },{ 0, -5 },{ 0, -6 },{ 0, -7 },{ 0, -8 },{ 0, -9 } } },
-		{ 0,{ 1, 0 },{ 0, 2, 2, 2, 1, 2, 2, 2 },10,{ { 0, 0 },{ 1, 0 },{ 2, 0 },{ 3, 0 },{ 4, 0 },{ 5, 0 },{ 6, 0 },{ 7, 0 },{ 8, 0 },{ 9, 0 } } },
-		{ 0,{ 1, 1 },{ 2, 0, 2, 2, 2, 1, 2, 2 },14,{ { 0, 0 },{ 0.71f, 0.71f },{ 1.41f, 1.41f },{ 2.12f, 2.12f },{ 2.83f, 2.83f },{ 3.54f, 3.54f },{ 4.24f, 4.24f },{ 4.95f, 4.95f },{ 5.66f, 5.66f },{ 6.36f, 6.36f },{ 7.07f, 7.07f },{ 7.78f, 7.78f },{ 8.49f, 8.49f },{ 9.19f, 9.19f } } },
-		{ 0,{ 1, -1 },{ 2, 2, 2, 1, 2, 2, 2, 0 },14,{ { 0, 0 },{ 0.71f, -0.71f },{ 1.41f, -1.41f },{ 2.12f, -2.12f },{ 2.83f, -2.83f },{ 3.54f, -3.54f },{ 4.24f, -4.24f },{ 4.95f, -4.95f },{ 5.66f, -5.66f },{ 6.36f, -6.36f },{ 7.07f, -7.07f },{ 7.78f, -7.78f },{ 8.49f, -8.49f },{ 9.19f, -9.19f } } },
+	const TrackItem Path::track[24] = {
+		{ 0,{ { 0, -1 },{ 0, 1 } },{ 6, 2 },{ SwitchElement::Vertical0 , SwitchElement::Vertical1 }, { 2, 2, 1, 2, 2, 2, 0, 2 },10,{ { 0, 0 }, { 0, -1 },{ 0, -2 },{ 0, -3 },{ 0, -4 },{ 0, -5 },{ 0, -6 },{ 0, -7 },{ 0, -8 },{ 0, -9 } } },
+		{ 0,{ { 1, 0 },{ -1, 0 } },{ 0, 4 },{ SwitchElement::Horizontal0 , SwitchElement::Horizontal1 },{ 0, 2, 2, 2, 1, 2, 2, 2 },10,{ { 0, 0 },{ 1, 0 },{ 2, 0 },{ 3, 0 },{ 4, 0 },{ 5, 0 },{ 6, 0 },{ 7, 0 },{ 8, 0 },{ 9, 0 } } },
+		{ 0,{ { 1, 1 },{ -1, -1 } },{ 1, 5 },{ SwitchElement::Item450 , SwitchElement::Item451 },{ 2, 0, 2, 2, 2, 1, 2, 2 },14,{ { 0, 0 },{ 0.71f, 0.71f },{ 1.41f, 1.41f },{ 2.12f, 2.12f },{ 2.83f, 2.83f },{ 3.54f, 3.54f },{ 4.24f, 4.24f },{ 4.95f, 4.95f },{ 5.66f, 5.66f },{ 6.36f, 6.36f },{ 7.07f, 7.07f },{ 7.78f, 7.78f },{ 8.49f, 8.49f },{ 9.19f, 9.19f } } },
+		{ 0,{ { 1, -1 },{ -1, 1 } },{ 7, 3 },{ SwitchElement::Item1350 , SwitchElement::Item1351 },{ 2, 2, 2, 1, 2, 2, 2, 0 },14,{ { 0, 0 },{ 0.71f, -0.71f },{ 1.41f, -1.41f },{ 2.12f, -2.12f },{ 2.83f, -2.83f },{ 3.54f, -3.54f },{ 4.24f, -4.24f },{ 4.95f, -4.95f },{ 5.66f, -5.66f },{ 6.36f, -6.36f },{ 7.07f, -7.07f },{ 7.78f, -7.78f },{ 8.49f, -8.49f },{ 9.19f, -9.19f } } },
 		//13
-		{ 10,{ -1, 3 },{ 2, 2, 0, 2, 2, 2, 2, 1 },32,{ { 0, 0 },{ -0.01f, 1 },{ -0.04f, 2 },{ -0.09f, 3 },{ -0.16f, 4 },{ -0.25f, 4.99f },{ -0.36f, 5.99f },{ -0.49f, 6.98f },{ -0.64f, 7.97f },{ -0.81f, 8.95f },{ -1, 9.93f },{ -1.21f, 10.91f },{ -1.43f, 11.89f },{ -1.68f, 12.85f },{ -1.95f, 13.82f },{ -2.23f, 14.78f },{ -2.54f, 15.73f },{ -2.86f, 16.67f },{ -3.21f, 17.61f },{ -3.57f, 18.55f },{ -3.95f, 19.47f },{ -4.35f, 20.39f },{ -4.76f, 21.3f },{ -5.2f, 22.2f },{ -5.65f, 23.09f },{ -6.12f, 23.97f },{ -6.61f, 24.84f },{ -7.11f, 25.71f },{ -7.64f, 26.56f },{ -8.18f, 27.4f },{ -8.73f, 28.23f },{ -9.31f, 29.05f } } },
-		{ 10,{ -3, 1 },{ 1, 2, 2, 0, 2, 2, 2, 2 },32,{ { 0, 0 },{ -0.81f, 0.59f },{ -1.62f, 1.17f },{ -2.45f, 1.73f },{ -3.29f, 2.27f },{ -4.14f, 2.8f },{ -5, 3.3f },{ -5.88f, 3.79f },{ -6.76f, 4.27f },{ -7.65f, 4.72f },{ -8.54f, 5.16f },{ -9.45f, 5.58f },{ -10.37f, 5.98f },{ -11.29f, 6.37f },{ -12.22f, 6.73f },{ -13.16f, 7.08f },{ -14.11f, 7.41f },{ -15.06f, 7.71f },{ -16.01f, 8 },{ -16.98f, 8.27f },{ -17.95f, 8.52f },{ -18.92f, 8.76f },{ -19.9f, 8.97f },{ -20.88f, 9.16f },{ -21.86f, 9.33f },{ -22.85f, 9.49f },{ -23.84f, 9.62f },{ -24.83f, 9.73f },{ -25.83f, 9.83f },{ -26.83f, 9.9f },{ -27.83f, 9.95f },{ -28.83f, 9.99f } } },
-		{ 10,{ -3, -1 },{ 2, 1, 2, 2, 0, 2, 2, 2 },32,{ { 0, 0 },{ -1, -0.01f },{ -2, -0.04f },{ -3, -0.09f },{ -4, -0.16f },{ -4.99f, -0.25f },{ -5.99f, -0.36f },{ -6.98f, -0.49f },{ -7.97f, -0.64f },{ -8.95f, -0.81f },{ -9.93f, -1 },{ -10.91f, -1.21f },{ -11.89f, -1.43f },{ -12.85f, -1.68f },{ -13.82f, -1.95f },{ -14.78f, -2.23f },{ -15.73f, -2.54f },{ -16.67f, -2.86f },{ -17.61f, -3.21f },{ -18.55f, -3.57f },{ -19.47f, -3.95f },{ -20.39f, -4.35f },{ -21.3f, -4.76f },{ -22.2f, -5.2f },{ -23.09f, -5.65f },{ -23.97f, -6.12f },{ -24.84f, -6.61f },{ -25.71f, -7.11f },{ -26.56f, -7.64f },{ -27.4f, -8.18f },{ -28.23f, -8.73f },{ -29.05f, -9.31f } } },
-		{ 10,{ -1, -3 },{ 2, 2, 1, 2, 2, 0, 2, 2 },32,{ { 0, 0 },{ -0.59f, -0.81f },{ -1.17f, -1.62f },{ -1.73f, -2.45f },{ -2.27f, -3.29f },{ -2.8f, -4.14f },{ -3.3f, -5 },{ -3.79f, -5.88f },{ -4.27f, -6.76f },{ -4.72f, -7.65f },{ -5.16f, -8.54f },{ -5.58f, -9.45f },{ -5.98f, -10.37f },{ -6.37f, -11.29f },{ -6.73f, -12.22f },{ -7.08f, -13.16f },{ -7.41f, -14.11f },{ -7.71f, -15.06f },{ -8, -16.01f },{ -8.27f, -16.98f },{ -8.52f, -17.95f },{ -8.76f, -18.92f },{ -8.97f, -19.9f },{ -9.16f, -20.88f },{ -9.33f, -21.86f },{ -9.49f, -22.85f },{ -9.62f, -23.84f },{ -9.73f, -24.83f },{ -9.83f, -25.83f },{ -9.9f, -26.83f },{ -9.95f, -27.83f },{ -9.99f, -28.83f } } },
-		{ 10,{ 1, -3 },{ 2, 2, 2, 1, 2, 2, 0, 2 },32,{ { 0, 0 },{ 0.01f, -1 },{ 0.04f, -2 },{ 0.09f, -3 },{ 0.16f, -4 },{ 0.25f, -4.99f },{ 0.36f, -5.99f },{ 0.49f, -6.98f },{ 0.64f, -7.97f },{ 0.81f, -8.95f },{ 1, -9.93f },{ 1.21f, -10.91f },{ 1.43f, -11.89f },{ 1.68f, -12.85f },{ 1.95f, -13.82f },{ 2.23f, -14.78f },{ 2.54f, -15.73f },{ 2.86f, -16.67f },{ 3.21f, -17.61f },{ 3.57f, -18.55f },{ 3.95f, -19.47f },{ 4.35f, -20.39f },{ 4.76f, -21.3f },{ 5.2f, -22.2f },{ 5.65f, -23.09f },{ 6.12f, -23.97f },{ 6.61f, -24.84f },{ 7.11f, -25.71f },{ 7.64f, -26.56f },{ 8.18f, -27.4f },{ 8.73f, -28.23f },{ 9.31f, -29.05f } } },
-		{ 10,{ 3, -1 },{ 2, 2, 2, 2, 1, 2, 2, 0 },32,{ { 0, 0 },{ 0.81f, -0.59f },{ 1.62f, -1.17f },{ 2.45f, -1.73f },{ 3.29f, -2.27f },{ 4.14f, -2.8f },{ 5, -3.3f },{ 5.88f, -3.79f },{ 6.76f, -4.27f },{ 7.65f, -4.72f },{ 8.54f, -5.16f },{ 9.45f, -5.58f },{ 10.37f, -5.98f },{ 11.29f, -6.37f },{ 12.22f, -6.73f },{ 13.16f, -7.08f },{ 14.11f, -7.41f },{ 15.06f, -7.71f },{ 16.01f, -8 },{ 16.98f, -8.27f },{ 17.95f, -8.52f },{ 18.92f, -8.76f },{ 19.9f, -8.97f },{ 20.88f, -9.16f },{ 21.86f, -9.33f },{ 22.85f, -9.49f },{ 23.84f, -9.62f },{ 24.83f, -9.73f },{ 25.83f, -9.83f },{ 26.83f, -9.9f },{ 27.83f, -9.95f },{ 28.83f, -9.99f } } },
-		{ 10,{ 3, 1 },{ 0, 2, 2, 2, 2, 1, 2, 2 },32,{ { 0, 0 },{ 1, 0.01f },{ 2, 0.04f },{ 3, 0.09f },{ 4, 0.16f },{ 4.99f, 0.25f },{ 5.99f, 0.36f },{ 6.98f, 0.49f },{ 7.97f, 0.64f },{ 8.95f, 0.81f },{ 9.93f, 1 },{ 10.91f, 1.21f },{ 11.89f, 1.43f },{ 12.85f, 1.68f },{ 13.82f, 1.95f },{ 14.78f, 2.23f },{ 15.73f, 2.54f },{ 16.67f, 2.86f },{ 17.61f, 3.21f },{ 18.55f, 3.57f },{ 19.47f, 3.95f },{ 20.39f, 4.35f },{ 21.3f, 4.76f },{ 22.2f, 5.2f },{ 23.09f, 5.65f },{ 23.97f, 6.12f },{ 24.84f, 6.61f },{ 25.71f, 7.11f },{ 26.56f, 7.64f },{ 27.4f, 8.18f },{ 28.23f, 8.73f },{ 29.05f, 9.31f } } },
-		{ 10,{ 1, 3 },{ 2, 0, 2, 2, 2, 2, 1, 2 },32,{ { 0, 0 },{ 0.59f, 0.81f },{ 1.17f, 1.62f },{ 1.73f, 2.45f },{ 2.27f, 3.29f },{ 2.8f, 4.14f },{ 3.3f, 5 },{ 3.79f, 5.88f },{ 4.27f, 6.76f },{ 4.72f, 7.65f },{ 5.16f, 8.54f },{ 5.58f, 9.45f },{ 5.98f, 10.37f },{ 6.37f, 11.29f },{ 6.73f, 12.22f },{ 7.08f, 13.16f },{ 7.41f, 14.11f },{ 7.71f, 15.06f },{ 8, 16.01f },{ 8.27f, 16.98f },{ 8.52f, 17.95f },{ 8.76f, 18.92f },{ 8.97f, 19.9f },{ 9.16f, 20.88f },{ 9.33f, 21.86f },{ 9.49f, 22.85f },{ 9.62f, 23.84f },{ 9.73f, 24.83f },{ 9.83f, 25.83f },{ 9.9f, 26.83f },{ 9.95f, 27.83f },{ 9.99f, 28.83f } } },
+		{ 10,{ { -1, 3 },{ 1, -3 } },{ 2, 7 },{ SwitchElement::BaseCircleSect00 , SwitchElement::BaseCircleSect01 },{ 2, 2, 0, 2, 2, 2, 2, 1 },32,{ { 0, 0 },{ -0.01f, 1 },{ -0.04f, 2 },{ -0.09f, 3 },{ -0.16f, 4 },{ -0.25f, 4.99f },{ -0.36f, 5.99f },{ -0.49f, 6.98f },{ -0.64f, 7.97f },{ -0.81f, 8.95f },{ -1, 9.93f },{ -1.21f, 10.91f },{ -1.43f, 11.89f },{ -1.68f, 12.85f },{ -1.95f, 13.82f },{ -2.23f, 14.78f },{ -2.54f, 15.73f },{ -2.86f, 16.67f },{ -3.21f, 17.61f },{ -3.57f, 18.55f },{ -3.95f, 19.47f },{ -4.35f, 20.39f },{ -4.76f, 21.3f },{ -5.2f, 22.2f },{ -5.65f, 23.09f },{ -6.12f, 23.97f },{ -6.61f, 24.84f },{ -7.11f, 25.71f },{ -7.64f, 26.56f },{ -8.18f, 27.4f },{ -8.73f, 28.23f },{ -9.31f, 29.05f } } },
+		{ 10,{ { -3, 1 },{ 3, -1 } },{ 3, 0 },{ SwitchElement::BaseCircleSect10 , SwitchElement::BaseCircleSect11 },{ 1, 2, 2, 0, 2, 2, 2, 2 },32,{ { 0, 0 },{ -0.81f, 0.59f },{ -1.62f, 1.17f },{ -2.45f, 1.73f },{ -3.29f, 2.27f },{ -4.14f, 2.8f },{ -5, 3.3f },{ -5.88f, 3.79f },{ -6.76f, 4.27f },{ -7.65f, 4.72f },{ -8.54f, 5.16f },{ -9.45f, 5.58f },{ -10.37f, 5.98f },{ -11.29f, 6.37f },{ -12.22f, 6.73f },{ -13.16f, 7.08f },{ -14.11f, 7.41f },{ -15.06f, 7.71f },{ -16.01f, 8 },{ -16.98f, 8.27f },{ -17.95f, 8.52f },{ -18.92f, 8.76f },{ -19.9f, 8.97f },{ -20.88f, 9.16f },{ -21.86f, 9.33f },{ -22.85f, 9.49f },{ -23.84f, 9.62f },{ -24.83f, 9.73f },{ -25.83f, 9.83f },{ -26.83f, 9.9f },{ -27.83f, 9.95f },{ -28.83f, 9.99f } } },
+		{ 10,{ { -3, -1 },{ 3, 1 } },{ 4, 1 },{ SwitchElement::BaseCircleSect20 , SwitchElement::BaseCircleSect21 },{ 2, 1, 2, 2, 0, 2, 2, 2 },32,{ { 0, 0 },{ -1, -0.01f },{ -2, -0.04f },{ -3, -0.09f },{ -4, -0.16f },{ -4.99f, -0.25f },{ -5.99f, -0.36f },{ -6.98f, -0.49f },{ -7.97f, -0.64f },{ -8.95f, -0.81f },{ -9.93f, -1 },{ -10.91f, -1.21f },{ -11.89f, -1.43f },{ -12.85f, -1.68f },{ -13.82f, -1.95f },{ -14.78f, -2.23f },{ -15.73f, -2.54f },{ -16.67f, -2.86f },{ -17.61f, -3.21f },{ -18.55f, -3.57f },{ -19.47f, -3.95f },{ -20.39f, -4.35f },{ -21.3f, -4.76f },{ -22.2f, -5.2f },{ -23.09f, -5.65f },{ -23.97f, -6.12f },{ -24.84f, -6.61f },{ -25.71f, -7.11f },{ -26.56f, -7.64f },{ -27.4f, -8.18f },{ -28.23f, -8.73f },{ -29.05f, -9.31f } } },
+		{ 10,{ { -1, -3 },{ 1, 3 } },{ 5, 2 },{ SwitchElement::BaseCircleSect30 , SwitchElement::BaseCircleSect31 },{ 2, 2, 1, 2, 2, 0, 2, 2 },32,{ { 0, 0 },{ -0.59f, -0.81f },{ -1.17f, -1.62f },{ -1.73f, -2.45f },{ -2.27f, -3.29f },{ -2.8f, -4.14f },{ -3.3f, -5 },{ -3.79f, -5.88f },{ -4.27f, -6.76f },{ -4.72f, -7.65f },{ -5.16f, -8.54f },{ -5.58f, -9.45f },{ -5.98f, -10.37f },{ -6.37f, -11.29f },{ -6.73f, -12.22f },{ -7.08f, -13.16f },{ -7.41f, -14.11f },{ -7.71f, -15.06f },{ -8, -16.01f },{ -8.27f, -16.98f },{ -8.52f, -17.95f },{ -8.76f, -18.92f },{ -8.97f, -19.9f },{ -9.16f, -20.88f },{ -9.33f, -21.86f },{ -9.49f, -22.85f },{ -9.62f, -23.84f },{ -9.73f, -24.83f },{ -9.83f, -25.83f },{ -9.9f, -26.83f },{ -9.95f, -27.83f },{ -9.99f, -28.83f } } },
+		{ 10,{ { 1, -3 },{ -1, 3 } },{ 6, 3 },{ SwitchElement::BaseCircleSect40 , SwitchElement::BaseCircleSect41 },{ 2, 2, 2, 1, 2, 2, 0, 2 },32,{ { 0, 0 },{ 0.01f, -1 },{ 0.04f, -2 },{ 0.09f, -3 },{ 0.16f, -4 },{ 0.25f, -4.99f },{ 0.36f, -5.99f },{ 0.49f, -6.98f },{ 0.64f, -7.97f },{ 0.81f, -8.95f },{ 1, -9.93f },{ 1.21f, -10.91f },{ 1.43f, -11.89f },{ 1.68f, -12.85f },{ 1.95f, -13.82f },{ 2.23f, -14.78f },{ 2.54f, -15.73f },{ 2.86f, -16.67f },{ 3.21f, -17.61f },{ 3.57f, -18.55f },{ 3.95f, -19.47f },{ 4.35f, -20.39f },{ 4.76f, -21.3f },{ 5.2f, -22.2f },{ 5.65f, -23.09f },{ 6.12f, -23.97f },{ 6.61f, -24.84f },{ 7.11f, -25.71f },{ 7.64f, -26.56f },{ 8.18f, -27.4f },{ 8.73f, -28.23f },{ 9.31f, -29.05f } } },
+		{ 10,{ { 3, -1 },{ -3, 1 } },{ 7, 4 },{ SwitchElement::BaseCircleSect50 , SwitchElement::BaseCircleSect51 },{ 2, 2, 2, 2, 1, 2, 2, 0 },32,{ { 0, 0 },{ 0.81f, -0.59f },{ 1.62f, -1.17f },{ 2.45f, -1.73f },{ 3.29f, -2.27f },{ 4.14f, -2.8f },{ 5, -3.3f },{ 5.88f, -3.79f },{ 6.76f, -4.27f },{ 7.65f, -4.72f },{ 8.54f, -5.16f },{ 9.45f, -5.58f },{ 10.37f, -5.98f },{ 11.29f, -6.37f },{ 12.22f, -6.73f },{ 13.16f, -7.08f },{ 14.11f, -7.41f },{ 15.06f, -7.71f },{ 16.01f, -8 },{ 16.98f, -8.27f },{ 17.95f, -8.52f },{ 18.92f, -8.76f },{ 19.9f, -8.97f },{ 20.88f, -9.16f },{ 21.86f, -9.33f },{ 22.85f, -9.49f },{ 23.84f, -9.62f },{ 24.83f, -9.73f },{ 25.83f, -9.83f },{ 26.83f, -9.9f },{ 27.83f, -9.95f },{ 28.83f, -9.99f } } },
+		{ 10,{ { 3, 1 },{ -3, -1 } },{ 0, 5 },{ SwitchElement::BaseCircleSect60 , SwitchElement::BaseCircleSect61 },{ 0, 2, 2, 2, 2, 1, 2, 2 },32,{ { 0, 0 },{ 1, 0.01f },{ 2, 0.04f },{ 3, 0.09f },{ 4, 0.16f },{ 4.99f, 0.25f },{ 5.99f, 0.36f },{ 6.98f, 0.49f },{ 7.97f, 0.64f },{ 8.95f, 0.81f },{ 9.93f, 1 },{ 10.91f, 1.21f },{ 11.89f, 1.43f },{ 12.85f, 1.68f },{ 13.82f, 1.95f },{ 14.78f, 2.23f },{ 15.73f, 2.54f },{ 16.67f, 2.86f },{ 17.61f, 3.21f },{ 18.55f, 3.57f },{ 19.47f, 3.95f },{ 20.39f, 4.35f },{ 21.3f, 4.76f },{ 22.2f, 5.2f },{ 23.09f, 5.65f },{ 23.97f, 6.12f },{ 24.84f, 6.61f },{ 25.71f, 7.11f },{ 26.56f, 7.64f },{ 27.4f, 8.18f },{ 28.23f, 8.73f },{ 29.05f, 9.31f } } },
+		{ 10,{ { 1, 3 },{ -1, -3 } },{ 1, 6 },{ SwitchElement::BaseCircleSect70 , SwitchElement::BaseCircleSect71 },{ 2, 0, 2, 2, 2, 2, 1, 2 },32,{ { 0, 0 },{ 0.59f, 0.81f },{ 1.17f, 1.62f },{ 1.73f, 2.45f },{ 2.27f, 3.29f },{ 2.8f, 4.14f },{ 3.3f, 5 },{ 3.79f, 5.88f },{ 4.27f, 6.76f },{ 4.72f, 7.65f },{ 5.16f, 8.54f },{ 5.58f, 9.45f },{ 5.98f, 10.37f },{ 6.37f, 11.29f },{ 6.73f, 12.22f },{ 7.08f, 13.16f },{ 7.41f, 14.11f },{ 7.71f, 15.06f },{ 8, 16.01f },{ 8.27f, 16.98f },{ 8.52f, 17.95f },{ 8.76f, 18.92f },{ 8.97f, 19.9f },{ 9.16f, 20.88f },{ 9.33f, 21.86f },{ 9.49f, 22.85f },{ 9.62f, 23.84f },{ 9.73f, 24.83f },{ 9.83f, 25.83f },{ 9.9f, 26.83f },{ 9.95f, 27.83f },{ 9.99f, 28.83f } } },
 		//10
-		{ 7,{ -2, 2 },{ 1, 2, 0, 2, 2, 2, 2, 2 },31,{ { 0, 0 },{ -0.02f, 1 },{ -0.1f, 2 },{ -0.22f, 2.99f },{ -0.4f, 3.97f },{ -0.62f, 4.95f },{ -0.89f, 5.91f },{ -1.21f, 6.86f },{ -1.58f, 7.79f },{ -1.99f, 8.7f },{ -2.45f, 9.59f },{ -2.95f, 10.45f },{ -3.49f, 11.29f },{ -4.08f, 12.1f },{ -4.7f, 12.88f },{ -5.37f, 13.63f },{ -6.07f, 14.35f },{ -6.8f, 15.03f },{ -7.57f, 15.67f },{ -8.37f, 16.27f },{ -9.19f, 16.83f },{ -10.05f, 17.35f },{ -10.93f, 17.82f },{ -11.83f, 18.26f },{ -12.75f, 18.64f },{ -13.69f, 18.98f },{ -14.65f, 19.27f },{ -15.62f, 19.51f },{ -16.6f, 19.71f },{ -17.59f, 19.85f },{ -18.59f, 19.95f } } },
-		{ 7,{ -2, -2 },{ 2, 2, 1, 2, 0, 2, 2, 2 },31,{ { 0, 0 },{ -1, -0.02f },{ -2, -0.1f },{ -2.99f, -0.22f },{ -3.97f, -0.4f },{ -4.95f, -0.62f },{ -5.91f, -0.89f },{ -6.86f, -1.21f },{ -7.79f, -1.58f },{ -8.7f, -1.99f },{ -9.59f, -2.45f },{ -10.45f, -2.95f },{ -11.29f, -3.49f },{ -12.1f, -4.08f },{ -12.88f, -4.7f },{ -13.63f, -5.37f },{ -14.35f, -6.07f },{ -15.03f, -6.8f },{ -15.67f, -7.57f },{ -16.27f, -8.37f },{ -16.83f, -9.19f },{ -17.35f, -10.05f },{ -17.82f, -10.93f },{ -18.26f, -11.83f },{ -18.64f, -12.75f },{ -18.98f, -13.69f },{ -19.27f, -14.65f },{ -19.51f, -15.62f },{ -19.71f, -16.6f },{ -19.85f, -17.59f },{ -19.95f, -18.59f } } },
-		{ 7,{ 2, -2 },{ 2, 2, 2, 2, 1, 2, 0, 2 },31,{ { 0, 0 },{ 0.02f, -1 },{ 0.1f, -2 },{ 0.22f, -2.99f },{ 0.4f, -3.97f },{ 0.62f, -4.95f },{ 0.89f, -5.91f },{ 1.21f, -6.86f },{ 1.58f, -7.79f },{ 1.99f, -8.7f },{ 2.45f, -9.59f },{ 2.95f, -10.45f },{ 3.49f, -11.29f },{ 4.08f, -12.1f },{ 4.7f, -12.88f },{ 5.37f, -13.63f },{ 6.07f, -14.35f },{ 6.8f, -15.03f },{ 7.57f, -15.67f },{ 8.37f, -16.27f },{ 9.19f, -16.83f },{ 10.05f, -17.35f },{ 10.93f, -17.82f },{ 11.83f, -18.26f },{ 12.75f, -18.64f },{ 13.69f, -18.98f },{ 14.65f, -19.27f },{ 15.62f, -19.51f },{ 16.6f, -19.71f },{ 17.59f, -19.85f },{ 18.59f, -19.95f } } },
-		{ 7,{ 2, 2 },{ 0, 2, 2, 2, 2, 2, 1, 2 },31,{ { 0, 0 },{ 1, 0.02f },{ 2, 0.1f },{ 2.99f, 0.22f },{ 3.97f, 0.4f },{ 4.95f, 0.62f },{ 5.91f, 0.89f },{ 6.86f, 1.21f },{ 7.79f, 1.58f },{ 8.7f, 1.99f },{ 9.59f, 2.45f },{ 10.45f, 2.95f },{ 11.29f, 3.49f },{ 12.1f, 4.08f },{ 12.88f, 4.7f },{ 13.63f, 5.37f },{ 14.35f, 6.07f },{ 15.03f, 6.8f },{ 15.67f, 7.57f },{ 16.27f, 8.37f },{ 16.83f, 9.19f },{ 17.35f, 10.05f },{ 17.82f, 10.93f },{ 18.26f, 11.83f },{ 18.64f, 12.75f },{ 18.98f, 13.69f },{ 19.27f, 14.65f },{ 19.51f, 15.62f },{ 19.71f, 16.6f },{ 19.85f, 17.59f },{ 19.95f, 18.59f } } }
+		{ 7,{ { -2, 2 },{ 2, -2 } },{ 2, 0 },{ SwitchElement::SmallCilcleSect00 , SwitchElement::SmallCilcleSect01 },{ 1, 2, 0, 2, 2, 2, 2, 2 },31,{ { 0, 0 },{ -0.02f, 1 },{ -0.1f, 2 },{ -0.22f, 2.99f },{ -0.4f, 3.97f },{ -0.62f, 4.95f },{ -0.89f, 5.91f },{ -1.21f, 6.86f },{ -1.58f, 7.79f },{ -1.99f, 8.7f },{ -2.45f, 9.59f },{ -2.95f, 10.45f },{ -3.49f, 11.29f },{ -4.08f, 12.1f },{ -4.7f, 12.88f },{ -5.37f, 13.63f },{ -6.07f, 14.35f },{ -6.8f, 15.03f },{ -7.57f, 15.67f },{ -8.37f, 16.27f },{ -9.19f, 16.83f },{ -10.05f, 17.35f },{ -10.93f, 17.82f },{ -11.83f, 18.26f },{ -12.75f, 18.64f },{ -13.69f, 18.98f },{ -14.65f, 19.27f },{ -15.62f, 19.51f },{ -16.6f, 19.71f },{ -17.59f, 19.85f },{ -18.59f, 19.95f } } },
+		{ 7,{ { -2, -2 },{ 2, 2 } },{ 4, 2 },{ SwitchElement::SmallCilcleSect10 , SwitchElement::SmallCilcleSect11 },{ 2, 2, 1, 2, 0, 2, 2, 2 },31,{ { 0, 0 },{ -1, -0.02f },{ -2, -0.1f },{ -2.99f, -0.22f },{ -3.97f, -0.4f },{ -4.95f, -0.62f },{ -5.91f, -0.89f },{ -6.86f, -1.21f },{ -7.79f, -1.58f },{ -8.7f, -1.99f },{ -9.59f, -2.45f },{ -10.45f, -2.95f },{ -11.29f, -3.49f },{ -12.1f, -4.08f },{ -12.88f, -4.7f },{ -13.63f, -5.37f },{ -14.35f, -6.07f },{ -15.03f, -6.8f },{ -15.67f, -7.57f },{ -16.27f, -8.37f },{ -16.83f, -9.19f },{ -17.35f, -10.05f },{ -17.82f, -10.93f },{ -18.26f, -11.83f },{ -18.64f, -12.75f },{ -18.98f, -13.69f },{ -19.27f, -14.65f },{ -19.51f, -15.62f },{ -19.71f, -16.6f },{ -19.85f, -17.59f },{ -19.95f, -18.59f } } },
+		{ 7,{ { 2, -2 },{ -2, 2 } },{ 6, 4 },{ SwitchElement::SmallCilcleSect20 , SwitchElement::SmallCilcleSect21 },{ 2, 2, 2, 2, 1, 2, 0, 2 },31,{ { 0, 0 },{ 0.02f, -1 },{ 0.1f, -2 },{ 0.22f, -2.99f },{ 0.4f, -3.97f },{ 0.62f, -4.95f },{ 0.89f, -5.91f },{ 1.21f, -6.86f },{ 1.58f, -7.79f },{ 1.99f, -8.7f },{ 2.45f, -9.59f },{ 2.95f, -10.45f },{ 3.49f, -11.29f },{ 4.08f, -12.1f },{ 4.7f, -12.88f },{ 5.37f, -13.63f },{ 6.07f, -14.35f },{ 6.8f, -15.03f },{ 7.57f, -15.67f },{ 8.37f, -16.27f },{ 9.19f, -16.83f },{ 10.05f, -17.35f },{ 10.93f, -17.82f },{ 11.83f, -18.26f },{ 12.75f, -18.64f },{ 13.69f, -18.98f },{ 14.65f, -19.27f },{ 15.62f, -19.51f },{ 16.6f, -19.71f },{ 17.59f, -19.85f },{ 18.59f, -19.95f } } },
+		{ 7,{ { 2, 2 },{ -2, -2 } },{ 0, 6 },{ SwitchElement::SmallCilcleSect30 , SwitchElement::SmallCilcleSect31 },{ 0, 2, 2, 2, 2, 2, 1, 2 },31,{ { 0, 0 },{ 1, 0.02f },{ 2, 0.1f },{ 2.99f, 0.22f },{ 3.97f, 0.4f },{ 4.95f, 0.62f },{ 5.91f, 0.89f },{ 6.86f, 1.21f },{ 7.79f, 1.58f },{ 8.7f, 1.99f },{ 9.59f, 2.45f },{ 10.45f, 2.95f },{ 11.29f, 3.49f },{ 12.1f, 4.08f },{ 12.88f, 4.7f },{ 13.63f, 5.37f },{ 14.35f, 6.07f },{ 15.03f, 6.8f },{ 15.67f, 7.57f },{ 16.27f, 8.37f },{ 16.83f, 9.19f },{ 17.35f, 10.05f },{ 17.82f, 10.93f },{ 18.26f, 11.83f },{ 18.64f, 12.75f },{ 18.98f, 13.69f },{ 19.27f, 14.65f },{ 19.51f, 15.62f },{ 19.71f, 16.6f },{ 19.85f, 17.59f },{ 19.95f, 18.59f } } },
+		
+		// 5
+		{ 5,{ { 3, -1 },{ -3, 1 } },{ 0, 4 },{ SwitchElement::Crossover000 , SwitchElement::Crossover001 }, { 0, 2, 2, 2, 1, 2, 2, 2 },32,{ { 1, -0.02f },{ 2, -0.08f },{ 2.99f, -0.18f },{ 3.98f, -0.32f },{ 4.97f, -0.5f },{ 5.94f, -0.72f },{ 6.91f, -0.97f },{ 7.86f, -1.27f },{ 8.81f, -1.6f },{ 9.74f, -1.97f },{ 10.65f, -2.38f },{ 11.54f, -2.83f },{ 12.42f, -3.3f },{ 13.28f, -3.82f },{ 14.12f, -4.37f },{ 14.93f, -4.95f },{ 15.74f, -5.54f },{ 16.57f, -6.09f },{ 17.43f, -6.61f },{ 18.3f, -7.09f },{ 19.2f, -7.54f },{ 20.11f, -7.95f },{ 21.03f, -8.33f },{ 21.97f, -8.67f },{ 22.93f, -8.97f },{ 23.89f, -9.23f },{ 24.87f, -9.46f },{ 25.85f, -9.64f },{ 26.84f, -9.79f },{ 27.83f, -9.89f },{ 28.83f, -9.96f },{ 29.83f, -9.98f } } },
+		{ 5,{ { 3, 1 },{ -3, -1 } },{ 0, 4 },{ SwitchElement::Crossover010 , SwitchElement::Crossover011 }, { 0, 2, 2, 2, 1, 2, 2, 2 },32,{ { 1, 0.02f },{ 2, 0.08f },{ 2.99f, 0.18f },{ 3.98f, 0.32f },{ 4.97f, 0.5f },{ 5.94f, 0.72f },{ 6.91f, 0.97f },{ 7.86f, 1.27f },{ 8.81f, 1.6f },{ 9.74f, 1.97f },{ 10.65f, 2.38f },{ 11.54f, 2.83f },{ 12.42f, 3.3f },{ 13.28f, 3.82f },{ 14.12f, 4.37f },{ 14.93f, 4.95f },{ 15.74f, 5.54f },{ 16.57f, 6.09f },{ 17.43f, 6.61f },{ 18.3f, 7.09f },{ 19.2f, 7.54f },{ 20.11f, 7.95f },{ 21.03f, 8.33f },{ 21.97f, 8.67f },{ 22.93f, 8.97f },{ 23.89f, 9.23f },{ 24.87f, 9.46f },{ 25.85f, 9.64f },{ 26.84f, 9.79f },{ 27.83f, 9.89f },{ 28.83f, 9.96f },{ 29.83f, 9.98f } } },
+		{ 5,{ { 2, 1 },{ -2, -1 } },{ 1, 5 },{ SwitchElement::Crossover100 , SwitchElement::Crossover101 }, { 2, 0, 2, 2, 2, 1, 2, 2 },22,{ { 0.81f, 0.59f },{ 1.64f, 1.15f },{ 2.48f, 1.68f },{ 3.35f, 2.19f },{ 4.22f, 2.67f },{ 5.12f, 3.11f },{ 6.02f, 3.53f },{ 6.95f, 3.93f },{ 7.88f, 4.29f },{ 8.82f, 4.62f },{ 9.78f, 4.92f },{ 10.74f, 5.21f },{ 11.68f, 5.53f },{ 12.62f, 5.88f },{ 13.55f, 6.26f },{ 14.46f, 6.67f },{ 15.36f, 7.11f },{ 16.24f, 7.57f },{ 17.11f, 8.07f },{ 17.96f, 8.59f },{ 18.8f, 9.15f },{ 19.61f, 9.72f } } },
+		{ 5,{ { 1, 2 },{ -1, -2 } },{ 1, 5 },{ SwitchElement::Crossover110 , SwitchElement::Crossover111 }, { 2, 0, 2, 2, 2, 1, 2, 2 },22,{ { 0.59f, 0.81f },{ 1.15f, 1.64f },{ 1.68f, 2.48f },{ 2.19f, 3.35f },{ 2.67f, 4.22f },{ 3.11f, 5.12f },{ 3.53f, 6.02f },{ 3.93f, 6.95f },{ 4.29f, 7.88f },{ 4.62f, 8.82f },{ 4.92f, 9.78f },{ 5.21f, 10.74f },{ 5.53f, 11.68f },{ 5.88f, 12.62f },{ 6.26f, 13.55f },{ 6.67f, 14.46f },{ 7.11f, 15.36f },{ 7.57f, 16.24f },{ 8.07f, 17.11f },{ 8.59f, 17.96f },{ 9.15f, 18.8f },{ 9.72f, 19.61f } } },
+		{ 5,{ { 1, 3 },{ -1, -3 } },{ 2, 6 },{ SwitchElement::Crossover200 , SwitchElement::Crossover201 }, { 2, 2, 0, 2, 2, 2, 1, 2 },32,{ { 0.02f, 1 },{ 0.08f, 2 },{ 0.18f, 2.99f },{ 0.32f, 3.98f },{ 0.5f, 4.97f },{ 0.72f, 5.94f },{ 0.97f, 6.91f },{ 1.27f, 7.86f },{ 1.6f, 8.81f },{ 1.97f, 9.74f },{ 2.38f, 10.65f },{ 2.83f, 11.54f },{ 3.3f, 12.42f },{ 3.82f, 13.28f },{ 4.37f, 14.12f },{ 4.95f, 14.93f },{ 5.54f, 15.74f },{ 6.09f, 16.57f },{ 6.61f, 17.43f },{ 7.09f, 18.3f },{ 7.54f, 19.2f },{ 7.95f, 20.11f },{ 8.33f, 21.03f },{ 8.67f, 21.97f },{ 8.97f, 22.93f },{ 9.23f, 23.89f },{ 9.46f, 24.87f },{ 9.64f, 25.85f },{ 9.79f, 26.84f },{ 9.89f, 27.83f },{ 9.96f, 28.83f },{ 9.98f, 29.83f } } },
+		{ 5,{ { -1, 3 },{ 1, -3 } },{ 2, 6 },{ SwitchElement::Crossover210 , SwitchElement::Crossover211 }, { 2, 2, 0, 2, 2, 2, 1, 2 },32,{ { -0.02f, 1 },{ -0.08f, 2 },{ -0.18f, 2.99f },{ -0.32f, 3.98f },{ -0.5f, 4.97f },{ -0.72f, 5.94f },{ -0.97f, 6.91f },{ -1.27f, 7.86f },{ -1.6f, 8.81f },{ -1.97f, 9.74f },{ -2.38f, 10.65f },{ -2.83f, 11.54f },{ -3.3f, 12.42f },{ -3.82f, 13.28f },{ -4.37f, 14.12f },{ -4.95f, 14.93f },{ -5.54f, 15.74f },{ -6.09f, 16.57f },{ -6.61f, 17.43f },{ -7.09f, 18.3f },{ -7.54f, 19.2f },{ -7.95f, 20.11f },{ -8.33f, 21.03f },{ -8.67f, 21.97f },{ -8.97f, 22.93f },{ -9.23f, 23.89f },{ -9.46f, 24.87f },{ -9.64f, 25.85f },{ -9.79f, 26.84f },{ -9.89f, 27.83f },{ -9.96f, 28.83f },{ -9.98f, 29.83f } } },
+		{ 5,{ { -1, 2 },{ 1, -2 } },{ 3, 7 },{ SwitchElement::Crossover300 , SwitchElement::Crossover301 }, { 2, 2, 2, 0, 2, 2, 2, 1 },22,{ { -0.29f, 0.96f },{ -0.61f, 1.9f },{ -0.96f, 2.84f },{ -1.34f, 3.77f },{ -1.75f, 4.68f },{ -2.19f, 5.58f },{ -2.65f, 6.46f },{ -3.15f, 7.33f },{ -3.67f, 8.18f },{ -4.23f, 9.02f },{ -4.8f, 9.83f },{ -5.39f, 10.64f },{ -5.95f, 11.47f },{ -6.48f, 12.31f },{ -6.99f, 13.18f },{ -7.47f, 14.05f },{ -7.91f, 14.95f },{ -8.33f, 15.85f },{ -8.73f, 16.78f },{ -9.09f, 17.71f },{ -9.42f, 18.65f },{ -9.72f, 19.61f } } },
+		{ 5,{ { -2, 1 },{ 2, -1 } },{ 3, 7 },{ SwitchElement::Crossover310 , SwitchElement::Crossover311 }, { 2, 2, 2, 0, 2, 2, 2, 1 },22,{ { -0.81f, 0.59f },{ -1.64f, 1.15f },{ -2.48f, 1.68f },{ -3.35f, 2.19f },{ -4.22f, 2.67f },{ -5.12f, 3.11f },{ -6.02f, 3.53f },{ -6.95f, 3.93f },{ -7.88f, 4.29f },{ -8.82f, 4.62f },{ -9.78f, 4.92f },{ -10.74f, 5.21f },{ -11.68f, 5.53f },{ -12.62f, 5.88f },{ -13.55f, 6.26f },{ -14.46f, 6.67f },{ -15.36f, 7.11f },{ -16.24f, 7.57f },{ -17.11f, 8.07f },{ -17.96f, 8.59f },{ -18.8f, 9.15f },{ -19.61f, 9.72f } } },
 	};
 	
-	const AccessItems Path::access[2][16] = {
+	const AccessItems Path::access[2][24] = {
 		{
+			//{},{},{},{},
 			{ { { 0b11000001,0b0,{ 0, -1 } } } },
 			{ { { 0b00000111,0b0,{ 0, 0 } } } },
 			{ { { 0b00010001,0b1,{ 0, 0 } } } },
 			{ { { 0b01000100,0b1,{ 0, -1 } } } },
 			
-			// base circle													
+			
+			// base circle	
+			//{},{},{},{},{},{},{},{},
 			{ { { 0b00010000,0b0,{ -1, 0 } },{ 0b00011100,0b0,{ -1, 1 } },{ 0b01000110,0b1,{ -1, 2 } },{ 0b11000001,0b0,{ 0, 0 } } } },
 			{ { { 0b01100100,0b1,{ -1, 0 } },{ 0b01110000,0b0,{ -2, 0 } },{ 0b00010000,0b0,{ -3, 0 } },{ 0b00000111,0b0,{ -3, 1 } } } },
 			{ { { 0b01000000,0b0,{ -1, -1 } },{ 0b01110000,0b0,{ -2, -1 } },{ 0b00011001,0b1,{ -3, -1 } },{ 0b00000111,0b0,{ -1, 0 } } } },
@@ -68,17 +81,33 @@ namespace GameObjects {
 			{ { { 0b00110001,0b1,{ 0, 0 } },{ 0b00011100,0b0,{ 0, 1 } },{ 0b00000100,0b0,{ 0, 2 } },{ 0b11000001,0b0,{ 1, 2 } } } },
 
 			// small circle
+			//{},{},{},{},
 			{ { { 0b00010000,0b0,{ -1, 0 } },{ 0b01000100,0b1,{ -1, 1 } },{ 0b00010000,0b0,{ -2, 1 } },{ 0b11000001,0b0,{ 0, 0 } }, { 0b00000111,0b0,{ -2, 2 } } } },
 			{ { { 0b01000000,0b0,{ -1, -1 } },{ 0b00010010,0b1,{ -2, -1 } },{ 0b11100001,0b0,{ -2, -2 } },{ 0b00000111,0b0,{ -1, 0 } } } },
 			{ { { 0b11000011,0b0,{ 0, -1 } },{ 0b00101000,0b1,{ 0, -2 } },{ 0b10000111,0b0,{ 1, -2 } } } },
-			{ { { 0b00001111,0b0,{ 0, 0 } },{ 0b10010000,0b1,{ 1, 0 } },{ 0b00000100,0b0,{ 1, 1 } },{ 0b11000001,0b0,{ 2, 1 } } } }
+			{ { { 0b00001111,0b0,{ 0, 0 } },{ 0b10010000,0b1,{ 1, 0 } },{ 0b00000100,0b0,{ 1, 1 } },{ 0b11000001,0b0,{ 2, 1 } } } },
+			
+			// crossover
+			{ { { 0b000000011,0b0,{ 0, 0 } },{ 0b00010000,0b0,{ 0, -1 } },{ 0b01101000,0b1,{ 1, -1 } },{ 0b10000110,0b0,{ 2, -1 } } } },		
+			{ { { 0b000001011,0b0,{ 0, 0 } },{ 0b10110000,0b1,{ 1, 0 } },{ 0b01000000,0b0,{ 2, 0 } },{ 0b00000110,0b0,{ 2, 1 } } } },
+
+			{ { { 0b00001001,0b1,{ 0, 0 } },{ 0b10010000,0b1,{ 1, 0 } } } },
+			{ { { 0b00100001,0b1,{ 0, 0 } },{ 0b00010010,0b1,{ 0, 1 } } } },
+
+			{ { { 0b10100001,0b0,{ 0, 0 } },{ 0b00011010,0b1,{ 0, 1 } },{ 0b00000100,0b0,{ 0, 2 } },{ 0b11000000,0b0,{ 1, 2 } } } },
+			{ { { 0b10000001,0b0,{ 0, 0 } },{ 0b00010000,0b0,{ -1, 0 } },{ 0b00101100,0b1,{ -1, 1 } },{ 0b11000010,0b0,{ -1, 2 } } } },
+
+			{ { { 0b00100100,0b1,{ -1, 0 } },{ 0b01000010,0b1,{ -1, 1 } } } },
+			{ { { 0b10000100,0b1,{ -1, 0 } },{ 0b01001000,0b1,{ -2, 0 } } } },
 		},{
+			//{},{},{},{},
 			{ { { 0b11000001,0b0,{ 0, 0 } } } },
 			{ { { 0b00000111,0b0,{ -1, 0 } } } },
 			{ { { 0b00010001,0b1,{ -1, -1 } } } },
 			{ { { 0b01000100,0b1,{ -1, 0 } } } },
 
 			// base circle
+			//{},{},{},{},{},{},{},{},
 			{ { { 0b00010000,0b0,{0, -3 } },{ 0b00011100,0b0,{ 0, -2 } },{ 0b01000110,0b1,{ 0, -1 } },{ 0b11000001,0b0,{ 1, -3 } } } },
 			{ { { 0b01100100,0b1,{ 2, -1 } },{ 0b01110000,0b0,{ 1, -1 } },{ 0b00010000,0b0,{ 0, -1 } },{ 0b00000111,0b0,{ 0, 0 } } } },
 			{ { { 0b01000000,0b0,{ 2, 0 } },{ 0b01110000,0b0,{ 1, 0 } },{ 0b00011001,0b1,{ 0, 0 } },{ 0b00000111,0b0,{ 2, 1 } } } },
@@ -89,10 +118,24 @@ namespace GameObjects {
 			{ { { 0b00110001,0b1,{ -1, -3 } },{ 0b00011100,0b0,{ -1, -2 } },{ 0b00000100,0b0,{ -1, -1 } },{ 0b11000001,0b0,{ 0, -1 } } } },
 
 			// small circle
+			//{},{},{},{},
 			{ { { 0b00010000,0b0,{ 1, -2 } },{ 0b01000100,0b1,{ 1, -1 } },{ 0b00010000,0b0,{ 0, -1 } },{ 0b11000001,0b0,{ 2, -2 } },{ 0b00000111,0b0,{ 0, 0 } } } },
 			{ { { 0b01000000,0b0,{ 1, 1 } },{ 0b00010010,0b1,{ 0, 1 } },{ 0b11100001,0b0,{ 0, 0 } },{ 0b00000111,0b0,{ 1, 2 } } } },
 			{ { { 0b11000011,0b0,{ -2, 1 } },{ 0b00101000,0b1,{ -2, 0 } },{ 0b10000111,0b0,{ -1, 0 } } } },
-			{ { { 0b00001111,0b0,{ -2, -2 } },{ 0b10010000,0b1,{ -1, -2 } },{ 0b00000100,0b0,{ -1, -1 } },{ 0b11000001,0b0,{ 0, -1 } } } }
+			{ { { 0b00001111,0b0,{ -2, -2 } },{ 0b10010000,0b1,{ -1, -2 } },{ 0b00000100,0b0,{ -1, -1 } },{ 0b11000001,0b0,{ 0, -1 } } } },
+
+			// crossover
+			{ { { 0b000000011,0b0,{ -3, 1 } },{ 0b00010000,0b0,{ -3, 0 } },{ 0b01101000,0b1,{ -2, 0 } },{ 0b10000110,0b0,{ -1, 0 } } } },
+			{ { { 0b000001011,0b0,{ -3, -1 } },{ 0b10110000,0b1,{ -2, -1 } },{ 0b01000000,0b0,{ -1, -1 } },{ 0b00000110,0b0,{ -1, 0 } } } },
+
+			{ { { 0b00001001,0b1,{ -2, -1 } },{ 0b10010000,0b1,{ -1, -1 } } } },
+			{ { { 0b00100001,0b1,{ -1, -2 } },{ 0b00010010,0b1,{ -1, -1 } } } },
+
+			{ { { 0b10100001,0b0,{ -1, -3 } },{ 0b00011010,0b1,{ -1, -2 } },{ 0b00000100,0b0,{ -1, -1 } },{ 0b11000000,0b0,{ 0, -1 } } } },
+			{ { { 0b10000001,0b0,{ 1, -3 } },{ 0b00010000,0b0,{ 0, -3 } },{ 0b00101100,0b1,{ 0, -2 } },{ 0b11000010,0b0,{ 0, -1 } } } },
+
+			{ { { 0b00100100,0b1,{ 0, -2 } },{ 0b01000010,0b1,{ 0, -1 } } } },
+			{ { { 0b10000100,0b1,{ 1, -1 } },{ 0b01001000,0b1,{ 0, -1 } } } },
 		}
 	};
 	
@@ -184,32 +227,36 @@ namespace GameObjects {
 					int i = 0;
 					int nextPoint;
 					Cell *next;
-					ConnectionConfig *connect;
 					PathItem *item;
 					MapPoint c = { current->x, current->y }, n;
 					bool a = true;
 					vector<PathItem*> pathItems;
 					while (a && graph(c)->d[p] > 0 && graph(c)->In[p] != 0) {
+
+						TrackElement element = graph(c)->e[p];
+
+						int enter = Elements::second[Path::track[element].entry[p]];
+						
 						next = graph(c)->In[p];
 						n = { next->x, next->y };
 						nextPoint = Cell::Related[graph(c)->Out[p]];
-						d.x = n.x - c.x;
-						d.y = n.y - c.y;
-						connect = Cell::GetConnectConfig(d.x, d.y, p);
+						
 						for (auto l = 0; l < pathItems.size(); l++) {
 							PathItem* item = pathItems[l];
 							if (a) {
-								a = checkIntersection({ item->next->x, item->next->y }, item->enter, item->elementType, n, connect->enter, connect->element);
+								a = checkIntersection({ item->next->x, item->next->y }, item->enter, item->elementType, n, enter, element);
 							}
 						}
+
 						item = new PathItem;
-						item->elementType = connect->element;
-						item->element = connect->enter == 0 ? Elements::GetTrackElement(c, connect->element) : Elements::GetTrackElement(n, connect->element);
-						item->enter = connect->enter;
+						item->elementType = element;
+						item->element = enter == 0 ? Elements::GetTrackElement(c, element) : Elements::GetTrackElement(n, element);
+						item->enter = enter;
 						item->next = next;
 						item->current = current;
 						item->point = p;
 						pathItems.insert(pathItems.end(), item);
+
 						p = nextPoint;
 						current = next;
 						c = { current->x, current->y };
@@ -292,8 +339,8 @@ namespace GameObjects {
 			fromPoint = PathItems[c]->point;
 			toPoint = Elements::offset[Elements::second[PathItems[c]->enter]][PathItems[c]->elementType].p;
 
-			pathCommand += StringUtils::format("%s{\"from\":{\"x\":%d,\"y\":%d},\"to\":{\"x\":%d,\"y\":%d},\"point\":%d}",
-				pathCommand == "" ? "" : ",", PathItems[c]->next->x, PathItems[c]->next->y, PathItems[c]->current->x, PathItems[c]->current->y, fromPoint);
+			pathCommand += StringUtils::format(("%s{\"cell\":{\"x\":%d,\"y\":%d},\"element\":\"" + Elements::getTrackElement(PathItems[c]->elementType) + "\",\"point\":%d}").c_str(),
+				pathCommand == "" ? "" : ",", PathItems[c]->current->x, PathItems[c]->current->y, fromPoint);
 
 			if (PathItems[c]->current->straightConnection[fromPoint] != NULL && PathItems[c]->current->divergingConnection[fromPoint] == NULL) {
 				switchCommand += StringUtils::format("%s{\"cell\":{\"x\":%d,\"y\":%d},\"point\":%d}",
@@ -334,52 +381,68 @@ namespace GameObjects {
 		if (p >= 0){			
 			int d = graph({c->x, c->y})->d[p];
 			if (p == 0){
-				Connect(c, p, SmallCilcleSect3, d + 314, 0);
-				Connect(c, p, BaseCircleSect6, d + 321, 0);
-				Connect(c, p, Horizontal, d + 100, 0);
-				Connect(c, p, BaseCircleSect1, d + 321, 1);
-				Connect(c, p, SmallCilcleSect0, d + 314, 1);
+				Connect(c, p, TrackElement::SmallCilcleSect3, d + 314, 0);
+				Connect(c, p, TrackElement::Crossover01, d + 322, 0);
+				Connect(c, p, TrackElement::BaseCircleSect6, d + 321, 0);
+				Connect(c, p, TrackElement::Horizontal, d + 100, 0);
+				Connect(c, p, TrackElement::BaseCircleSect1, d + 321, 1);
+				Connect(c, p, TrackElement::Crossover00, d + 322, 0);
+				Connect(c, p, TrackElement::SmallCilcleSect0, d + 314, 1);
 			}
 			if (p == 1){
-				Connect(c, p, BaseCircleSect7, d + 321, 0);
-				Connect(c, p, Item45, d + 141, 0);
-				Connect(c, p, BaseCircleSect2, d + 321, 1);
+				Connect(c, p, TrackElement::BaseCircleSect7, d + 321, 0);
+				Connect(c, p, TrackElement::Crossover11, d + 221, 0);
+				Connect(c, p, TrackElement::Item45, d + 141, 0);
+				Connect(c, p, TrackElement::Crossover10, d + 221, 0);
+				Connect(c, p, TrackElement::BaseCircleSect2, d + 321, 1);
 			}
 			if (p == 2){
-				Connect(c, p, SmallCilcleSect0, d + 314, 0);
-				Connect(c, p, BaseCircleSect0, d + 321, 0);
-				Connect(c, p, Vertical, d + 100, 1);
-				Connect(c, p, BaseCircleSect3, d + 321, 1);
-				Connect(c, p, SmallCilcleSect1, d + 314, 1);
+				Connect(c, p, TrackElement::SmallCilcleSect0, d + 314, 0);
+				Connect(c, p, TrackElement::Crossover21, d + 322, 0);
+				Connect(c, p, TrackElement::BaseCircleSect0, d + 321, 0);
+				Connect(c, p, TrackElement::Vertical, d + 100, 1);
+				Connect(c, p, TrackElement::BaseCircleSect3, d + 321, 1);
+				Connect(c, p, TrackElement::Crossover20, d + 322, 0);
+				Connect(c, p, TrackElement::SmallCilcleSect1, d + 314, 1);
 			}
 			if (p == 3){
-				Connect(c, p, BaseCircleSect4, d + 321, 1);
-				Connect(c, p, Item135, d + 141, 1);
-				Connect(c, p, BaseCircleSect1, d + 321, 0);
+				Connect(c, p, TrackElement::BaseCircleSect4, d + 321, 1);
+				Connect(c, p, TrackElement::Crossover31, d + 221, 0);
+				Connect(c, p, TrackElement::Item135, d + 141, 1);
+				Connect(c, p, TrackElement::Crossover30, d + 221, 0);
+				Connect(c, p, TrackElement::BaseCircleSect1, d + 321, 0);
 			}
 			if (p == 4){
-				Connect(c, p, SmallCilcleSect2, d + 314, 1);
-				Connect(c, p, BaseCircleSect5, d + 321, 1);
-				Connect(c, p, Horizontal, d + 100, 1);
-				Connect(c, p, BaseCircleSect2, d + 321, 0);
-				Connect(c, p, SmallCilcleSect1, d + 314, 0);
+				Connect(c, p, TrackElement::SmallCilcleSect2, d + 314, 1);
+				Connect(c, p, TrackElement::Crossover00, d + 322, 1);
+				Connect(c, p, TrackElement::BaseCircleSect5, d + 321, 1);
+				Connect(c, p, TrackElement::Horizontal, d + 100, 1);
+				Connect(c, p, TrackElement::BaseCircleSect2, d + 321, 0);
+				Connect(c, p, TrackElement::Crossover01, d + 322, 1);
+				Connect(c, p, TrackElement::SmallCilcleSect1, d + 314, 0);
 			}
 			if (p == 5){
-				Connect(c, p, BaseCircleSect3, d + 321, 0);
-				Connect(c, p, Item45, d + 141, 1);
-				Connect(c, p, BaseCircleSect6, d + 321, 1);
+				Connect(c, p, TrackElement::BaseCircleSect3, d + 321, 0);
+				Connect(c, p, TrackElement::Crossover10, d + 221, 1);
+				Connect(c, p, TrackElement::Item45, d + 141, 1);
+				Connect(c, p, TrackElement::Crossover11, d + 221, 1);
+				Connect(c, p, TrackElement::BaseCircleSect6, d + 321, 1);
 			}
 			if (p == 6){
-				Connect(c, p, SmallCilcleSect3, d + 314, 1);
-				Connect(c, p, BaseCircleSect7, d + 321, 1);
-				Connect(c, p, Vertical, d + 100, 0);
-				Connect(c, p, BaseCircleSect4, d + 321, 0);
-				Connect(c, p, SmallCilcleSect2, d + 314, 0);
+				Connect(c, p, TrackElement::SmallCilcleSect3, d + 314, 1);
+				Connect(c, p, TrackElement::Crossover20, d + 322, 1);
+				Connect(c, p, TrackElement::BaseCircleSect7, d + 321, 1);
+				Connect(c, p, TrackElement::Vertical, d + 100, 0);
+				Connect(c, p, TrackElement::BaseCircleSect4, d + 321, 0);
+				Connect(c, p, TrackElement::Crossover21, d + 322, 1);
+				Connect(c, p, TrackElement::SmallCilcleSect2, d + 314, 0);
 			}
 			if (p == 7){
-				Connect(c, p, BaseCircleSect0, d + 321, 1);
-				Connect(c, p, Item135, d + 141, 0);
-				Connect(c, p, BaseCircleSect5, d + 321, 0);
+				Connect(c, p, TrackElement::BaseCircleSect0, d + 321, 1);
+				Connect(c, p, TrackElement::Crossover30, d + 221, 1);
+				Connect(c, p, TrackElement::Item135, d + 141, 0);
+				Connect(c, p, TrackElement::Crossover31, d + 221, 1);
+				Connect(c, p, TrackElement::BaseCircleSect5, d + 321, 0);
 			}
 		}
 		int min = 0;
@@ -412,13 +475,12 @@ namespace GameObjects {
 	void Path::Connect(Cell *out, int outPoint, TrackElement element, int d, int enter)
 	{
 		ElementOffset offset = Elements::offset[enter][element];
-		MapPoint p = { out->x + offset.dx, out->y + offset.dy };	
-		
+		MapPoint p = { out->x + offset.d.x, out->y + offset.d.y };		
 		if (Path::inWindow(p)) {			
 			if (Path::isArea(p)) {
 				Cell *in = &Field::getInstance()->cells[p.x][p.y];
 				int inPoint = offset.p;
-				if (Path::isAllow(out, outPoint, enter, in, inPoint, Elements::second[enter], element)) {
+				if (Path::isAllow(out, outPoint, enter, in, inPoint, Elements::second[enter] , element)) {
 					GraphItem *i = graph({ in->x, in->y });
 					if (i->d[inPoint] == 0 || (i->d[inPoint] > 0 && i->d[inPoint] > d)){
 						i->d[inPoint] = d;
@@ -497,6 +559,10 @@ namespace GameObjects {
 			if (f && in->configuration == Configuration::Polar) {
 				f = checkBaseCircle(in, inPoint, inEnter, element);
 			}
+			//check crossover
+			if (f) {
+				f = checkCrossover(in, inPoint, inEnter, element);
+			}
 			//intersection 
 			if (f && in->straightConnection[inPoint] > 0) {
 				AccessItems accesInItems = Path::access[in->straightConnection[inPoint]->Enter][in->straightConnection[inPoint]->Element];
@@ -505,6 +571,9 @@ namespace GameObjects {
 		}
 		if (f) {
 			f = checkBaseCircle(element, inEnter, graph({ in->x, in->y })->e[Cell::Related[inPoint]]);
+		}
+		if (f) {
+			f = checkCrossover(element, inEnter, graph({ in->x, in->y })->e[Cell::Related[inPoint]]);
 		}
 
 		//check Out
@@ -521,6 +590,9 @@ namespace GameObjects {
 			if (f  && out->configuration == Configuration::Polar) {
 				f = checkBaseCircle(out, outPoint, outEnter, element);			
 			}
+			if (f) {
+				f = checkCrossover(out, outPoint, outEnter, element);
+			}
 			if (f && out->straightConnection[outPoint] > 0) {
 				AccessItems accesOutItems = Path::access[out->straightConnection[outPoint]->Enter][out->straightConnection[outPoint]->Element];
 				accessItems = Path::getIntersection({ out->x, out->y }, accessItems, { out->x, out->y }, accesOutItems);
@@ -528,6 +600,9 @@ namespace GameObjects {
 		}
 		if (f) {
 			f = checkBaseCircle(element, outEnter, graph({ out->x, out->y })->e[Cell::Related[outPoint]]);
+		}
+		if (f) {
+			f = checkCrossover(element, outEnter, graph({ out->x, out->y })->e[Cell::Related[outPoint]]);
 		}
 		
 		if (f) {			
@@ -577,7 +652,7 @@ namespace GameObjects {
 		}
 		return items;
 	}
-	
+		
 	bool Path::checkBaseCircle(Cell *cell, int point, int enter, TrackElement element)
 	{
 		bool f = true;
@@ -588,7 +663,8 @@ namespace GameObjects {
 		}
 		if (cell->divergingConnection[r] > 0) {
 			el2 = cell->divergingConnection[r]->Element;
-		} if (element == TrackElement::BaseCircleSect0 && enter == 1 && (el1 == TrackElement::BaseCircleSect1 || el2 == TrackElement::BaseCircleSect1)) {
+		}
+		if (element == TrackElement::BaseCircleSect0 && enter == 1 && (el1 == TrackElement::BaseCircleSect1 || el2 == TrackElement::BaseCircleSect1)) {
 			f = false;
 		} else if (element == TrackElement::BaseCircleSect1 && enter == 0 && (el1 == TrackElement::BaseCircleSect0 || el2 == TrackElement::BaseCircleSect0)) {
 			f = false;
@@ -630,6 +706,33 @@ namespace GameObjects {
 		}
 		return f;
 	}
+	
+	bool Path::checkCrossover(Cell *cell, int point, int enter, TrackElement element)
+	{
+		bool f = true;
+		int r = Cell::Related[point];
+		TrackElement el1 = TrackElement::None, el2 = TrackElement::None;
+		if (cell->straightConnection[r] > 0) {
+			el1 = cell->straightConnection[r]->Element;
+		}
+		if (cell->divergingConnection[r] > 0) {
+			el2 = cell->divergingConnection[r]->Element;
+		}
+				
+		if ((element >= TrackElement::Crossover00 && element <= TrackElement::Crossover31) && ((el1 >= TrackElement::Crossover00 && el1 <= TrackElement::Crossover31) || (el2 >= TrackElement::Crossover00 && el2 <= TrackElement::Crossover31)) ) {
+			f = false;
+		}		
+		return f;
+	}
+
+	bool Path::checkCrossover(TrackElement element, int enter, TrackElement graphElement)
+	{
+		bool f = true;
+		if ((element >= TrackElement::Crossover00 && element <= TrackElement::Crossover31) && (graphElement >= TrackElement::Crossover00 && graphElement <= TrackElement::Crossover31)) {
+			f = false;
+		}		
+		return f;
+	}
 
 	Vec2 Path::GetPosition(TrackPosition position)
 	{
@@ -642,8 +745,8 @@ namespace GameObjects {
 			if (_track.entry[position.point] == 0) {
 				indent = position.indent;
 			} else {
-				c.x -= _track.shift.x;
-				c.y -= _track.shift.y;
+				c.x -= _track.shift[0].x;
+				c.y -= _track.shift[0].y;
 				indent = _track.length - position.indent;
 			}
 			p = _track.items[indent] * s;

@@ -29,7 +29,7 @@ namespace primitives
         public int sld = 20;
 
         Boolean SaveImages = false;
-        Boolean WriteGrid = false;
+        Boolean WriteGrid = true;
         //f:\projects\trains\Platforms\cpp\MyTrains\vendor\primitives\
         public string ResourcesPath = "f:\\projects\\trains\\Platforms\\cpp\\MyTrains\\vendor\\primitives\\";
 
