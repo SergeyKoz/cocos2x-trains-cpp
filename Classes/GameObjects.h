@@ -13,5 +13,6 @@
 #include "MenuItem.h"
 #include "Train.h"
 #include "Car.h"
+#include "RailwayStation.h"
 
 #endif // __GAMEOBJECTS_H__

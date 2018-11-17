@@ -28,7 +28,7 @@ public:
 
 	//Node* pin;
 
-	vector<Sprite*> **sectors;
+	vector<CommandsElement*> **sectors;
 		
 	void renderMap();
 	void showMap();
@@ -38,7 +38,7 @@ public:
 	int getStartPoint(MapPoint c, Vec2 d);
 
 	void testNet();
-	void testNetSector(int x, int y, int train);
+	void testNetSector(int x, int y, int train, int station);
 
 	//void debugBoard(Sprite *Crossover, Color4F color);
 

@@ -39,6 +39,17 @@ namespace GameObjects {
 		this->trains.pop_back();
 	}
 
+	void Field::addRailwayStation(RailwayStation station)
+	{
+		this->stations.push_back(station);
+	}
+
+	void Field::removeRailwayStation()
+	{
+		this->stations.back().remove();
+		this->stations.pop_back();
+	}
+
 	void Field::save(string name)
 	{
 		ValueMap settings;

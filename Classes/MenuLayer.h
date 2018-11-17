@@ -32,7 +32,10 @@ public:
 	GameObjects::MenuItem *FastButton;
 
 	MapPoint pos(MapPoint Point);
-
+	
 	CREATE_FUNC(MenuLayer);
+
+private:
+	void setElementsAccess();
 };
 

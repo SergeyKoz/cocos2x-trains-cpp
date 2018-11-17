@@ -166,6 +166,14 @@ namespace GameObjects {
 		Switcher = 5,
 	};
 
+	enum ObjectsElement {
+		RailwayStaton = 1,
+		Mine = 2,
+		OilTerminal = 3,
+		Lake = 4,
+		Forest = 5
+	};
+
 	struct TrackPosition {
 		Cell *cell;
 		int point;
@@ -194,6 +202,7 @@ namespace GameObjects {
 		static Sprite *GetSwitchElement(MapPoint Point, SwitchElement Element);
 		static Sprite *GetSemaphoreElement(MapPoint Point, SemaphorElement Element);
 		static Sprite *GetCarElement(CarElement Element);
+		static Sprite *GetObjectElement(ObjectsElement Element);
 		static CarElement getCarElement(string Element);
 		static string getCarElement(CarElement Element);
 		static MenuItemImage *GetMenuElement(MenuElement Element);

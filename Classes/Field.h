@@ -4,6 +4,7 @@
 #include "Elements.h"
 #include "Cell.h"
 #include "Train.h"
+#include "RailwayStation.h"
 
 namespace GameObjects {
 
@@ -30,13 +31,16 @@ namespace GameObjects {
 
 	enum LayerZIndex
 	{
-		ZIndexRails = 1,
-		ZIndexRailsBackground = 2,
-		ZIndexSwitches = 3,
-		ZIndexTrains = 4,
-		ZIndexSemaphores = 5,
-		ZIndexMenu = 6,
-		ZIndexTrainsLabel = 7,
+		ZIndexBackground = 1,
+		ZIndexBackgroundBuildings = 2,
+		ZIndexBackgroundRails = 3,		
+		ZIndexBuildings = 4,
+		ZIndexRails = 5,		
+		ZIndexSwitches = 6,
+		ZIndexTrains = 7,
+		ZIndexSemaphores = 8,
+		ZIndexMenu = 9,		
+		ZIndexTrainsLabel = 10
 	};
 
 	enum GameMode
@@ -52,7 +56,7 @@ namespace GameObjects {
 		static Field *getInstance();
 		static const int SizeX = 1500;
 		static const int SizeY = 750;	
-		Size sector = {200, 200};
+		Size sector = {20, 20};
 		Cell cells[SizeX][SizeY];
 		int scale = 2;
 		ConstructionMode constuctionMode = ConstructionMode::ConstructNone;
@@ -68,6 +72,10 @@ namespace GameObjects {
 		vector<Train> trains;
 		void addTrain(Train train);
 		void removeTrain();
+
+		vector<RailwayStation> stations;
+		void addRailwayStation(RailwayStation station);
+		void removeRailwayStation();
 		
 		void save(string name);
 		void open(string name);

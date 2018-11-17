@@ -56,16 +56,14 @@ namespace GameObjects {
 		Field::getInstance()->mapLayer->addChild(box1);*/
 
 		Switch *s = this;
-
 		auto listener = EventListenerTouchOneByOne::create();
 		listener->setSwallowTouches(true);
-		listener->onTouchBegan = [](Touch* touch, Event* event) {
-
+		listener->onTouchBegan = [](Touch* touch, Event* event) {			
 			Node *target = event->getCurrentTarget();
 			/*Vec2 point = touch->getLocation();
-			Rect rect = target->getBoundingBox();	
+			Rect rect = target->getBoundingBox();
 			bool  res = rect.containsPoint(point);*/
-			
+
 			/*Vec2 locationInNode = target->convertToNodeSpace(touch->getLocation());
 			Size size = target->getContentSize();
 			Rect area = Rect(0, 0, size.width, size.height);
@@ -76,7 +74,7 @@ namespace GameObjects {
 			/*if (touched) {
 				target->setOpacity(180);
 			}*/
-			return touched;
+			return touched;		
 		};
 
 		listener->onTouchMoved = [](Touch* touch, Event* event) {

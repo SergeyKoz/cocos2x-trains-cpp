@@ -48,7 +48,7 @@ namespace GameObjects {
 			this->Resources = { Elements::GetSemaphoreElement(p, SemaphorGo7), Elements::GetSemaphoreElement(p, SemaphorReverse7) , Elements::GetSemaphoreElement(p, SemaphorStop7) };
 		}
 
-		Semaphore *s = this;
+		/*Semaphore *s = this;
 
 		auto listener = EventListenerTouchOneByOne::create();
 		listener->setSwallowTouches(true);
@@ -67,16 +67,16 @@ namespace GameObjects {
 				vector<Train*>::iterator i = trains.begin();
 				for (int i = 0; i < trains.size(); i++)
 				{
-					/*if (Position == SemaphorePosition::Reverse) {
-						trains[i]->direction == trains[i]->direction == TrainDirection::Forward ? TrainDirection::Back : TrainDirection::Forward;
-					}*/
+					//if (Position == SemaphorePosition::Reverse) {
+					//	trains[i]->direction == trains[i]->direction == TrainDirection::Forward ? TrainDirection::Back : TrainDirection::Forward;
+					//}
 					trains[i]->SpeedReset();
 				}
 			}
 			s->Next();
 		};
 
-		Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this->Resources.go);
+		Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this->Resources.go);*/
 
 		game->mapLayer->addChild(this->Resources.go, ZIndexSemaphores);
 		game->mapLayer->addChild(this->Resources.reverse, ZIndexSemaphores);
@@ -108,7 +108,7 @@ namespace GameObjects {
 
 		ShowItem item = showItem;
 
-		if (cell->configuration == Polar || cell->configuration == Ortogonal) {
+		if (cell->accessParam < 0b10 && (cell->configuration == Polar || cell->configuration == Ortogonal)) {
 			int k = game->trafficSide == LeftHandTraffic ? -1 : 1;
 				
 			if (cell->configuration == Ortogonal) {
@@ -205,6 +205,36 @@ namespace GameObjects {
 			Resources.stop->setVisible(true);
 		}
 		Position = pos;
+
+		Semaphore *s = this;
+
+		auto listener = EventListenerTouchOneByOne::create();
+		listener->setSwallowTouches(true);
+		listener->onTouchBegan = [](Touch* touch, Event* event) {					
+			Node *target = event->getCurrentTarget();
+			Size size = target->getContentSize();
+			bool touched = Rect(0, 0, size.width, size.height).containsPoint(target->convertToNodeSpace(touch->getLocation()));
+			return touched;			
+		};
+
+		listener->onTouchMoved = [](Touch* touch, Event* event) {
+		};
+		
+		listener->onTouchEnded = [&, s](Touch* touch, Event* event) { //[=]			
+			if (!trains.empty()) {
+				vector<Train*>::iterator i = trains.begin();
+				for (int i = 0; i < trains.size(); i++)
+				{
+					//if (Position == SemaphorePosition::Reverse) {
+					//	trains[i]->direction == trains[i]->direction == TrainDirection::Forward ? TrainDirection::Back : TrainDirection::Forward;
+					//}
+					trains[i]->SpeedReset();
+				}
+			}
+			s->Next();			
+		};
+
+		Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this->Resources.go);
 	}
 
 	void Semaphore::Next()

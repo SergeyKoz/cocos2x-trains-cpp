@@ -82,7 +82,19 @@ void MapLayer::onEnter()
 	x = 0b1001 ^ 0b1011;
 	str = std::bitset<8>(x).to_string();
 	x = 0b1011 ^ 0b1001;
-	str = std::bitset<8>(x).to_string();*/
+	str = std::bitset<8>(x).to_string();
+
+	x = 0b10 | 0b0;
+	str = std::bitset<4>(x).to_string();
+
+	x = 0b10 | 0b1;
+	str = std::bitset<4>(x).to_string();
+
+	x = 0b0 | 0b10;
+	str = std::bitset<4>(x).to_string();
+
+	x = 0b1 | 0b10;
+	str = std::bitset<4>(x).to_string();*/
 }
 
 /*void MapLayer::debugBoard(Sprite *Crossover, Color4F color)
@@ -234,18 +246,35 @@ void MapLayer::renderMap()
 	Size s = Game->sector;
 	Size f = {ceil(Game->SizeX / Game->sector.width),  ceil(Game->SizeY / Game->sector.height)};
 	
-	sectors = new vector<Sprite*>*[f.width];
+	sectors = new vector<CommandsElement*>*[f.width];
 	for (int i = 0; i < f.width; ++i) {
-		sectors[i] = new vector<Sprite*>[f.height];
+		sectors[i] = new vector<CommandsElement*>[f.height];
 	}
 	
 	for (int i = 0; i < inst->pointer; i++) {
 		for (int c = 0; c < inst->history[i].elements.size(); c++) {
-			Sprite *element = inst->history[i].elements[c];
-			Rect rect = element->getBoundingBox();
+			CommandsElement *element = &inst->history[i].elements[c];
+			//Sprite *element = inst->history[i].elements[c];
+			
+			Rect rect = element->image->getBoundingBox();
 			int x = rect.origin.x / (d * s.width);
 			int y = rect.origin.y / (d * s.height);
 			sectors[x][y].push_back(element);
+
+			int _x = (rect.origin.x + rect.size.width) / (d * s.width);
+			int _y = (rect.origin.y + rect.size.height) / (d * s.height);
+
+			if (_x > x) {
+				sectors[_x][y].push_back(element);
+			}
+			if (_y > y) {
+				sectors[x][_y].push_back(element);
+			}
+
+			if (_y > y && _x > x) {
+				sectors[_x][_y].push_back(element);
+			}
+
 		}		
 	}
 	
@@ -273,10 +302,13 @@ void MapLayer::renderMapSector(int px, int py)
 		renderTexture->setScale(1);
 		renderTexture->begin();
 		for (int i = 0; i < sectors[px][py].size(); i++) {
-			Vec2 p = sectors[px][py][i]->getPosition();
-			sectors[px][py][i]->setPosition({p.x - px * Game->sector.width * d, p.y - py * Game->sector.height * d });
-			sectors[px][py][i]->visit();
-			sectors[px][py][i]->setVisible(false);
+			Vec2 p = sectors[px][py][i]->image->getPosition();
+			sectors[px][py][i]->image->setZOrder(sectors[px][py][i]->ZIndex);
+			sectors[px][py][i]->image->setVisible(true);
+			sectors[px][py][i]->image->setPosition({p.x - px * Game->sector.width * d, p.y - py * Game->sector.height * d });
+			sectors[px][py][i]->image->visit();
+			sectors[px][py][i]->image->setVisible(false);
+			sectors[px][py][i]->image->setPosition(p);			
 		}		
 		renderTexture->end();
 		renderTexture->saveToFile(file, Image::Format::PNG, true, [&](RenderTexture* texture, const std::string& string) {
@@ -331,7 +363,7 @@ void MapLayer::onRenderMapEnd()
 	for (int i = 0; i < inst->pointer; i++) {
 		if (inst->history[i].elements.size() > 0) {
 			for (int c = 0; c < inst->history[i].elements.size(); c++) {
-				inst->history[i].elements[c]->removeFromParentAndCleanup(true);
+				inst->history[i].elements[c].image->removeFromParentAndCleanup(true);
 			}
 		}
 	}
@@ -357,7 +389,7 @@ void MapLayer::showMap()
 				Sprite *sp = Sprite::createWithTexture(texture, Rect(0, 0, cp.width * d, cp.height * d));
 				sp->setPosition(x * game->sector.width * d, y * game->sector.height * d);
 				sp->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-				this->addChild(sp, ZIndexRailsBackground);
+				this->addChild(sp, ZIndexBackground);
 			}
 		}
 	}
@@ -372,32 +404,51 @@ void MapLayer::testNet()
 	int dx = 2, dy = 1;
 	
 	int train = 1;
+	int station = 1;
 
 	//int dx = 33, dy = 17;
 	for (int i = 0; i < dy; i++) {
 		for (int j = 0; j < dx; j++) {
 			x = j * 45;
 			y = i * 43;
-			testNetSector(x, y, train);
+			testNetSector(x, y, train, station);
 		}
 	}
+	/*string command;
+	command = "station --add --id=" + to_string(station++) + " --cell={\"x\":107,\"y\":5} --angle=270"; //180
+	Cmd::Exec(command);
+	command = "station --add --id=" + to_string(station++) + " --cell={\"x\":112,\"y\":15} --angle=270";
+	Cmd::Exec(command);
+	command = "station --add --id=" + to_string(station++) + " --cell={\"x\":117,\"y\":25} --angle=270";
+	Cmd::Exec(command);
+	command = "station --add --id=" + to_string(station++) + " --cell={\"x\":122,\"y\":35} --angle=270";
+	Cmd::Exec(command);
+	command = "station --add --id=" + to_string(station++) + " --cell={\"x\":127,\"y\":45} --angle=270";
+	Cmd::Exec(command);
+	command = "station --add --id=" + to_string(station++) + " --cell={\"x\":132,\"y\":55} --angle=270";
+	Cmd::Exec(command);
+	command = "station --add --id=" + to_string(station++) + " --cell={\"x\":137,\"y\":65} --angle=270";
+	Cmd::Exec(command);*/
 	
 	end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> elapsed_seconds = end - start;
 	CCLOG("%f seconds", elapsed_seconds.count());
 }
 
-void MapLayer::testNetSector(int x, int y, int train) {
+void MapLayer::testNetSector(int x, int y, int train, int station) {
 	Field *Game = Field::getInstance();
 
+	string command;
 	//Game->cells[18 + x][15 + y].Connect(&Game->cells[15 + x][14 + y], 1);	
-	string command = "path --add --path=[{\"cell\":{\"x\":" + p(15, x) + ",\"y\":" + p(13, y) + "},\"element\":\"BaseCircleSect2\",\"point\":1}] param1 param2";
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(15, x) + ",\"y\":" + p(13, y) + "},\"element\":\"BaseCircleSect2\",\"point\":1}] param1 param2";
 	Cmd::Exec(command);
 	command = "path --add --path=[{\"cell\":{\"x\":" + p(39, x) + ",\"y\":" + p(33, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(38, x) + ",\"y\":" + p(32, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(37, x) + ",\"y\":" + p(31, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(36, x) + ",\"y\":" + p(30, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(35, x) + ",\"y\":" + p(29, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(34, x) + ",\"y\":" + p(28, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(33, x) + ",\"y\":" + p(27, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(32, x) + ",\"y\":" + p(26, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(31, x) + ",\"y\":" + p(25, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(30, x) + ",\"y\":" + p(24, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(29, x) + ",\"y\":" + p(23, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(28, x) + ",\"y\":" + p(22, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(27, x) + ",\"y\":" + p(21, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(26, x) + ",\"y\":" + p(20, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(19, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(24, x) + ",\"y\":" + p(18, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(23, x) + ",\"y\":" + p(17, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(22, x) + ",\"y\":" + p(16, y) + "},\"element\":\"Item45\",\"point\":5},{\"cell\":{\"x\":" + p(18, x) + ",\"y\":" + p(14, y) + "},\"element\":\"BaseCircleSect6\",\"point\":0}]";
 	Cmd::Exec(command);
 	command = "path --add --path=[{\"cell\":{\"x\":" + p(46, x) + ",\"y\":" + p(33, y) + "},\"element\":\"BaseCircleSect1\",\"point\":3},{\"cell\":{\"x\":" + p(43, x) + ",\"y\":" + p(34, y) + "},\"element\":\"Horizontal\",\"point\":4},{\"cell\":{\"x\":" + p(42, x) + ",\"y\":" + p(34, y) + "},\"element\":\"BaseCircleSect2\",\"point\":4}]";
 	Cmd::Exec(command);
 	command = "path --add --path=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(27, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(28, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(29, y) + "},\"element\":\"BaseCircleSect0\",\"point\":2},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(32, y) + "},\"element\":\"Item135\",\"point\":3}]";
+	Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(3, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(4, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(5, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(6, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(7, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(8, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(9, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(10, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(11, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(12, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(13, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(14, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(16, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(17, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(18, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(19, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(20, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(21, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(22, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(23, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(24, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(25, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(26, y) + "},\"element\":\"Vertical\",\"point\":2}]";
 	Cmd::Exec(command);
 	command = "path --add --path=[{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(7, y) + "},\"element\":\"BaseCircleSect0\",\"point\":7}] --switch=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(4, y) + "},\"point\":2}]";//
 	Cmd::Exec(command);
@@ -437,9 +488,9 @@ void MapLayer::testNetSector(int x, int y, int train) {
 	Cmd::Exec(command);
 	command = "path --add --path=[{\"cell\":{\"x\":" + p(7, x) + ",\"y\":" + p(22, y) + "},\"element\":\"SmallCilcleSect2\",\"point\":4}]";
 	Cmd::Exec(command);
-	command = "path --add --path=[{\"cell\":{\"x\":" + p(11, x) + ",\"y\":" + p(23, y) + "},\"element\":\"BaseCircleSect6\",\"point\":5},{\"cell\":{\"x\":" + p(8, x) + ",\"y\":" + p(22, y) + "},\"element\":\"Horizontal\",\"point\":4}] --switch=[{\"cell\":{\"x\":" + p(11, x) + ",\"y\":" + p(23, y) + "},\"point\":5,\"position\":\"Diverging\"},{\"cell\":{\"x\":" + p(5, x) + ",\"y\":" + p(24, y) + "},\"point\":6,\"position\":\"Diverging\"}]";//
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(11, x) + ",\"y\":" + p(23, y) + "},\"element\":\"BaseCircleSect6\",\"point\":5},{\"cell\":{\"x\":" + p(8, x) + ",\"y\":" + p(22, y) + "},\"element\":\"Horizontal\",\"point\":4}] --switch=[{\"cell\":{\"x\":" + p(11, x) + ",\"y\":" + p(23, y) + "},\"point\":5,\"position\":\"Diverging\"},{\"cell\":{\"x\":" + p(5, x) + ",\"y\":" + p(24, y) + "},\"point\":6,\"position\":\"Diverging\"}]";
 	Cmd::Exec(command);
-	command = "path --add --path=[{\"cell\":{\"x\":" + p(42, x) + ",\"y\":" + p(25, y) + "},\"element\":\"SmallCilcleSect1\",\"point\":2},{\"cell\":{\"x\":" + p(44, x) + ",\"y\":" + p(27, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(45, x) + ",\"y\":" + p(27, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(46, x) + ",\"y\":" + p(27, y) + "},\"element\":\"SmallCilcleSect0\",\"point\":0}] --switch=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(25, y) + "},\"point\":2}]";
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(42, x) + ",\"y\":" + p(25, y) + "},\"element\":\"SmallCilcleSect1\",\"point\":2},{\"cell\":{\"x\":" + p(44, x) + ",\"y\":" + p(27, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(45, x) + ",\"y\":" + p(27, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(46, x) + ",\"y\":" + p(27, y) + "},\"element\":\"SmallCilcleSect0\",\"point\":0}] --switch=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(25, y) + "},\"point\":2}]"; 
 	Cmd::Exec(command);
 	command = "path --add --path=[{\"cell\":{\"x\":" + p(32, x) + ",\"y\":" + p(24, y) + "},\"element\":\"BaseCircleSect5\",\"point\":7},{\"cell\":{\"x\":" + p(35, x) + ",\"y\":" + p(23, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(36, x) + ",\"y\":" + p(23, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(37, x) + ",\"y\":" + p(23, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(38, x) + ",\"y\":" + p(23, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(39, x) + ",\"y\":" + p(23, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(40, x) + ",\"y\":" + p(23, y) + "},\"element\":\"SmallCilcleSect3\",\"point\":0}]";
 	Cmd::Exec(command);
@@ -447,7 +498,7 @@ void MapLayer::testNetSector(int x, int y, int train) {
 	Cmd::Exec(command);
 	command = "path --add --path=[{\"cell\":{\"x\":" + p(5, x) + ",\"y\":" + p(19, y) + "},\"element\":\"BaseCircleSect4\",\"point\":6}] --switch=[{\"cell\":{\"x\":" + p(5, x) + ",\"y\":" + p(19, y) + "},\"point\":6}]";
 	Cmd::Exec(command);
-	command = "path --add --path=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(24, y) + "},\"element\":\"Crossover20\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(21, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(20, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(19, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(18, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(17, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(16, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(14, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(13, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(12, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(11, y) + "},\"element\":\"Crossover21\",\"point\":6}] --switch=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(24, y) + "},\"point\":6},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(8, y) + "},\"point\":2}]";
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(24, y) + "},\"element\":\"Crossover20\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(21, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(20, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(19, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(18, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(17, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(16, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(14, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(13, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(12, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(11, y) + "},\"element\":\"Crossover21\",\"point\":6}] --switch=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(24, y) + "},\"point\":6},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(8, y) + "},\"point\":2}]";// 
 	Cmd::Exec(command);
 	command = "path --add --path=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(29, y) + "},\"element\":\"Crossover21\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(26, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(25, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(24, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(23, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(22, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(21, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(20, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(19, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(18, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(17, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(16, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(49, x) + ",\"y\":" + p(14, y) + "},\"element\":\"Crossover20\",\"point\":6}] --switch=[{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(29, y) + "},\"point\":6},{\"cell\":{\"x\":" + p(48, x) + ",\"y\":" + p(11, y) + "},\"point\":2}]";
 	Cmd::Exec(command);
@@ -484,10 +535,41 @@ void MapLayer::testNetSector(int x, int y, int train) {
 	Cmd::Exec(command);
 	command = "semaphore --add --cell={\"x\":" + p(23, x) + ",\"y\":" + p(17, y) + "} --point=5 --position=Reverse param3 param4";
 	Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(35, x) + ",\"y\":" + p(23, y) + "},\"element\":\"Crossover01\",\"point\":4}] --switch=[{\"cell\":{\"x\":" + p(35, x) + ",\"y\":" + p(23, y) + "},\"point\":4},{\"cell\":{\"x\":" + p(32, x) + ",\"y\":" + p(22, y) + "},\"point\":0}]";
+	Cmd::Exec(command);
+	
+
 	command = "train --add --id=" + to_string(train++) + " --position={\"cell\":{\"x\":" + p(40, x) + ",\"y\":" + p(1, y) + "},\"point\":0,\"indent\":0,\"element\":\"Horizontal\"} --direction=Forward Locomotive Locomotive TankCar TankCar TankCar Locomotive";
 	Cmd::Exec(command);
 	command = "train --add --id=" + to_string(train++) + " --position={\"cell\":{\"x\":" + p(5, x) + ",\"y\":" + p(25, y) + "},\"point\":6,\"indent\":0,\"element\":\"Verical\"} --direction=Back Switcher TankCar TankCar TankCar Switcher";
 	Cmd::Exec(command);
+	command = "station --add --id=" + to_string(station++) + " --cell={\"x\":" + p(10, x) + ",\"y\":" + p(1, y) + "} --angle=270"; 
+	Cmd::Exec(command);
+	command = "station --add --id=" + to_string(station++) + " --cell={\"x\":" + p(30, x) + ",\"y\":" + p(5, y) + "} --angle=90";
+	Cmd::Exec(command);
+	command = "station --add --id=" + to_string(station++) + " --cell={\"x\":" + p(25, x) + ",\"y\":" + p(25, y) + "} --angle=180";
+	Cmd::Exec(command);
+	command = "station --add --id=" + to_string(station++) + " --cell={\"x\":" + p(15, x) + ",\"y\":" + p(17, y) + "} --angle=0";
+	Cmd::Exec(command);
+
+
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(21, x) + ",\"y\":" + p(33, y) + "},\"element\":\"BaseCircleSect3\",\"point\":5},{\"cell\":{\"x\":" + p(20, x) + ",\"y\":" + p(30, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(20, x) + ",\"y\":" + p(29, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(20, x) + ",\"y\":" + p(28, y) + "},\"element\":\"Vertical\",\"point\":6}] --switch=[{\"cell\":{\"x\":" + p(21, x) + ",\"y\":" + p(33, y) + "},\"point\":5}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(20, x) + ",\"y\":" + p(30, y) + "},\"element\":\"Crossover20\",\"point\":6}] --switch=[{\"cell\":{\"x\":" + p(20, x) + ",\"y\":" + p(30, y) + "},\"point\":6}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(7, x) + ",\"y\":" + p(17, y) + "},\"element\":\"SmallCilcleSect2\",\"point\":6},{\"cell\":{\"x\":" + p(9, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(10, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(11, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(12, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(13, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(14, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(15, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(16, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(17, x) + ",\"y\":" + p(15, y) + "},\"element\":\"SmallCilcleSect3\",\"point\":0}] --switch=[{\"cell\":{\"x\":" + p(7, x) + ",\"y\":" + p(17, y) + "},\"point\":6}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(17, x) + ",\"y\":" + p(15, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(18, x) + ",\"y\":" + p(15, y) + "},\"element\":\"SmallCilcleSect3\",\"point\":0}] --switch=[{\"cell\":{\"x\":" + p(17, x) + ",\"y\":" + p(15, y) + "},\"point\":0}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(24, x) + ",\"y\":" + p(11, y) + "},\"element\":\"SmallCilcleSect1\",\"point\":4},{\"cell\":{\"x\":" + p(22, x) + ",\"y\":" + p(9, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(22, x) + ",\"y\":" + p(8, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(22, x) + ",\"y\":" + p(7, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(22, x) + ",\"y\":" + p(6, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(22, x) + ",\"y\":" + p(5, y) + "},\"element\":\"SmallCilcleSect3\",\"point\":6}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(30, x) + ",\"y\":" + p(11, y) + "},\"element\":\"Horizontal\",\"point\":4},{\"cell\":{\"x\":" + p(29, x) + ",\"y\":" + p(11, y) + "},\"element\":\"Horizontal\",\"point\":4},{\"cell\":{\"x\":" + p(28, x) + ",\"y\":" + p(11, y) + "},\"element\":\"Horizontal\",\"point\":4},{\"cell\":{\"x\":" + p(27, x) + ",\"y\":" + p(11, y) + "},\"element\":\"Horizontal\",\"point\":4},{\"cell\":{\"x\":" + p(26, x) + ",\"y\":" + p(11, y) + "},\"element\":\"Horizontal\",\"point\":4},{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(11, y) + "},\"element\":\"Horizontal\",\"point\":4}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(23, x) + ",\"y\":" + p(8, y) + "},\"element\":\"SmallCilcleSect1\",\"point\":2},{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(10, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(26, x) + ",\"y\":" + p(10, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(27, x) + ",\"y\":" + p(10, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(28, x) + ",\"y\":" + p(10, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(29, x) + ",\"y\":" + p(10, y) + "},\"element\":\"Horizontal\",\"point\":0}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(23, x) + ",\"y\":" + p(7, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(23, x) + ",\"y\":" + p(6, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(23, x) + ",\"y\":" + p(5, y) + "},\"element\":\"Vertical\",\"point\":6},{\"cell\":{\"x\":" + p(23, x) + ",\"y\":" + p(4, y) + "},\"element\":\"SmallCilcleSect3\",\"point\":6},{\"cell\":{\"x\":" + p(21, x) + ",\"y\":" + p(2, y) + "},\"element\":\"Horizontal\",\"point\":4}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(23, x) + ",\"y\":" + p(8, y) + "},\"element\":\"Vertical\",\"point\":6}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(7, y) + "},\"element\":\"Crossover31\",\"point\":3},{\"cell\":{\"x\":" + p(45, x) + ",\"y\":" + p(8, y) + "},\"element\":\"Item135\",\"point\":3},{\"cell\":{\"x\":" + p(44, x) + ",\"y\":" + p(9, y) + "},\"element\":\"Item135\",\"point\":3},{\"cell\":{\"x\":" + p(43, x) + ",\"y\":" + p(10, y) + "},\"element\":\"BaseCircleSect1\",\"point\":3}] --switch=[{\"cell\":{\"x\":" + p(47, x) + ",\"y\":" + p(7, y) + "},\"point\":3}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(44, x) + ",\"y\":" + p(9, y) + "},\"element\":\"BaseCircleSect1\",\"point\":3},{\"cell\":{\"x\":" + p(41, x) + ",\"y\":" + p(10, y) + "},\"element\":\"Horizontal\",\"point\":4}] --switch=[{\"cell\":{\"x\":" + p(44, x) + ",\"y\":" + p(9, y) + "},\"point\":3}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(7, x) + ",\"y\":" + p(1, y) + "},\"element\":\"Crossover01\",\"point\":0}] --switch=[{\"cell\":{\"x\":" + p(7, x) + ",\"y\":" + p(1, y) + "},\"point\":0}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(5, x) + ",\"y\":" + p(5, y) + "},\"element\":\"SmallCilcleSect2\",\"point\":6},{\"cell\":{\"x\":" + p(7, x) + ",\"y\":" + p(3, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(8, x) + ",\"y\":" + p(3, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(9, x) + ",\"y\":" + p(3, y) + "},\"element\":\"Horizontal\",\"point\":0}] --switch=[{\"cell\":{\"x\":" + p(5, x) + ",\"y\":" + p(5, y) + "},\"point\":6}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(17, x) + ",\"y\":" + p(41, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(18, x) + ",\"y\":" + p(41, y) + "},\"element\":\"Horizontal\",\"point\":0},{\"cell\":{\"x\":" + p(19, x) + ",\"y\":" + p(41, y) + "},\"element\":\"BaseCircleSect1\",\"point\":0},{\"cell\":{\"x\":" + p(22, x) + ",\"y\":" + p(40, y) + "},\"element\":\"Item135\",\"point\":7},{\"cell\":{\"x\":" + p(23, x) + ",\"y\":" + p(39, y) + "},\"element\":\"Item135\",\"point\":7},{\"cell\":{\"x\":" + p(24, x) + ",\"y\":" + p(38, y) + "},\"element\":\"BaseCircleSect0\",\"point\":7}] --switch=[{\"cell\":{\"x\":" + p(17, x) + ",\"y\":" + p(41, y) + "},\"point\":0}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(34, x) + ",\"y\":" + p(29, y) + "},\"element\":\"BaseCircleSect7\",\"point\":1},{\"cell\":{\"x\":" + p(35, x) + ",\"y\":" + p(32, y) + "},\"element\":\"BaseCircleSect0\",\"point\":2},{\"cell\":{\"x\":" + p(34, x) + ",\"y\":" + p(35, y) + "},\"element\":\"Item135\",\"point\":3},{\"cell\":{\"x\":" + p(33, x) + ",\"y\":" + p(36, y) + "},\"element\":\"BaseCircleSect1\",\"point\":3},{\"cell\":{\"x\":" + p(30, x) + ",\"y\":" + p(37, y) + "},\"element\":\"Horizontal\",\"point\":4},{\"cell\":{\"x\":" + p(29, x) + ",\"y\":" + p(37, y) + "},\"element\":\"Horizontal\",\"point\":4},{\"cell\":{\"x\":" + p(28, x) + ",\"y\":" + p(37, y) + "},\"element\":\"SmallCilcleSect1\",\"point\":4}] --switch=[{\"cell\":{\"x\":" + p(34, x) + ",\"y\":" + p(29, y) + "},\"point\":1}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(24, x) + ",\"y\":" + p(19, y) + "},\"element\":\"BaseCircleSect7\",\"point\":1},{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(22, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(23, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(24, y) + "},\"element\":\"Vertical\",\"point\":2}] --switch=[{\"cell\":{\"x\":" + p(24, x) + ",\"y\":" + p(19, y) + "},\"point\":1}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(22, y) + "},\"element\":\"Crossover20\",\"point\":2}] --switch=[{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(22, y) + "},\"point\":2}]"; Cmd::Exec(command);
 }
 
 string MapLayer::p(int p, int d)

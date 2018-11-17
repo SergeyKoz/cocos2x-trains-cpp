@@ -28,12 +28,14 @@ namespace GameObjects {
 		execMethods["save"] = &Cmd::save;
 		execMethods["open"] = &Cmd::open;
 		execMethods["train"] = &Cmd::train;
+		execMethods["station"] = &Cmd::railwayStation;
 
 		undoMethods["path"] = &Cmd::_path;
 		undoMethods["semaphore"] = &Cmd::_semaphore;
 		undoMethods["train"] = &Cmd::_train;
 		undoMethods["save"] = &Cmd::_save;
 		undoMethods["open"] = &Cmd::_open;
+		undoMethods["station"] = &Cmd::_railwayStation;
 	}
 	
 	Cmd::~Cmd()
@@ -277,6 +279,31 @@ namespace GameObjects {
 		}		
 	}
 
+	void Cmd::railwayStation(map<string, string> opts, vector<string> args)
+	{
+		if (opts["add"] == "") {
+			Field *game = Field::getInstance();
+			rapidjson::Document jsonDoc;
+			jsonDoc.Parse<kParseDefaultFlags>(opts["cell"].c_str());
+			int x = jsonDoc["x"].GetInt();
+			int y = jsonDoc["y"].GetInt();
+			string id = opts["id"];
+			int angle = 0;
+			if (opts["angle"] != "") {
+				int _angle = std::stoi(opts["angle"]);
+				if (_angle == 0 || _angle == 90 || _angle == 180 || _angle == 270) {
+					angle = _angle;
+				}
+			}
+
+			RailwayStation station;
+			station.id = std::stoi(opts["id"]);			
+			//station.angle = angle;
+			station.setPosition({ x, y }, angle);
+			game->addRailwayStation(station);
+		}
+	}
+
 	//undo methods
 	void Cmd::_path(map<string, string> opts, vector<string> args) {
 		if (opts["add"] == "") {
@@ -324,8 +351,7 @@ namespace GameObjects {
 	void Cmd::_train(map<string, string> opts, vector<string> args)
 	{
 		if (opts["add"] == "") {
-			Field *game = Field::getInstance();			
-			game->removeTrain();
+			Field::getInstance()->removeTrain();
 		}
 	}
 
@@ -335,5 +361,12 @@ namespace GameObjects {
 
 	void Cmd::_open(map<string, string> opts, vector<string> args)
 	{
+	}
+
+	void Cmd::_railwayStation(map<string, string> opts, vector<string> args)
+	{
+		if (opts["add"] == "") {			
+			Field::getInstance()->removeRailwayStation();
+		}
 	}
 }

@@ -572,10 +572,7 @@ namespace GameObjects {
 		if (f) {
 			f = checkBaseCircle(element, inEnter, graph({ in->x, in->y })->e[Cell::Related[inPoint]]);
 		}
-		if (f) {
-			f = checkCrossover(element, inEnter, graph({ in->x, in->y })->e[Cell::Related[inPoint]]);
-		}
-
+	
 		//check Out
 		if (f && out->configuration != Configuration::Undefined) {
 			if (out->divergingConnection[outPoint] != 0) {
@@ -601,15 +598,17 @@ namespace GameObjects {
 		if (f) {
 			f = checkBaseCircle(element, outEnter, graph({ out->x, out->y })->e[Cell::Related[outPoint]]);
 		}
-		if (f) {
-			f = checkCrossover(element, outEnter, graph({ out->x, out->y })->e[Cell::Related[outPoint]]);
+
+		//check crossover
+		if (f && (element >= TrackElement::Crossover00 && element <= TrackElement::Crossover31) && (in->configuration == Configuration::Undefined && out->configuration == Configuration::Undefined)) {
+			f = false;
 		}
 		
 		if (f) {			
 			for (int i = 0; i < accessItems.items.size(); i++) {
 				Cell cell = Field::getInstance()->cells[out->x + accessItems.items[i].p.x][out->y + accessItems.items[i].p.y];
-				if (f && (cell.access > 0 || accessItems.items[i].c >0)) {
-					if ((accessItems.items[i].access & cell.access) > 0 || (accessItems.items[i].c & cell.accessParam) > 0) {
+				if (f && (cell.accessParam > 0 || cell.access > 0)) {
+					if (cell.accessParam > 0b1 || (accessItems.items[i].access & cell.access) > 0 || (accessItems.items[i].c & cell.accessParam) > 0) {
 						f = false;
 					}
 				}
@@ -720,15 +719,6 @@ namespace GameObjects {
 		}
 				
 		if ((element >= TrackElement::Crossover00 && element <= TrackElement::Crossover31) && ((el1 >= TrackElement::Crossover00 && el1 <= TrackElement::Crossover31) || (el2 >= TrackElement::Crossover00 && el2 <= TrackElement::Crossover31)) ) {
-			f = false;
-		}		
-		return f;
-	}
-
-	bool Path::checkCrossover(TrackElement element, int enter, TrackElement graphElement)
-	{
-		bool f = true;
-		if ((element >= TrackElement::Crossover00 && element <= TrackElement::Crossover31) && (graphElement >= TrackElement::Crossover00 && graphElement <= TrackElement::Crossover31)) {
 			f = false;
 		}		
 		return f;

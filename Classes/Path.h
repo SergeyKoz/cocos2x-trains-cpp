@@ -105,8 +105,7 @@ namespace GameObjects {
 		bool checkBaseCircle(TrackElement element, int enter, TrackElement graphElement);
 
 		bool checkCrossover(Cell *cell, int point, int enter, TrackElement element);
-		bool checkCrossover(TrackElement element, int enter, TrackElement graphElement);
-		
+				
 		static Vec2 GetPosition(TrackPosition position);
 		static TrackPosition GetPosition(TrackPosition position, int increase);
 		static TrackPosition backPosition(TrackPosition position);

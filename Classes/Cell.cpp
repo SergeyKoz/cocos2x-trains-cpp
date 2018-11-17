@@ -100,7 +100,7 @@ namespace GameObjects {
 			Cmd *inst = Cmd::getInstance();
 			Sprite *image = Elements::GetTrackElement({ cell->x, cell->y }, Element);
 			Field::getInstance()->mapLayer->addChild(image, ZIndexRails);
-			inst->history[inst->pointer - 1].elements.push_back(image);			
+			inst->history[inst->pointer - 1].elements.push_back({ image, ZIndexBackgroundRails });
 		}
 		configuration = Configuration;
 		if (straightConnection[FromPoint] == NULL) { // ToPoint
@@ -120,7 +120,8 @@ namespace GameObjects {
 
 		if (Enter == 0) {
 			Cmd *cmd = Cmd::getInstance();
-			game->mapLayer->removeChild(cmd->history[cmd->pointer].elements.back());
+			CommandsElement element = cmd->history[cmd->pointer].elements.back();
+			game->mapLayer->removeChild(element.image);
 			cmd->history[cmd->pointer].elements.pop_back();
 		}
 
@@ -257,6 +258,12 @@ namespace GameObjects {
 			debugNode = DrawNode::create();
 			game->mapLayer->addChild(debugNode, ZIndexRails);
 			debugNode->drawDot({ _dx + 7, _dy + 7 }, 3, color);
-		}		
+		}	
+
+		if ((c & 0b10) == 2) {
+			debugNode = DrawNode::create();
+			game->mapLayer->addChild(debugNode, ZIndexRails);
+			debugNode->drawDot({ _dx + 7, _dy + 7 }, 5, color);
+		}
 	}*/
 }

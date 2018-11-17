@@ -214,6 +214,7 @@ namespace GameObjects {
 			item->setRotation(90);
 			item->setPosition(Point.x * d + 1.0 * d, Point.y * d - 0.5 * d);
 		}
+		item->setName(Elements::getTrackElement(Element));
 
 		return item;
 	}
@@ -733,6 +734,18 @@ namespace GameObjects {
 
 		if (Element == FreightCar) {
 		}
+		return item;
+	}
+
+	Sprite *Elements::GetObjectElement(ObjectsElement Element) {
+		Sprite *item;
+		Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("objects.png");
+		int d = 10 * Field::getInstance()->scale;
+
+		if (Element == ObjectsElement::RailwayStaton) {			
+			item = Sprite::createWithTexture(texture, Rect(20 * d, 10 * d, 8 * d, 10 * d));
+			item->setName("RailwayStaton");
+		}		
 		return item;
 	}
 

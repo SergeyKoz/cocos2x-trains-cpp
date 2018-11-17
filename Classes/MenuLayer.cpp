@@ -53,31 +53,41 @@ MapPoint MenuLayer::pos(MapPoint Point)
 
 void MenuLayer::menuDefaultCallback(Ref* pSender)
 {
-
+	/*Cmd::Exec("station --add --id=1 --cell={\"x\":20,\"y\":2} --angle=0");
+	Cmd::Exec("station --add --id=2 --cell={\"x\":20,\"y\":2} --angle=90");
+	Cmd::Exec("station --add --id=3 --cell={\"x\":20,\"y\":2} --angle=180");
+	Cmd::Exec("station --add --id=4 --cell={\"x\":20,\"y\":2} --angle=270");*/
 }
 
 void MenuLayer::menuRailsButtonCallback(Ref* pSender)
 {
+	Field *game = Field::getInstance();
 	if (!this->RailsButton->checked) {
 		this->RailsButton->check(true);
 		this->SemaforesButton->check(false);
-		Field::getInstance()->constuctionMode = ConstructRails;
+		game->constuctionMode = ConstructRails;
 	} else {
 		this->RailsButton->check(false);
-		Field::getInstance()->constuctionMode = ConstructNone;
+		game->constuctionMode = ConstructNone;
 	}
+
+	setElementsAccess();
 }
 
 void MenuLayer::menuSemaforesButtonCallback(Ref* pSender)
 {
+	Field *game = Field::getInstance();
+
 	if (!this->SemaforesButton->checked) {
 		this->SemaforesButton->check(true);
 		this->RailsButton->check(false);
-		Field::getInstance()->constuctionMode = ConstructSemafores;
+		game->constuctionMode = ConstructSemafores;
 	} else {
 		this->SemaforesButton->check(false);
-		Field::getInstance()->constuctionMode = ConstructNone;
+		game->constuctionMode = ConstructNone;
 	}
+
+	setElementsAccess();	
 }
 
 void MenuLayer::menuUndoButtonCallback(Ref* pSender)
@@ -102,6 +112,36 @@ void MenuLayer::menuPauseButtonCallback(Ref* pSender)
 	Field::getInstance()->gameMode = GameMode::ModeOff;	
 	this->StartButton->show(true);
 	this->PauseButton->show(false);
+}
+
+void MenuLayer::setElementsAccess()
+{
+	Field *game = Field::getInstance();
+	EventDispatcher *eventDispatcher = Director::getInstance()->getEventDispatcher();
+	for (int x = 0; x < game->SizeX; x++) {
+		for (int y = 0; y < game->SizeY; y++) {
+			if (game->cells[x][y].configuration != None) {
+				for (int i = 0; i < 8; i++)
+				{
+					if (game->cells[x][y].semaphores[i] > 0) {
+						if (game->constuctionMode == ConstructNone) {
+							eventDispatcher->resumeEventListenersForTarget(game->cells[x][y].semaphores[i]->Resources.go);
+						} else {
+							eventDispatcher->pauseEventListenersForTarget(game->cells[x][y].semaphores[i]->Resources.go);
+						}
+					}
+
+					if (game->cells[x][y].switches[i] > 0) {
+						if (game->constuctionMode == ConstructNone) {
+							eventDispatcher->resumeEventListenersForTarget(game->cells[x][y].switches[i]->positions[SwitchPosition::Straight]->element);
+						} else {
+							eventDispatcher->pauseEventListenersForTarget(game->cells[x][y].switches[i]->positions[SwitchPosition::Straight]->element);
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 void MenuLayer::menuCloseCallback(Ref* pSender)

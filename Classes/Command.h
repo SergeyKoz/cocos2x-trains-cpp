@@ -11,6 +11,11 @@ using namespace std;
 
 namespace GameObjects {
 
+	struct CommandsElement {
+		Sprite* image;
+		int ZIndex;
+	};
+
 	class Command
 	{
 		
@@ -21,7 +26,7 @@ namespace GameObjects {
 		string command;
 		map<string, string> opts;
 		vector<string> args;
-		vector<Sprite*> elements;
+		vector<CommandsElement> elements;
 	};
 }
 

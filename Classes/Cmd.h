@@ -56,6 +56,9 @@ namespace GameObjects {
 
 		void open(map<string, string> opts, vector<string> args);
 		void _open(map<string, string> opts, vector<string> args);
+
+		void railwayStation(map<string, string> opts, vector<string> args);
+		void _railwayStation(map<string, string> opts, vector<string> args);
 	};
 }
 
