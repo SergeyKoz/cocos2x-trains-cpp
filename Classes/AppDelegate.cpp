@@ -1,5 +1,44 @@
+/****************************************************************************
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ 
+ http://www.cocos2d-x.org
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ ****************************************************************************/
+
 #include "AppDelegate.h"
 #include "GameMapScene.h"
+
+// #define USE_AUDIO_ENGINE 1
+// #define USE_SIMPLE_AUDIO_ENGINE 1
+
+#if USE_AUDIO_ENGINE && USE_SIMPLE_AUDIO_ENGINE
+#error "Don't use AudioEngine and SimpleAudioEngine at the same time. Please just select one in your game!"
+#endif
+
+#if USE_AUDIO_ENGINE
+#include "audio/include/AudioEngine.h"
+using namespace cocos2d::experimental;
+#elif USE_SIMPLE_AUDIO_ENGINE
+#include "audio/include/SimpleAudioEngine.h"
+using namespace CocosDenshion;
+#endif
 
 USING_NS_CC;
 using namespace GameObjects;
@@ -7,7 +46,7 @@ using namespace GameObjects;
 static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
-static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536); 
+static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 
 AppDelegate::AppDelegate()
 {
@@ -15,14 +54,19 @@ AppDelegate::AppDelegate()
 
 AppDelegate::~AppDelegate() 
 {
+#if USE_AUDIO_ENGINE
+    AudioEngine::end();
+#elif USE_SIMPLE_AUDIO_ENGINE
+    SimpleAudioEngine::end();
+#endif
 }
 
 // if you want a different context, modify the value of glContextAttrs
 // it will affect all platforms
 void AppDelegate::initGLContextAttrs()
 {
-    // set OpenGL context attributes: red,green,blue,alpha,depth,stencil
-    GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8};
+    // set OpenGL context attributes: red,green,blue,alpha,depth,stencil,multisamplesCount
+    GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8, 0};
 
     GLView::setGLContextAttrs(glContextAttrs);
 }
@@ -75,8 +119,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    //auto scene = HelloWorld::createScene();
-	auto scene = GameMapScene::createScene();
+    auto scene = GameMapScene::createScene();
 
     // run
     director->runWithScene(scene);
@@ -88,14 +131,22 @@ bool AppDelegate::applicationDidFinishLaunching() {
 void AppDelegate::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
 
-    // if you use SimpleAudioEngine, it must be paused
-    // SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+#if USE_AUDIO_ENGINE
+    AudioEngine::pauseAll();
+#elif USE_SIMPLE_AUDIO_ENGINE
+    SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+    SimpleAudioEngine::getInstance()->pauseAllEffects();
+#endif
 }
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
     Director::getInstance()->startAnimation();
 
-    // if you use SimpleAudioEngine, it must resume here
-    // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+#if USE_AUDIO_ENGINE
+    AudioEngine::resumeAll();
+#elif USE_SIMPLE_AUDIO_ENGINE
+    SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+    SimpleAudioEngine::getInstance()->resumeAllEffects();
+#endif
 }
