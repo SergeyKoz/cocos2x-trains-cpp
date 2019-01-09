@@ -29,18 +29,24 @@ namespace GameObjects {
 		SemaphoreShow
 	};
 
+	enum BackgroundZIndex
+	{
+		ZIndexBackgroundBuildings = 0,
+		ZIndexBackgroundTrackBed = 1,		
+		ZIndexBackgroundTrack = 2,
+	};
+
 	enum LayerZIndex
 	{
-		ZIndexBackground = 1,
-		ZIndexBackgroundBuildings = 2,
-		ZIndexBackgroundRails = 3,		
-		ZIndexBuildings = 4,
-		ZIndexRails = 5,		
-		ZIndexSwitches = 6,
-		ZIndexTrains = 7,
-		ZIndexSemaphores = 8,
-		ZIndexMenu = 9,		
-		ZIndexTrainsLabel = 10
+		ZIndexBackground = 0,
+		ZIndexBuildings = 1,
+		ZIndexTrackBed = 2,
+		ZIndexTrack = 3,
+		ZIndexSwitches = 4,
+		ZIndexTrains = 5,
+		ZIndexSemaphores = 6,
+		ZIndexMenu = 7,		
+		ZIndexTrainsLabel = 8
 	};
 
 	enum GameMode

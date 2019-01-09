@@ -29,7 +29,7 @@ namespace primitives
         public int sld = 20;
 
         Boolean SaveImages = false;
-        Boolean WriteGrid = true;
+        Boolean WriteGrid = false;
         //f:\projects\trains\Platforms\cpp\MyTrains\vendor\primitives\
         public string ResourcesPath = "f:\\projects\\trains\\Platforms\\cpp\\MyTrains\\vendor\\primitives\\";
 
@@ -37,13 +37,12 @@ namespace primitives
 
         public MainWindow()
         {
-            InitializeComponent();
-            
+            InitializeComponent();            
             helper = new Helper(PrimitivesScale, FieldSize, SaveImages, WriteGrid);
             helper.SetCanvas(PrimitivesCanvas);
             helper.WriteGrid();
             WritePrimitives();
-            helper.ExportToPng("rails.png", 325 * PrimitivesScale, 230 * PrimitivesScale);
+            helper.ExportToPng("rails.png", 340 * PrimitivesScale, 310 * PrimitivesScale);
             
             //UriBuilder myURI = new UriBuilder("http", "professorweb.ru", 80, "primitives.png", "#titlecode");
             //Uri uri1 = myURI.Uri;            
@@ -51,16 +50,43 @@ namespace primitives
 
         public void WritePrimitives()
         {
+            double l = 36.869;
+
+            Brush b3 = Brushes.Lavender;
+
+            int dy = 220; //220
+            int dyc = 120; //120
+
+            trackBackBaseCircle(10, dy + 40, 50, 0, l, D, b3); // 1
+            trackBackBaseCircle(70, dy + 60, 50, 90 - l, 90, D, b3); // 2
+            trackBackBaseCircle(100, dy + 80, 50, 90, 90 + l, D, b3); // 3
+            trackBackBaseCircle(160, dy + 40, 50, 180 - l, 180, D, b3); // 4
+            trackBackBaseCircle(180, dy + 10, 50, 180, 180 + l, D, b3); // 5
+            trackBackBaseCircle(180, dy + -30, 50, 270 - l, 270, D, b3); // 6
+            trackBackBaseCircle(150, dy + -10, 50, 270, 270 + l, D, b3); // 7
+            trackBackBaseCircle(150, dy + 10, 50, 360 - l, 360, D, b3); // 8
+
+            trackBackBaseCircle(210, dy + 30, 20, 0, 90, D, b3);
+            trackBackBaseCircle(260, dy + 30, 20, 90, 180, D, b3);
+            trackBackBaseCircle(290, dy + 10, 20, 180, 270, D, b3);
+            trackBackBaseCircle(300, dy + 10, 20, 270, 360, D, b3);
+
             //new
             Brush b1 = Brushes.Black;
             Brush b2 = Brushes.Red;
 
-            double l = 36.869;
+            
             double s1 = 14.3;
             double s2 = 30;
 
+            WriteRailItemV_2_bed(10, dy + 10, D, b3);
+            WriteRailItemH_2_bed(10, dy + 30, D, b3);
+
             WriteRailItemV_2(10, 10, D, b1);
             WriteRailItemH_2(10, 30, D, b1);
+
+            WriteRailItem45_2_bed(30, dy + 20, D, b3);
+            WriteRailItem135_2_bed(30, dy + 30, D, b3);
 
             WriteRailItem45_2(30, 20, D, b1);
             WriteRailItem135_2(30, 30, D, b1);
@@ -74,10 +100,10 @@ namespace primitives
             CircleSection_2(150, -10, 50, 270, 270 + l, D, b1); // 7
             CircleSection_2(150, 10, 50, 360 - l, 360, D, b1); // 8
 
-            CircleSection_2(210, 30, 20, 0, 90, D, b1);
-            CircleSection_2(260, 30, 20, 90, 180, D, b1);
-            CircleSection_2(290, 10, 20, 180, 270, D, b1);
-            CircleSection_2(300, 10, 20, 270, 360, D, b1);
+            CircleSection_small(210, 30, 20, 0, 90, D, b1);
+            CircleSection_small(260, 30, 20, 90, 180, D, b1);
+            CircleSection_small(290, 10, 20, 180, 270, D, b1);
+            CircleSection_small(300, 10, 20, 270, 360, D, b1);
 
             WriteRailItemV_2(10, 50, D, b2);
             WriteRailItemH_2(10, 70, D, b2);
@@ -94,8 +120,7 @@ namespace primitives
 
             CircleSection_2(100, 120, 50, 90, 90 + s1, D, b2); // 3
             CircleSection_2(100, 120, 50, 90 + l - s1, 90 + l, D, b2); // 3
-
-
+            
             CircleSection_2(160, 80, 50, 180 - l, 180 - l + s1, D, b2); // 4
             CircleSection_2(160, 80, 50, 180 - s1, 180, D, b2); // 4
             
@@ -111,17 +136,17 @@ namespace primitives
             CircleSection_2(150, 50, 50, 360 - l, 360 - l + s1, D, b2); // 8
             CircleSection_2(150, 50, 50, 360 - s1, 360, D, b2); // 8
 
-            CircleSection_2(210, 70, 20, 0, s2, D, b2);
-            CircleSection_2(210, 70, 20, 90 - s2, 90, D, b2);
+            CircleSection_small(210, 70, 20, 0, s2, D, b2);
+            CircleSection_small(210, 70, 20, 90 - s2, 90, D, b2);
 
-            CircleSection_2(260, 70, 20, 90, 90 + s2, D, b2);
-            CircleSection_2(260, 70, 20, 180 - s2, 180, D, b2);
+            CircleSection_small(260, 70, 20, 90, 90 + s2, D, b2);
+            CircleSection_small(260, 70, 20, 180 - s2, 180, D, b2);
 
-            CircleSection_2(290, 50, 20, 180, 180 + s2, D, b2);
-            CircleSection_2(290, 50, 20, 270 - s2, 270, D, b2);
+            CircleSection_small(290, 50, 20, 180, 180 + s2, D, b2);
+            CircleSection_small(290, 50, 20, 270 - s2, 270, D, b2);
 
-            CircleSection_2(300, 50, 20, 270, 270 + s2, D, b2);
-            CircleSection_2(300, 50, 20, 360 - s2, 360, D, b2);
+            CircleSection_small(300, 50, 20, 270, 270 + s2, D, b2);
+            CircleSection_small(300, 50, 20, 360 - s2, 360, D, b2);
 
             Locomotive(10, 90, D, Brushes.Green);
 
@@ -165,6 +190,19 @@ namespace primitives
             double __s1 = 25;
             double _s2 = 21;
 
+            trackBackBaseCircle(10, dyc + 195, 25, 90 - _s1, 90, D, b3);
+            trackBackBaseCircle(40, dyc + 155, 25, 270 - _s1, 270, D, b3);
+
+            trackBackBaseCircle(80, dyc + 195, 25, 90, 90 + _s1, D, b3); // 3
+            trackBackBaseCircle(50, dyc + 155, 25, 270, 270 + _s1, D, b3); // 7
+
+            trackBackBaseCircle(75, dyc + 180, 25, 0, _s1, D, b3); // 1
+            trackBackBaseCircle(115, dyc + 150, 25, 180, 180 + _s1, D, b3); // 5
+
+            trackBackBaseCircle(95, dyc + 150, 25, 360 - _s1, 360, D, b3); // 8
+            trackBackBaseCircle(135, dyc + 180, 25, 180 - _s1, 180, D, b3); // 4
+
+
             // crossovers 1
             CircleSection_2(10, 195, 25, 90 - _s1, 90, D, b1);
             CircleSection_2(40, 155, 25, 270 - _s1, 270, D, b1);
@@ -177,7 +215,7 @@ namespace primitives
 
             CircleSection_2(95, 150, 25, 360 - _s1, 360, D, b1); // 8
             CircleSection_2(135, 180, 25, 180 - _s1, 180, D, b1); // 4
-
+            
             //// switches
             CircleSection_2(10, 195 + 30, 25, 90 - __s1, 90, D, b2);
             CircleSection_2(40, 155 + 30, 25, 270 - __s1, 270, D, b2);
@@ -192,6 +230,18 @@ namespace primitives
             CircleSection_2(135, 180 + 40, 25, 180 - __s1, 180, D, b2); // 4
 
             // crossovers 2
+            trackBackCrossover(160, dyc + 160, 31, l - _s2, l, D, b3, true); // 3
+            trackBackCrossover(170, dyc + 180, 31, 180 + l - _s2, 180 + l, D, b3, true); // 7
+
+            trackBackCrossover(180, dyc + 180, 31, 360 - l, 360 - l + _s2, D, b3, false); // 8
+            trackBackCrossover(190, dyc + 160, 31, 180 - l, 180 - l + _s2, D, b3, false); // 4
+
+            trackBackCrossover(200, dyc + 170, 31, 90 + l - _s2, 90 + l, D, b3, true); // 3
+            trackBackCrossover(220, dyc + 160, 31, 270 + l - _s2, 270 + l, D, b3, true); // 7
+
+            trackBackCrossover(250, dyc + 170, 31, 90 - l, 90 - l + _s2, D, b3, false); // 2
+            trackBackCrossover(230, dyc + 160, 31, 270 - l, 270 - l + _s2, D, b3, false); // 6
+
             crossover(160, 160, 31, l - _s2, l, D, b1, true); // 3
             crossover(170, 180, 31, 180 + l - _s2, 180 + l, D, b1, true); // 7
 
@@ -293,7 +343,88 @@ namespace primitives
                 x1 = Math.Cos(Math.PI * angle / 180) * r + x;
                 y1 = -Math.Sin(Math.PI * angle / 180) * r + y;
 
-                LineItem = helper.CreateLine(x, y, x1, y1, ItemColor, 0.5);
+                LineItem = helper.CreateLine(x, y, x1, y1, ItemColor, 0.3);
+                LineItem.Clip = ClipCilclePathGeometry;
+                PrimitivesCanvas.Children.Add(LineItem);
+
+                angle += a;
+            }
+        }
+
+        public void CircleSection_small(int x, int y, int r, double a1, double a2, int d, Brush ItemColor)
+        {
+            Size S;
+
+            d = d * PrimitivesScale;
+            r = r * PrimitivesScale;
+
+            int s;
+
+            float X = x * PrimitivesScale;
+            float Y = y * PrimitivesScale;
+
+            Point p1, p2, p3, p4;
+
+            s = r - d;
+            S = new Size(s, s);
+            PathFigure Segment1 = new PathFigure();
+
+            p1 = new Point(Math.Cos(Math.PI * a1 / 180) * (r - d) + X, -Math.Sin(Math.PI * a1 / 180) * (r - d) + Y);
+            p2 = new Point(Math.Cos(Math.PI * a2 / 180) * (r - d) + X, -Math.Sin(Math.PI * a2 / 180) * (r - d) + Y);
+
+            Segment1.StartPoint = p1;
+            Segment1.Segments.Add(new ArcSegment(p2, S, 0, false, SweepDirection.Counterclockwise, true));
+
+
+            s = r + d;
+            S = new Size(s, s);
+            PathFigure Segment2 = new PathFigure();
+            p3 = new Point(Math.Cos(Math.PI * a1 / 180) * (r + d) + X, -Math.Sin(Math.PI * a1 / 180) * (r + d) + Y);
+            p4 = new Point(Math.Cos(Math.PI * a2 / 180) * (r + d) + X, -Math.Sin(Math.PI * a2 / 180) * (r + d) + Y);
+
+            Segment2.StartPoint = p3;
+            Segment2.Segments.Add(new ArcSegment(p4, S, 0, false, SweepDirection.Counterclockwise, true));
+
+            PathGeometry CilclePathGeometry = new PathGeometry();
+            CilclePathGeometry.Figures.Add(Segment1);
+            CilclePathGeometry.Figures.Add(Segment2);
+
+            System.Windows.Shapes.Path CirclePath = new System.Windows.Shapes.Path();
+            CirclePath.Stroke = ItemColor;
+            CirclePath.StrokeThickness = 1;
+            CirclePath.Data = CilclePathGeometry;
+
+            PrimitivesCanvas.Children.Add(CirclePath);
+
+            PathGeometry ClipCilclePathGeometry = new PathGeometry();
+
+            PathFigure CilclePath = new PathFigure();
+            CilclePath.StartPoint = p1;
+            s = r - d;
+            S = new Size(s, s);
+            CilclePath.Segments.Add(new ArcSegment(p2, S, 0, false, SweepDirection.Counterclockwise, true));
+            CilclePath.Segments.Add(new LineSegment(p4, false));
+
+            s = r + d;
+            S = new Size(s, s);
+            CilclePath.Segments.Add(new ArcSegment(p3, S, 0, false, SweepDirection.Clockwise, true));
+            ClipCilclePathGeometry.Figures.Add(CilclePath);
+
+            double angle;
+            Line LineItem;
+
+            double a = 360 / (2 * Math.PI * (r / PrimitivesScale) * 10 / sld) - 0.12;
+
+            angle = (a1 + a / 2) + 0.5;
+
+            double x1, y1;
+
+            while (angle < a2)
+            {
+                x1 = Math.Cos(Math.PI * angle / 180) * r + x;
+                y1 = -Math.Sin(Math.PI * angle / 180) * r + y;
+
+                LineItem = helper.CreateLine(x, y, x1, y1, ItemColor, 0.3);
                 LineItem.Clip = ClipCilclePathGeometry;
                 PrimitivesCanvas.Children.Add(LineItem);
 
@@ -311,13 +442,79 @@ namespace primitives
 
             while (l < 10)
             {
-                PrimitivesCanvas.Children.Add(helper.CreateLine(x - dt + l, y - dt - l, x + dt + l, y + dt - l, ItemColor, 0.5));
+                PrimitivesCanvas.Children.Add(helper.CreateLine(x - dt + l, y - dt - l, x + dt + l, y + dt - l, ItemColor, i == 0.5 ? 0.1 : 0.3));//, 0.5
                 l = i * sldt;
                 i++;
             }
-
             PrimitivesCanvas.Children.Add(helper.CreateLine(x - dt, y - dt, x + 10 - dt, y - 10 - dt, ItemColor, 1));
             PrimitivesCanvas.Children.Add(helper.CreateLine(x + dt, y + dt, x + 10 + dt, y - 10 + dt, ItemColor, 1));
+        }
+
+        public void WriteRailItem45_2_bed(int x, int y, double d, Brush ItemColor)
+        {
+            double _d = d;
+            //_d = (_d + 2);
+
+            double dt = d * Math.Sqrt(2) / 2;
+
+            dt += _d * Math.Sqrt(2) / 2;
+
+            PathFigure Segment = new PathFigure();
+
+            Segment.StartPoint = helper.CreatePoint(x - dt, y - dt);
+            Segment.Segments.Add(helper.CreateLineSegment(x + 10 - dt, y - 10 - dt));
+            Segment.Segments.Add(helper.CreateLineSegment(x + 10 + dt, y - 10 + dt));
+            Segment.Segments.Add(helper.CreateLineSegment(x + dt, y + dt));
+            Segment.Segments.Add(helper.CreateLineSegment(x - dt, y - dt));
+
+            PathGeometry pathGeometry = new PathGeometry();
+            pathGeometry.Figures.Add(Segment);
+
+            System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
+            path.Stroke = ItemColor;
+            path.StrokeThickness = 1;
+            path.Fill = ItemColor;
+            path.Data = pathGeometry;
+
+            PrimitivesCanvas.Children.Add(path);
+        }
+
+        public void WriteRailItem135_2_bed(int x, int y, double d, Brush ItemColor)
+        {
+            //double sld = 20;
+            /*double sldt = sld / Math.Sqrt(2) / 10;
+            double dt = d * Math.Sqrt(2) / 2;
+            double i = 0.5;
+            double l = i * sldt;
+            
+            PrimitivesCanvas.Children.Add(helper.CreateLine(x + dt, y - dt, x + 10 + dt, y + 10 - dt, ItemColor, 1));
+            PrimitivesCanvas.Children.Add(helper.CreateLine(x - dt, y + dt, x + 10 - dt, y + 10 + dt, ItemColor, 1));*/
+
+            double _d = d;
+            //_d = (_d + 2);
+
+            double dt = d * Math.Sqrt(2) / 2;
+
+            dt += _d * Math.Sqrt(2) / 2;
+
+            PathFigure Segment = new PathFigure();
+
+            Segment.StartPoint = helper.CreatePoint(x + dt, y - dt);
+            Segment.Segments.Add(helper.CreateLineSegment(x - dt, y + dt));
+            Segment.Segments.Add(helper.CreateLineSegment(x + 10 - dt, y + 10 + dt));
+            Segment.Segments.Add(helper.CreateLineSegment(x + 10 + dt, y + 10 - dt));
+            Segment.Segments.Add(helper.CreateLineSegment(x + dt, y - dt));
+
+            PathGeometry pathGeometry = new PathGeometry();
+            pathGeometry.Figures.Add(Segment);
+
+            System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
+            path.Stroke = ItemColor;
+            path.StrokeThickness = 1;
+            path.Fill = ItemColor;
+            path.Data = pathGeometry;
+
+            PrimitivesCanvas.Children.Add(path);
         }
 
         public void WriteRailItem135_2(int x, int y, double d, Brush ItemColor)
@@ -327,10 +524,10 @@ namespace primitives
             double dt = d * Math.Sqrt(2) / 2;
             double i = 0.5;
             double l = i * sldt;
-
+            
             while (l < 10)
             {
-                PrimitivesCanvas.Children.Add(helper.CreateLine(x - dt + l, y + dt + l, x + dt + l, y - dt + l, ItemColor, 0.5));
+                PrimitivesCanvas.Children.Add(helper.CreateLine(x - dt + l, y + dt + l, x + dt + l, y - dt + l, ItemColor, i == 0.5 ? 0.1 : 0.3));//0.5
                 l = i * sldt;
                 i++;
             }
@@ -341,36 +538,85 @@ namespace primitives
 
         public void WriteRailItemH_2(int x, int y, double d, Brush ItemColor)
         {
-            double sldt = sld / 10;      
-            double i = 0.5;
+            double sldt = (sld + 0.0) / 10;      
+            double i = 0.55;
             double l = i * sldt;
 
             while (l < 10)
             {
-                PrimitivesCanvas.Children.Add(helper.CreateLine(x + l, y + d, x + l, y - d, ItemColor, 0.3));
+                PrimitivesCanvas.Children.Add(helper.CreateLine(x + l, y + d, x + l, y - d, ItemColor, i == 0.55 ? 0.01 : 0.3)); //0.3
                 l = i * sldt;
                 i++;
             }
 
-            PrimitivesCanvas.Children.Add(helper.CreateLine(x, y - d, x + 10, y - d, ItemColor, 1));
-            PrimitivesCanvas.Children.Add(helper.CreateLine(x, y + d, x + 10, y + d, ItemColor, 1));
+            PrimitivesCanvas.Children.Add(helper.CreateLine(x, y - d, x + 10, y - d, ItemColor, 1.2)); //1
+            PrimitivesCanvas.Children.Add(helper.CreateLine(x, y + d, x + 10, y + d, ItemColor, 1.2)); //1
+        }
+
+        public void WriteRailItemH_2_bed(int x, int y, double d, Brush ItemColor)
+        {
+            double _d = d;
+            _d = (_d + 2);
+
+            PathFigure Segment = new PathFigure();
+            Segment.StartPoint = helper.CreatePoint(x, y - _d);
+            Segment.Segments.Add(helper.CreateLineSegment(x + 10, y - _d));
+            Segment.Segments.Add(helper.CreateLineSegment(x + 10, y + _d));
+            Segment.Segments.Add(helper.CreateLineSegment(x, y + _d));
+            Segment.Segments.Add(helper.CreateLineSegment(x, y - _d));
+
+            PathGeometry pathGeometry = new PathGeometry();
+            pathGeometry.Figures.Add(Segment);
+           
+            System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
+            path.Stroke = ItemColor;
+            path.StrokeThickness = 1;
+            path.Fill = ItemColor;
+            path.Data = pathGeometry;
+
+            PrimitivesCanvas.Children.Add(path);
+        }
+
+        public void WriteRailItemV_2_bed(int x, int y, double d, Brush ItemColor)
+        {
+            double _d = d;
+            _d = (_d + 2);
+
+            PathFigure Segment = new PathFigure();
+
+            Segment.StartPoint = helper.CreatePoint(x - _d, y);
+            Segment.Segments.Add(helper.CreateLineSegment(x - _d, y + 10));
+            Segment.Segments.Add(helper.CreateLineSegment(x + _d, y + 10));
+            Segment.Segments.Add(helper.CreateLineSegment(x + _d, y));
+            Segment.Segments.Add(helper.CreateLineSegment(x - _d, y));
+            
+            PathGeometry pathGeometry = new PathGeometry();
+            pathGeometry.Figures.Add(Segment);
+
+            System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
+            path.Stroke = ItemColor;
+            path.StrokeThickness = 1;
+            path.Fill = ItemColor;
+            path.Data = pathGeometry;
+
+            PrimitivesCanvas.Children.Add(path);
         }
 
         public void WriteRailItemV_2(int x, int y, double d, Brush ItemColor)
         {
-            double sldt = sld / 10;
-            double i = 0.5;
+            double sldt = (sld - 0.0) / 10; //step
+            double i = 0.55; // up offset
             double l = i * sldt;
 
             while (l < 10)
             {
-                PrimitivesCanvas.Children.Add(helper.CreateLine(x + d, y + l, x - d, y + l, ItemColor, 0.3));
+                PrimitivesCanvas.Children.Add(helper.CreateLine(x + d, y + l, x - d, y + l, ItemColor, i == 0.55 ? 0.01 : 0.3));
                 l = i * sldt;
                 i++;
             }
 
-            PrimitivesCanvas.Children.Add(helper.CreateLine(x - d, y, x - d, y + 10, ItemColor, 1));
-            PrimitivesCanvas.Children.Add(helper.CreateLine(x + d, y, x + d, y + 10, ItemColor, 1));
+            PrimitivesCanvas.Children.Add(helper.CreateLine(x - d, y, x - d, y + 10, ItemColor, 1.2));
+            PrimitivesCanvas.Children.Add(helper.CreateLine(x + d, y, x + d, y + 10, ItemColor, 1.2));
         }
 
         public void Locomotive(int x, int y, int d, Brush ItemColor)
@@ -792,7 +1038,6 @@ namespace primitives
 
             PrimitivesCanvas.Children.Add(CarPath2);
         }
-
         public void BuildRailsButton(int x, int y, Boolean Enable)
         {
 
@@ -1687,7 +1932,6 @@ namespace primitives
             return BorderPath;
         }
 
-
         public void Semafor(int x, int y, Color ItemColor)
         {
 
@@ -1866,7 +2110,7 @@ namespace primitives
             {
                 x1 = Math.Cos(Math.PI * angle / 180) * r + x;
                 y1 = -Math.Sin(Math.PI * angle / 180) * r + y;
-                LineItem = helper.CreateLine(x, y, x1, y1, ItemColor, 0.5);
+                LineItem = helper.CreateLine(x, y, x1, y1, ItemColor, 0.3);
                 LineItem.Clip = ClipCilclePathGeometry;
                 PrimitivesCanvas.Children.Add(LineItem);
 
@@ -1874,5 +2118,130 @@ namespace primitives
             }
         }
 
+        public void trackBackBaseCircle(int x, int y, int r, double a1, double a2, int d, Brush ItemColor)
+        {
+            Size S;
+
+            //d += 1;
+
+            double _d = d;
+
+            _d = (_d + 2) * PrimitivesScale;
+            r = r * PrimitivesScale;
+
+            double s;
+
+            float X = x * PrimitivesScale;
+            float Y = y * PrimitivesScale;
+
+
+            PathGeometry ClipCilclePathGeometry = new PathGeometry();
+
+            Point p1, p2, p3, p4;
+
+            s = r - _d;
+            S = new Size(s, s);
+
+            p1 = new Point(Math.Cos(Math.PI * a1 / 180) * (r - _d) + X, -Math.Sin(Math.PI * a1 / 180) * (r - _d) + Y);
+            p2 = new Point(Math.Cos(Math.PI * a2 / 180) * (r - _d) + X, -Math.Sin(Math.PI * a2 / 180) * (r - _d) + Y);
+
+            PathFigure CilclePath = new PathFigure();
+            CilclePath.StartPoint = p1;
+            CilclePath.Segments.Add(new ArcSegment(p2, S, 0, false, SweepDirection.Counterclockwise, true));
+            
+
+            s = r + _d;
+            S = new Size(s, s);
+
+            p3 = new Point(Math.Cos(Math.PI * a1 / 180) * (r + _d) + X, -Math.Sin(Math.PI * a1 / 180) * (r + _d) + Y);
+            p4 = new Point(Math.Cos(Math.PI * a2 / 180) * (r + _d) + X, -Math.Sin(Math.PI * a2 / 180) * (r + _d) + Y);
+
+            CilclePath.Segments.Add(new LineSegment(p4, true));
+            CilclePath.Segments.Add(new ArcSegment(p3, S, 0, false, SweepDirection.Clockwise, true));
+            CilclePath.Segments.Add(new LineSegment(p1, true));
+            ClipCilclePathGeometry.Figures.Add(CilclePath);
+
+            System.Windows.Shapes.Path CirclePath_ = new System.Windows.Shapes.Path();
+            //CirclePath_.Stroke = ItemColor;
+            CirclePath_.StrokeThickness = 0;
+            CirclePath_.Fill = ItemColor;
+            CirclePath_.Data = ClipCilclePathGeometry;
+          
+            PrimitivesCanvas.Children.Add(CirclePath_);
+        }
+
+        public void trackBackCrossover(double x, double y, double r, double a1, double a2, double d, Brush ItemColor, bool f)
+        {
+            
+            Size S;
+
+            double _d = d;
+
+            _d = (_d + 2) * PrimitivesScale;
+            r = r * PrimitivesScale;
+
+            double s;
+
+            double _x, _y;
+
+            if (f)
+            {
+                _x = (x * PrimitivesScale) - Math.Cos(Math.PI * a2 / 180) * r;
+                _y = (y * PrimitivesScale) + Math.Sin(Math.PI * a2 / 180) * r;
+            }
+            else
+            {
+                _x = (x * PrimitivesScale) - Math.Cos(Math.PI * a1 / 180) * r;
+                _y = (y * PrimitivesScale) + Math.Sin(Math.PI * a1 / 180) * r;
+            }
+
+            x = _x / PrimitivesScale;
+            y = _y / PrimitivesScale;
+
+            double X = x * PrimitivesScale;
+            double Y = y * PrimitivesScale;
+
+
+            Point p1, p2, p3, p4;
+            //inner r
+            s = r - _d;
+            S = new Size(s, s);
+            PathFigure Segment1 = new PathFigure();
+
+            p1 = new Point(Math.Cos(Math.PI * a1 / 180) * (r - _d) + X, -Math.Sin(Math.PI * a1 / 180) * (r - _d) + Y);
+            p2 = new Point(Math.Cos(Math.PI * a2 / 180) * (r - _d) + X, -Math.Sin(Math.PI * a2 / 180) * (r - _d) + Y);
+
+            Segment1.StartPoint = p1;
+            Segment1.Segments.Add(new ArcSegment(p2, S, 0, false, SweepDirection.Counterclockwise, true));
+
+            //outer r
+            s = r + _d;
+            S = new Size(s, s);
+            PathFigure Segment2 = new PathFigure();
+            p3 = new Point(Math.Cos(Math.PI * a1 / 180) * (r + _d) + X, -Math.Sin(Math.PI * a1 / 180) * (r + _d) + Y);
+            p4 = new Point(Math.Cos(Math.PI * a2 / 180) * (r + _d) + X, -Math.Sin(Math.PI * a2 / 180) * (r + _d) + Y);
+
+            Point _p1 = new Point(Math.Cos(Math.PI * a1 / 180) * r + X, -Math.Sin(Math.PI * a1 / 180) * r + Y);
+            Point _p2 = new Point(Math.Cos(Math.PI * a2 / 180) * r + X, -Math.Sin(Math.PI * a2 / 180) * r + Y);
+
+
+            Segment1.Segments.Add(new LineSegment(p4, true));
+
+            Segment2.StartPoint = p3;
+            Segment2.Segments.Add(new ArcSegment(p4, S, 0, false, SweepDirection.Counterclockwise, true));
+            Segment2.Segments.Add(new LineSegment(p1, true));
+
+            PathGeometry CilclePathGeometry = new PathGeometry();
+            CilclePathGeometry.Figures.Add(Segment1);
+            CilclePathGeometry.Figures.Add(Segment2);
+
+            System.Windows.Shapes.Path CirclePath = new System.Windows.Shapes.Path();
+            CirclePath.Stroke = ItemColor;
+            CirclePath.StrokeThickness = 1;
+            CirclePath.Fill = ItemColor;
+            CirclePath.Data = CilclePathGeometry;
+
+            PrimitivesCanvas.Children.Add(CirclePath); // add rails
+        }
     }
 }

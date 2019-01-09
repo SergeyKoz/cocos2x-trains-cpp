@@ -219,6 +219,147 @@ namespace GameObjects {
 		return item;
 	}
 
+	Sprite *Elements::GetTrackBedElement(MapPoint Point, TrackElement Element) {
+		Sprite *item;
+		Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("rails.png");
+
+		int d = 10 * Field::getInstance()->scale;
+
+		int dy = 22;
+
+		if (Element == TrackElement::Horizontal) {
+			item = Sprite::createWithTexture(texture, Rect(d, 24.5 * d, d, d));
+			item->setPosition(Point.x * d - 0.5 * d, Point.y * d);
+		}
+
+		if (Element == TrackElement::Vertical) {
+			item = Sprite::createWithTexture(texture, Rect(d - 0.5 * d, 23 * d, d, d));
+			item->setPosition(Point.x * d, Point.y * d + 0.5 * d);
+		}
+
+		if (Element == TrackElement::Item45) {
+			item = Sprite::createWithTexture(texture, Rect(3 * d - 0.5 * d, 22.5 * d, 2 * d, 2 * d));
+			item->setPosition(Point.x * d - 0.5 * d, Point.y * d - 0.5 * d);
+		}
+
+		if (Element == TrackElement::Item135) {
+			item = Sprite::createWithTexture(texture, Rect(3 * d - 0.5 * d, 24.5 * d, 2 * d, 2 * d));
+			item->setPosition(Point.x * d - 0.5 * d, Point.y * d + 0.5 * d);
+		}
+
+		if (Element == TrackElement::BaseCircleSect0) {
+			item = Sprite::createWithTexture(texture, Rect(4.5 * d, 22.5 * d, 2 * d, 4 * d));
+			item->setPosition(Point.x * d + 0.5 * d, Point.y * d - 1.5 * d);
+		}
+
+		if (Element == TrackElement::BaseCircleSect1) {
+			item = Sprite::createWithTexture(texture, Rect(6.5 * d, 22.5 * d, 4 * d, 2 * d));
+			item->setPosition(Point.x * d + 1.5 * d, Point.y * d - 0.5 * d);
+		}
+
+		if (Element == TrackElement::BaseCircleSect2) {
+			item = Sprite::createWithTexture(texture, Rect(6.5 * d, 24.5 * d, 4 * d, 2 * d));
+			item->setPosition(Point.x * d + 1.5 * d, Point.y * d + 0.5 * d);
+		}
+
+		if (Element == TrackElement::BaseCircleSect3) {
+			item = Sprite::createWithTexture(texture, Rect(10.5 * d, 22.5 * d, 2 * d, 4 * d));
+			item->setPosition(Point.x * d + 0.5 * d, Point.y * d + 1.5 * d);
+		}
+
+		if (Element == TrackElement::BaseCircleSect4) {
+			item = Sprite::createWithTexture(texture, Rect(12.5 * d, 22.5 * d, 2 * d, 4 * d));
+			item->setPosition(Point.x * d - 0.5 * d, Point.y * d + 1.5 * d);
+		}
+
+		if (Element == TrackElement::BaseCircleSect5) {
+			item = Sprite::createWithTexture(texture, Rect(14.5 * d, 22.5 * d, 4 * d, 2 * d));
+			item->setPosition(Point.x * d - 1.5 * d, Point.y * d + 0.5 * d);
+		}
+
+		if (Element == TrackElement::BaseCircleSect6) {
+			item = Sprite::createWithTexture(texture, Rect(14.5 * d, 24.5 * d, 4 * d, 2 * d));
+			item->setPosition(Point.x * d - 1.5 * d, Point.y * d - 0.5 * d);
+		}
+
+		if (Element == TrackElement::BaseCircleSect7) {
+			item = Sprite::createWithTexture(texture, Rect(18.5 * d, 22.5 * d, 2 * d, 4 * d));
+			item->setPosition(Point.x * d - 0.5 * d, Point.y * d - 1.5 * d);
+		}
+
+		if (Element == TrackElement::SmallCilcleSect0) {
+			item = Sprite::createWithTexture(texture, Rect(20.5 * d, 22.5 * d, 3 * d, 3 * d));
+			item->setPosition(Point.x * d + d, Point.y * d - d);
+		}
+
+		if (Element == TrackElement::SmallCilcleSect1) {
+			item = Sprite::createWithTexture(texture, Rect(23.5 * d, 22.5 * d, 3 * d, 3 * d));
+			item->setPosition(Point.x * d + d, Point.y * d + d);
+		}
+
+		if (Element == TrackElement::SmallCilcleSect2) {
+			item = Sprite::createWithTexture(texture, Rect(26.5 * d, 22.5 * d, 3 * d, 3 * d));
+			item->setPosition(Point.x * d - d, Point.y * d + d);
+		}
+
+		if (Element == TrackElement::SmallCilcleSect3) {
+			item = Sprite::createWithTexture(texture, Rect(29.5 * d, 22.5 * d, 3 * d, 3 * d));
+			item->setPosition(Point.x * d - d, Point.y * d - d);
+		}
+
+		if (Element == TrackElement::Crossover00 || Element == TrackElement::Crossover01 || Element == TrackElement::Crossover20 || Element == TrackElement::Crossover21) {
+			item = Sprite::createWithTexture(texture, Rect(d, 28.5 * d, 3 * d, 2 * d));
+		}
+
+		if (Element == TrackElement::Crossover10 || Element == TrackElement::Crossover11 || Element == TrackElement::Crossover30 || Element == TrackElement::Crossover31) {
+			item = Sprite::createWithTexture(texture, Rect(15.5 * d, 27.5 * d, 2 * d, 3 * d));
+		}
+
+		if (Element == TrackElement::Crossover00) {
+			item->setPosition(Point.x * d - 1.5 * d, Point.y * d + 0.5 * d);
+		}
+
+		if (Element == TrackElement::Crossover01) {
+			item->setFlippedY(true);
+			item->setPosition(Point.x * d - 1.5 * d, Point.y * d - 0.5 * d);
+		}
+
+		if (Element == TrackElement::Crossover10) {
+			item->setRotation(90);
+			item->setPosition(Point.x * d - 1 * d, Point.y * d - 0.5 * d);
+		}
+
+		if (Element == TrackElement::Crossover11) {
+			item->setFlippedX(true);
+			item->setPosition(Point.x * d - 0.5 * d, Point.y * d - 1.0 * d);
+		}
+
+		if (Element == TrackElement::Crossover20) {
+			item->setRotation(90);
+			item->setPosition(Point.x * d - 0.5 * d, Point.y * d - 1.5 * d);
+		}
+
+		if (Element == TrackElement::Crossover21) {
+			item->setFlippedY(true);
+			item->setRotation(90);
+			item->setPosition(Point.x * d + 0.5 * d, Point.y * d - 1.5 * d);
+		}
+
+
+		if (Element == TrackElement::Crossover30) {
+			item->setPosition(Point.x * d + 0.5 * d, Point.y * d - 1.0 * d);
+		}
+
+		if (Element == TrackElement::Crossover31) {
+			item->setFlippedX(true);
+			item->setRotation(90);
+			item->setPosition(Point.x * d + 1.0 * d, Point.y * d - 0.5 * d);
+		}
+		item->setName(Elements::getTrackElement(Element));
+
+		return item;
+	}
+
 	TrackElement Elements::getTrackElement(string element)
 	{
 		TrackElement el = TrackElement::None;

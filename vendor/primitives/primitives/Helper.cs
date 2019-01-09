@@ -78,6 +78,16 @@ namespace primitives
             return LineItem;
         }
 
+        public LineSegment CreateLineSegment(double x, double y)
+        {
+            return new LineSegment(new Point(x * _PrimitivesScale, y * _PrimitivesScale), true);
+        }
+
+        public Point CreatePoint(double x, double y)
+        {
+            return new Point(x * _PrimitivesScale, y * _PrimitivesScale);
+        }
+
         public void ExportToPng(string FileName, int ImageWidth, int ImageHeight)
         {
             if (this._SaveImages)
@@ -109,7 +119,7 @@ namespace primitives
                     96d,
                     96d,
                     PixelFormats.Pbgra32);
-                
+
                 element.UpdateLayout();
                 renderBitmap.Render(element);
                 

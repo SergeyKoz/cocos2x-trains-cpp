@@ -25,10 +25,9 @@ public:
 	Semaphore semaphore;
 
 	//vector<Sprite> backGround;
-
 	//Node* pin;
 
-	vector<CommandsElement*> **sectors;
+	vector<Sprite*> ***sectors;
 		
 	void renderMap();
 	void showMap();

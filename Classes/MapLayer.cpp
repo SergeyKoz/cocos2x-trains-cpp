@@ -246,35 +246,33 @@ void MapLayer::renderMap()
 	Size s = Game->sector;
 	Size f = {ceil(Game->SizeX / Game->sector.width),  ceil(Game->SizeY / Game->sector.height)};
 	
-	sectors = new vector<CommandsElement*>*[f.width];
-	for (int i = 0; i < f.width; ++i) {
-		sectors[i] = new vector<CommandsElement*>[f.height];
+	sectors = new vector<Sprite*>**[3];
+	for (int i = 0; i < 3; ++i) {
+		sectors[i] = new vector<Sprite*>*[f.width];
+		for (int c = 0; c < f.width; ++c) {
+			sectors[i][c] = new vector<Sprite*>[f.height];
+		}
 	}
+	
 	
 	for (int i = 0; i < inst->pointer; i++) {
 		for (int c = 0; c < inst->history[i].elements.size(); c++) {
-			CommandsElement *element = &inst->history[i].elements[c];
-			//Sprite *element = inst->history[i].elements[c];
-			
+			CommandsElement *element = &inst->history[i].elements[c];			
 			Rect rect = element->image->getBoundingBox();
 			int x = rect.origin.x / (d * s.width);
 			int y = rect.origin.y / (d * s.height);
-			sectors[x][y].push_back(element);
-
+			sectors[element->ZIndex][x][y].push_back(element->image);
 			int _x = (rect.origin.x + rect.size.width) / (d * s.width);
 			int _y = (rect.origin.y + rect.size.height) / (d * s.height);
-
 			if (_x > x) {
-				sectors[_x][y].push_back(element);
+				sectors[element->ZIndex][_x][y].push_back(element->image);
 			}
 			if (_y > y) {
-				sectors[x][_y].push_back(element);
+				sectors[element->ZIndex][x][_y].push_back(element->image);
 			}
-
 			if (_y > y && _x > x) {
-				sectors[_x][_y].push_back(element);
+				sectors[element->ZIndex][_x][_y].push_back(element->image);
 			}
-
 		}		
 	}
 	
@@ -295,21 +293,22 @@ void MapLayer::renderMapSector(int px, int py)
 		cp.height = Game->SizeY - Game->sector.height * py;
 	}	
 	string file = "map_sector_" + to_string(px) + "_" + to_string(py) + ".png";
-
-	if (sectors[px][py].size() > 0) {
+	
+	if (sectors[0][px][py].size() > 0 || sectors[1][px][py].size() > 0 || sectors[2][px][py].size() > 0) {
 		RenderTexture *renderTexture = RenderTexture::create(cp.width * d, cp.height * d, Texture2D::PixelFormat::RGBA8888);		
 		renderTexture->setName(to_string(px) + ":" + to_string(py));
 		renderTexture->setScale(1);
-		renderTexture->begin();
-		for (int i = 0; i < sectors[px][py].size(); i++) {
-			Vec2 p = sectors[px][py][i]->image->getPosition();
-			sectors[px][py][i]->image->setZOrder(sectors[px][py][i]->ZIndex);
-			sectors[px][py][i]->image->setVisible(true);
-			sectors[px][py][i]->image->setPosition({p.x - px * Game->sector.width * d, p.y - py * Game->sector.height * d });
-			sectors[px][py][i]->image->visit();
-			sectors[px][py][i]->image->setVisible(false);
-			sectors[px][py][i]->image->setPosition(p);			
-		}		
+		renderTexture->begin();		
+		for (int z = 0; z < 3; ++z) {
+			for (int i = 0; i < sectors[z][px][py].size(); i++) {
+				Vec2 p = sectors[z][px][py][i]->getPosition();
+				sectors[z][px][py][i]->setVisible(true);
+				sectors[z][px][py][i]->setPosition({ p.x - px * Game->sector.width * d, p.y - py * Game->sector.height * d });
+				sectors[z][px][py][i]->visit();
+				sectors[z][px][py][i]->setVisible(false);
+				sectors[z][px][py][i]->setPosition(p);
+			}
+		}
 		renderTexture->end();
 		renderTexture->saveToFile(file, Image::Format::PNG, true, [&](RenderTexture* texture, const std::string& string) {
 			vector<std::string> items = Helper::split(texture->getName(), ':');
@@ -317,7 +316,6 @@ void MapLayer::renderMapSector(int px, int py)
 			int y = std::stoi(items[1]);
 			Field *Game = Field::getInstance();
 			Size f = { ceil(Game->SizeX / Game->sector.width),  ceil(Game->SizeY / Game->sector.height) };
-
 			if (x < f.width - 1) {
 				x++;
 				Director::getInstance()->getScheduler()->performFunctionInCocosThread([&, x, y] {
@@ -331,7 +329,7 @@ void MapLayer::renderMapSector(int px, int py)
 			} else {				
 				onRenderMapEnd();
 			}
-		});		
+		});
 	} else {		
 		Size f = { ceil(Game->SizeX / Game->sector.width),  ceil(Game->SizeY / Game->sector.height) };
 		if (px < f.width - 1) {
@@ -367,9 +365,10 @@ void MapLayer::onRenderMapEnd()
 			}
 		}
 	}
-		
-	for (int x = 0; x < f.width; ++x) {		
-		delete[] sectors[x];
+	for (int z = 0; z < 3; ++z) {
+		for (int x = 0; x < f.width; ++x) {
+			delete[] sectors[z][x];
+		}
 	}
 	delete[] sectors;
 	Cmd::clear();
@@ -383,7 +382,7 @@ void MapLayer::showMap()
 	int d = 10 * game->scale;
 	for (int x = 0; x < f.width; ++x) {
 		for (int y = 0; y < f.height; ++y) {
-			if (game->constuctionMode == ConstructionMode::ConstructOpen || sectors[x][y].size() > 0) {
+			if (game->constuctionMode == ConstructionMode::ConstructOpen || (sectors[0][x][y].size() > 0 || sectors[1][x][y].size() > 0 || sectors[2][x][y].size() > 0)) {
 				string file = "map_sector_" + to_string(x) + "_" + to_string(y) + ".png";
 				Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(FileUtils::getInstance()->getWritablePath() + file);
 				Sprite *sp = Sprite::createWithTexture(texture, Rect(0, 0, cp.width * d, cp.height * d));
@@ -570,6 +569,10 @@ void MapLayer::testNetSector(int x, int y, int train, int station) {
 	command = "path --add --path=[{\"cell\":{\"x\":" + p(34, x) + ",\"y\":" + p(29, y) + "},\"element\":\"BaseCircleSect7\",\"point\":1},{\"cell\":{\"x\":" + p(35, x) + ",\"y\":" + p(32, y) + "},\"element\":\"BaseCircleSect0\",\"point\":2},{\"cell\":{\"x\":" + p(34, x) + ",\"y\":" + p(35, y) + "},\"element\":\"Item135\",\"point\":3},{\"cell\":{\"x\":" + p(33, x) + ",\"y\":" + p(36, y) + "},\"element\":\"BaseCircleSect1\",\"point\":3},{\"cell\":{\"x\":" + p(30, x) + ",\"y\":" + p(37, y) + "},\"element\":\"Horizontal\",\"point\":4},{\"cell\":{\"x\":" + p(29, x) + ",\"y\":" + p(37, y) + "},\"element\":\"Horizontal\",\"point\":4},{\"cell\":{\"x\":" + p(28, x) + ",\"y\":" + p(37, y) + "},\"element\":\"SmallCilcleSect1\",\"point\":4}] --switch=[{\"cell\":{\"x\":" + p(34, x) + ",\"y\":" + p(29, y) + "},\"point\":1}]"; Cmd::Exec(command);
 	command = "path --add --path=[{\"cell\":{\"x\":" + p(24, x) + ",\"y\":" + p(19, y) + "},\"element\":\"BaseCircleSect7\",\"point\":1},{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(22, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(23, y) + "},\"element\":\"Vertical\",\"point\":2},{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(24, y) + "},\"element\":\"Vertical\",\"point\":2}] --switch=[{\"cell\":{\"x\":" + p(24, x) + ",\"y\":" + p(19, y) + "},\"point\":1}]"; Cmd::Exec(command);
 	command = "path --add --path=[{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(22, y) + "},\"element\":\"Crossover20\",\"point\":2}] --switch=[{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(22, y) + "},\"point\":2}]"; Cmd::Exec(command);
+
+
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(29, x) + ",\"y\":" + p(6, y) + "},\"element\":\"SmallCilcleSect3\",\"point\":6},{\"cell\":{\"x\":" + p(27, x) + ",\"y\":" + p(4, y) + "},\"element\":\"SmallCilcleSect2\",\"point\":4}]"; Cmd::Exec(command);
+	command = "path --add --path=[{\"cell\":{\"x\":" + p(25, x) + ",\"y\":" + p(6, y) + "},\"element\":\"SmallCilcleSect1\",\"point\":2},{\"cell\":{\"x\":" + p(27, x) + ",\"y\":" + p(8, y) + "},\"element\":\"SmallCilcleSect0\",\"point\":0}]"; Cmd::Exec(command);
 }
 
 string MapLayer::p(int p, int d)

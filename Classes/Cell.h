@@ -18,7 +18,7 @@ namespace GameObjects {
 		Ortogonal
 	};
 
-	struct ConnectionConfig{
+	struct ConnectionConfig {
 		Configuration config;
 		TrackElement element;
 		int point;

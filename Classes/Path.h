@@ -41,6 +41,7 @@ namespace GameObjects {
 	struct PathItem {
 		TrackElement elementType;
 		Sprite *element;
+		Sprite *bed;
 		int enter;
 		Cell *current;
 		Cell *next;

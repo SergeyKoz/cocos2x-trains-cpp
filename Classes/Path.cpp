@@ -251,6 +251,7 @@ namespace GameObjects {
 						item = new PathItem;
 						item->elementType = element;
 						item->element = enter == 0 ? Elements::GetTrackElement(c, element) : Elements::GetTrackElement(n, element);
+						item->bed = enter == 0 ? Elements::GetTrackBedElement(c, element) : Elements::GetTrackBedElement(n, element);
 						item->enter = enter;
 						item->next = next;
 						item->current = current;
@@ -265,16 +266,19 @@ namespace GameObjects {
 					if (a) {
 						for (auto c = 0; c < PathItems.size(); c++) {
 							Game->mapLayer->removeChild(PathItems[c]->element, true);
+							Game->mapLayer->removeChild(PathItems[c]->bed, true);
 						}
 						PathItems.clear();
 						for (auto c = 0; c < pathItems.size(); c++) {
 							PathItems.insert(PathItems.end(), pathItems[c]);
-							Game->mapLayer->addChild(pathItems[c]->element, ZIndexRails);
+							Game->mapLayer->addChild(pathItems[c]->element, ZIndexTrack);
+							Game->mapLayer->addChild(pathItems[c]->bed, ZIndexTrackBed);
 						}
 					}
 				} else if (Area.d.x == 0 && Area.d.y == 0) {
 					for (auto c = 0; c < PathItems.size(); c++) {
 						Game->mapLayer->removeChild(PathItems[c]->element, true);
+						Game->mapLayer->removeChild(PathItems[c]->bed, true);
 					}
 					PathItems.clear();									
 				}

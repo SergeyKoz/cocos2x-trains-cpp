@@ -28,7 +28,6 @@ namespace GameObjects {
 	
 	void Cell::Connect(TrackElement element, int Point, bool Back) //from point
 	{
-		
 		int enter = Path::track[element].entry[Point];
 		ElementOffset offset = Elements::offset[enter][element];
 		Cell *cell = &Field::getInstance()->cells[x + offset.d.x][y + offset.d.y];
@@ -44,7 +43,6 @@ namespace GameObjects {
 		ElementOffset offset = Elements::offset[enter][element];
 		Cell *cell = &Field::getInstance()->cells[x + offset.d.x][y + offset.d.y];
 		RemoveEntry(cell, Point, offset.p, Cell::GetPointConfiguration(Point), element, enter);
-
 		if (!Back) {
 			cell->Disconnect(element, offset.p, true);
 		}
@@ -99,8 +97,12 @@ namespace GameObjects {
 		if (Enter == 0 && Field::getInstance()->constuctionMode != ConstructionMode::ConstructOpen) {
 			Cmd *inst = Cmd::getInstance();
 			Sprite *image = Elements::GetTrackElement({ cell->x, cell->y }, Element);
-			Field::getInstance()->mapLayer->addChild(image, ZIndexRails);
-			inst->history[inst->pointer - 1].elements.push_back({ image, ZIndexBackgroundRails });
+			Field::getInstance()->mapLayer->addChild(image, ZIndexTrack);
+			inst->history[inst->pointer - 1].elements.push_back({ image, ZIndexBackgroundTrack });
+
+			Sprite *bed = Elements::GetTrackBedElement({ cell->x, cell->y }, Element);
+			Field::getInstance()->mapLayer->addChild(bed, ZIndexTrackBed);
+			inst->history[inst->pointer - 1].elements.push_back({ bed, ZIndexBackgroundTrackBed });
 		}
 		configuration = Configuration;
 		if (straightConnection[FromPoint] == NULL) { // ToPoint

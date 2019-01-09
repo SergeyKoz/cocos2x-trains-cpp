@@ -199,6 +199,7 @@ namespace GameObjects {
 		static Sprite *GetTrackElement(MapPoint Point, TrackElement Element);
 		static TrackElement getTrackElement(string Element);
 		static string getTrackElement(TrackElement Element);
+		static Sprite *GetTrackBedElement(MapPoint Point, TrackElement Element);
 		static Sprite *GetSwitchElement(MapPoint Point, SwitchElement Element);
 		static Sprite *GetSemaphoreElement(MapPoint Point, SemaphorElement Element);
 		static Sprite *GetCarElement(CarElement Element);
