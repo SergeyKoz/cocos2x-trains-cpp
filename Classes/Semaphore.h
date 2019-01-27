@@ -43,19 +43,25 @@ namespace GameObjects {
 		bool AllowedPoint(Cell *cell, int Point);
 
 		ShowItem showItem;
-
+		static const SemaphorePosition defaultProgram[24][12];
+		SemaphorePosition program[24][12];
+		//int program[24][12];
 		SemaphorePosition Position;
 		Cell *cell;
 		SemaphoreResources Resources;
 
 		void Next();
-		void SetPosition(SemaphorePosition pos);
+		void setPosition(SemaphorePosition pos);
+		void setProgram(int program[24][12]);
+		void resetProgram();
 
 		vector<Train*> trains;
 		void listen(Train *train);
 		void remove(Train *train);
 
 		void remove();
+	private:
+		EventListenerTouchOneByOne *listener;
 	};
 }
 

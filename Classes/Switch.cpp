@@ -90,6 +90,12 @@ namespace GameObjects {
 
 		Field::getInstance()->mapLayer->addChild(positions[Straight]->element, ZIndexSwitches);
 		Field::getInstance()->mapLayer->addChild(positions[Diverging]->element, ZIndexSwitches);
+
+		for (int h = 0; h < 24; h++) {
+			for (int m = 0; m < 12; m++) {
+				program[h][m] = SwitchPosition::Straight;
+			}
+		}
 	}
 
 	Switch::~Switch()

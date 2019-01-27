@@ -242,9 +242,23 @@ namespace GameObjects {
 			rapidjson::Document jsonDoc;
 			jsonDoc.Parse<kParseDefaultFlags>(opts["cell"].c_str());
 			Field::getInstance()->cells[jsonDoc["x"].GetInt()][jsonDoc["y"].GetInt()].SetSemaphore(std::stoi(opts["point"]));
+			Semaphore *semaphore = Field::getInstance()->cells[jsonDoc["x"].GetInt()][jsonDoc["y"].GetInt()].semaphores[std::stoi(opts["point"])];
 			if (opts["position"] != "") {				
 				SemaphorePosition pos = Elements::getSemaphorePosition(opts["position"]);
-				Field::getInstance()->cells[jsonDoc["x"].GetInt()][jsonDoc["y"].GetInt()].semaphores[std::stoi(opts["point"])]->SetPosition(pos);
+				semaphore->setPosition(pos);
+			}
+
+			if (opts["program"] != "") {				
+				string data = "{\"data\":" + opts["program"] + "}";
+				rapidjson::Document jsonDocProgram;
+				jsonDocProgram.Parse<kParseDefaultFlags>(data.c_str());
+				int program[24][12];
+				for (SizeType h = 0; h < jsonDocProgram["data"].Size(); h++) {
+					for (SizeType m = 0; m < jsonDocProgram["data"][h].Size(); m++) {
+						program[h][m] = jsonDocProgram["data"][h][m].GetInt();
+					}
+				}
+				semaphore->setProgram(program);
 			}
 		}
 

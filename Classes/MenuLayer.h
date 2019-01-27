@@ -32,10 +32,14 @@ public:
 	GameObjects::MenuItem *FastButton;
 
 	MapPoint pos(MapPoint Point);
+
+	void setTimer(int mimute);
+	void setTimer(int hour, int minute);
 	
 	CREATE_FUNC(MenuLayer);
 
 private:
 	void setElementsAccess();
+	Label *timer;
 };
 

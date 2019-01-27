@@ -50,6 +50,33 @@ namespace GameObjects {
 		this->stations.pop_back();
 	}
 
+	void Field::removeSemaphore(Semaphore *semaphore)
+	{
+		this->semaphores.erase(std::remove(this->semaphores.begin(), this->semaphores.end(), semaphore), this->semaphores.end());
+	}
+
+	void Field::removeSwitch(Switch *_switch)
+	{
+		this->switches.erase(std::remove(this->switches.begin(), this->switches.end(), _switch), this->switches.end());
+	}
+
+	void Field::setProgram(int hour, int minutes)
+	{
+		if (minutes % 5 == 0) {
+			int minute = minutes / 5;
+			vector<Semaphore*>::iterator j;
+			for (j = this->semaphores.begin(); j < this->semaphores.end(); ++j)
+			{
+				(*j)->setPosition((*j)->program[hour][minute]);
+			}
+			vector<Switch*>::iterator i;
+			for (i = this->switches.begin(); i < this->switches.end(); ++i)
+			{
+				(*i)->setPosition((*i)->program[hour][minute]);
+			}
+		}
+	}
+
 	void Field::save(string name)
 	{
 		ValueMap settings;

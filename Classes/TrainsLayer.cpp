@@ -30,14 +30,24 @@ void TrainsLayer::onEnter()
 
 void TrainsLayer::trainsMoveCallback(float dt)
 {
-	Field *Game = Field::getInstance();
+	Field *game = Field::getInstance();
 
-	if (Game->gameMode == GameMode::ModeOn) {
+	if (game->gameMode == GameMode::ModeOn) {
 		/*std::chrono::steady_clock::time_point start, end;
 		start = std::chrono::steady_clock::now();*/
-		for (int i = 0; i < Game->trains.size(); i++) {
-			Game->trains[i].move();
-		}	
+		for (int i = 0; i < game->trains.size(); i++) {
+			game->trains[i].move();
+		}		
+		if (game->timer % 10 == 0) {
+			MenuLayer *menu = (MenuLayer*)game->menuLayer;
+			int minute = game->timer / 10;
+			int hour = floor(minute / 60);
+			int minutes = minute - (hour * 60);
+			menu->setTimer(hour, minutes);
+			game->setProgram(hour, minutes);
+		}
+		game->timer++;
+
 		/*end = std::chrono::steady_clock::now();
 		std::chrono::duration<double> elapsed_seconds = end - start;
 		CCLOG("%f callcack seconds", elapsed_seconds.count());*/

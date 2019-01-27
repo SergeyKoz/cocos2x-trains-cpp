@@ -5,6 +5,35 @@
 
 namespace GameObjects {
 
+	const SemaphorePosition Semaphore::defaultProgram[24][12] = {
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+		{ Go, Go, Go, Go, Go, Go, Go, Go, Go, Go },
+	};
+
 	Semaphore::Semaphore()
 	{
 	}
@@ -82,7 +111,11 @@ namespace GameObjects {
 		game->mapLayer->addChild(this->Resources.reverse, ZIndexSemaphores);
 		game->mapLayer->addChild(this->Resources.stop, ZIndexSemaphores);
 
-		this->SetPosition(Go);		
+		this->setPosition(Go);
+
+		game->semaphores.push_back(this);
+
+		resetProgram();		
 	}
 
 	Semaphore::~Semaphore()
@@ -98,6 +131,8 @@ namespace GameObjects {
 		game->mapLayer->removeChild(this->Resources.go);
 		game->mapLayer->removeChild(this->Resources.reverse);
 		game->mapLayer->removeChild(this->Resources.stop);
+
+		game->removeSemaphore(this);
 	}
 
 	bool Semaphore::Show(MapPoint Point, MapIndent Indent)
@@ -190,7 +225,7 @@ namespace GameObjects {
 		return cell->straightConnection[Point] != 0 && cell->switches[Point] == 0 && cell->semaphores[Point] == 0;
 	}
 
-	void Semaphore::SetPosition(SemaphorePosition pos)
+	void Semaphore::setPosition(SemaphorePosition pos)
 	{
 		Resources.go->setVisible(false);
 		Resources.reverse->setVisible(false);
@@ -208,7 +243,7 @@ namespace GameObjects {
 
 		Semaphore *s = this;
 
-		auto listener = EventListenerTouchOneByOne::create();
+		listener = EventListenerTouchOneByOne::create();
 		listener->setSwallowTouches(true);
 		listener->onTouchBegan = [](Touch* touch, Event* event) {					
 			Node *target = event->getCurrentTarget();
@@ -231,20 +266,49 @@ namespace GameObjects {
 					trains[i]->SpeedReset();
 				}
 			}
-			s->Next();			
+			s->Next();
 		};
 
 		Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this->Resources.go);
 	}
 
+	void Semaphore::setProgram(int program[24][12])
+	{
+		for (int h = 0; h < 24; h++) {
+			for (int m = 0; m < 12; m++) {
+				switch (program[h][m])
+				{
+				case 0:
+					this->program[h][m] = SemaphorePosition::Go;
+					break;
+				case 1:
+					this->program[h][m] = SemaphorePosition::Reverse;
+					break;
+				case 2:
+					this->program[h][m] = SemaphorePosition::Stop;
+					break;
+				}
+			}
+		}
+	}
+
+	void Semaphore::resetProgram()
+	{
+		for (int h = 0; h < 24; h++) {
+			for (int m = 0; m < 12; m++) {
+				program[h][m] = defaultProgram[h][m];
+			}
+		}
+	}
+
 	void Semaphore::Next()
 	{
 		if (Position == Go) {
-			SetPosition(Reverse);
+			setPosition(Reverse);
 		} else if (Position == Reverse) {
-			SetPosition(Stop);
+			setPosition(Stop);
 		} else {
-			SetPosition(Go);
+			setPosition(Go);
 		}
 	}
 	

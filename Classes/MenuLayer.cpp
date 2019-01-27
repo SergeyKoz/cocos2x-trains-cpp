@@ -41,6 +41,15 @@ bool MenuLayer::init()
 	// add the label as a child to this layer
 	this->addChild(label, ZIndexMenu);
 
+	timer = Label::createWithTTF("00:00", "fonts/digital-7.ttf", 60);
+
+	MapPoint p = pos({ -18, -1 });
+	int d = 10 * Field::getInstance()->scale;
+	timer->setPosition(Vec2(p.x, p.y + d / 2.9));
+	timer->setColor(Color3B::BLACK);
+	timer->setString("00:00");
+	this->addChild(timer, ZIndexMenu);
+
 	return true;
 }
 
@@ -142,6 +151,20 @@ void MenuLayer::setElementsAccess()
 			}
 		}
 	}
+}
+
+void MenuLayer::setTimer(int minute)
+{
+	int hour = floor(minute / 60);
+	int minutes = minute - (hour * 60);
+	std::string time = StringUtils::format("%02d:%02d", hour, minutes);
+	timer->setString(time);
+}
+
+void MenuLayer::setTimer(int hour, int minutes)
+{
+	std::string time = StringUtils::format("%02d:%02d", hour, minutes);
+	timer->setString(time);
 }
 
 void MenuLayer::menuCloseCallback(Ref* pSender)

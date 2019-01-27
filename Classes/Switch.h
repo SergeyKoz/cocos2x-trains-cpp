@@ -33,6 +33,7 @@ namespace GameObjects {
 		SwitchPosition Position;
 		Cell *cell;
 		SwitchItem *positions[2];
+		SwitchPosition program[24][12];
 
 		void changePosition();
 		void setPosition(SwitchPosition position);

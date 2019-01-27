@@ -68,6 +68,7 @@ namespace GameObjects {
 		ConstructionMode constuctionMode = ConstructionMode::ConstructNone;
 		TrafficSide trafficSide = TrafficSide::RightHandTraffic; //LeftHandTraffic;
 		GameMode gameMode = GameMode::ModeOff;
+		int timer = 0;
 		
 		Scene *scene;
 
@@ -82,9 +83,17 @@ namespace GameObjects {
 		vector<RailwayStation> stations;
 		void addRailwayStation(RailwayStation station);
 		void removeRailwayStation();
+
+		vector<Semaphore*> semaphores;
+		void removeSemaphore(Semaphore *semaphore);
+
+		vector<Switch*> switches;
+		void removeSwitch(Switch *_switch);
 		
 		void save(string name);
 		void open(string name);
+
+		void setProgram(int hour, int minutes);
 
 	protected:
 		Field();
