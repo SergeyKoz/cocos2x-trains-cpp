@@ -2,8 +2,8 @@
 #include <functional>
 //#include "cocos2d.h"
 //USING_NS_CC;
-#include "cocos2d/external/json/rapidjson.h"  
-#include "cocos2d/external/json/document.h"
+#include "json/rapidjson.h"  
+#include "json/document.h"
 #include "Field.h"
 #include "Helper.h"
 #include "MenuLayer.h"

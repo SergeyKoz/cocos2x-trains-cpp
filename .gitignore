@@ -1,13 +1,10 @@
 bin
 cocos2d
 proj.android
-proj.android-studio
 proj.ios_mac
 proj.linux
-proj.tizen
-proj.win10
 proj.win32
-proj.win8.1-universal
+win32-build
 CMakeLists.txt
 vendor/primitives/.vs
 vendor/primitives/primitives/obj

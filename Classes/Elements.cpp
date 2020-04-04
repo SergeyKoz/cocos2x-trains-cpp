@@ -176,7 +176,7 @@ namespace GameObjects {
 		}
 
 		if (Element == TrackElement::Crossover01) {
-			item->setFlipY(true);
+			item->setFlippedY(true);
 			//item->setPosition(Point.x * d + 1.5 * d, Point.y * d + 0.5 * d);
 			item->setPosition(Point.x * d - 1.5 * d, Point.y * d - 0.5 * d);
 		}
@@ -188,7 +188,7 @@ namespace GameObjects {
 		}
 
 		if (Element == TrackElement::Crossover11) {
-			item->setFlipX(true);
+			item->setFlippedX(true);
 			//item->setPosition(Point.x * d + 0.5 * d, Point.y * d + 1.0 * d);
 			item->setPosition(Point.x * d - 0.5 * d, Point.y * d - 1.0 * d);
 		}
@@ -199,7 +199,7 @@ namespace GameObjects {
 		}
 
 		if (Element == TrackElement::Crossover21) {
-			item->setFlipY(true);
+			item->setFlippedY(true);
 			item->setRotation(90);
 			item->setPosition(Point.x * d + 0.5 * d, Point.y * d - 1.5 * d);
 		}
@@ -210,7 +210,7 @@ namespace GameObjects {
 		}
 
 		if (Element == TrackElement::Crossover31) {
-			item->setFlipX(true);
+			item->setFlippedX(true);
 			item->setRotation(90);
 			item->setPosition(Point.x * d + 1.0 * d, Point.y * d - 0.5 * d);
 		}
@@ -635,12 +635,12 @@ namespace GameObjects {
 		}
 
 		if (Element == Crossover010) {
-			item->setFlipY(true);
+			item->setFlippedY(true);
 			item->setPosition(Point.x * d + 0.75 * d, Point.y * d - 0.0 * d);
 		}
 
 		if (Element == Crossover011) {
-			item->setFlipY(true);
+			item->setFlippedY(true);
 			item->setRotation(180);
 			item->setPosition(Point.x * d - 0.75 * d, Point.y * d - 0.0 * d);
 		}
@@ -657,20 +657,20 @@ namespace GameObjects {
 		
 		if (Element == Crossover210) {
 			item->setRotation(270);
-			item->setFlipY(true);
+			item->setFlippedY(true);
 			item->setPosition(Point.x * d - 0.0 * d, Point.y * d + 0.75 * d);
 		}
 
 		if (Element == Crossover211) {
 			item->setRotation(90);
-			item->setFlipY(true);
+			item->setFlippedY(true);
 			item->setPosition(Point.x * d - 0.0 * d, Point.y * d - 0.75 * d);
 		}
 
 		//----------------
 		if (Element == Crossover100) {
-			item->setFlipY(true);
-			item->setFlipX(true);
+			item->setFlippedY(true);
+			item->setFlippedX(true);
 			item->setRotation(90);
 			item->setPosition(Point.x * d + 0.5 * d, Point.y * d + 0.25 * d);
 		}
@@ -681,18 +681,18 @@ namespace GameObjects {
 		}
 
 		if (Element == Crossover110) {
-			item->setFlipY(true);
+			item->setFlippedY(true);
 			item->setPosition(Point.x * d + 0.25 * d, Point.y * d + 0.5 * d);
 		}
 
 		if (Element == Crossover111) {
-			item->setFlipX(true);
+			item->setFlippedX(true);
 			item->setPosition(Point.x * d - 0.25 * d, Point.y * d - 0.5 * d);
 		}
 
 		if (Element == Crossover300) {
-			item->setFlipY(true);
-			item->setFlipX(true);
+			item->setFlippedY(true);
+			item->setFlippedX(true);
 			item->setPosition(Point.x * d - 0.25 * d, Point.y * d + 0.5 * d);
 		}
 
@@ -702,12 +702,12 @@ namespace GameObjects {
 
 
 		if (Element == Crossover310) {
-			item->setFlipX(true);
+			item->setFlippedX(true);
 			item->setRotation(90);
 			item->setPosition(Point.x * d - 0.5 * d, Point.y * d + 0.25 * d);
 		}
 		if (Element == Crossover311) {
-			item->setFlipY(true);
+			item->setFlippedY(true);
 			item->setRotation(90);
 			item->setPosition(Point.x * d + 0.5 * d, Point.y * d - 0.25 * d);
 		}

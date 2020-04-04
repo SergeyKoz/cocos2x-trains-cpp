@@ -324,7 +324,7 @@ void MapLayer::renderMapSector(int px, int py)
 	string file = "map_sector_" + to_string(px) + "_" + to_string(py) + ".png";
 	
 	if (sectors[0][px][py].size() > 0 || sectors[1][px][py].size() > 0 || sectors[2][px][py].size() > 0) {
-		RenderTexture *renderTexture = RenderTexture::create(cp.width * d, cp.height * d, Texture2D::PixelFormat::RGBA8888);		
+		RenderTexture *renderTexture = RenderTexture::create(cp.width * d, cp.height * d, PixelFormat::RGBA8888);
 		renderTexture->setName(to_string(px) + ":" + to_string(py));
 		renderTexture->setScale(1);
 		renderTexture->begin();		
